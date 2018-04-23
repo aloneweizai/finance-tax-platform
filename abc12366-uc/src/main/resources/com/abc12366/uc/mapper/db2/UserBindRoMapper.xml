@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserBindRoMapper">
+        <select id="staRegsAndNsrlogins" resultType="com.abc12366.uc.model.order.bo.RegsAndNsrloginStatBO">
+                select
+                (SELECT COUNT(1) FROM uc_user a WHERE a.createTime &gt;=(SELECT CURDATE()) and a.createTime &lt;	(SELECT DATE_SUB(CURDATE(),INTERVAL -1 DAY))) regsDay,
+                (SELECT COUNT(1) FROM uc_user b WHERE b.createTime &gt;=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) and b.createTime &lt;	(SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) regsMonth
+                from dual
+        </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventBangBangUpdateMapper">
+
+
+    <!--新增浏览记录-->
+    <insert id="saveEventRecord" parameterType="com.abc12366.cms.model.event.EventRecordBbBo">
+        INSERT INTO cms_event_record (recordId,eventId,source,browsetime,ip) VALUES(#{recordId},#{eventId},#{source},#{browsetime},#{ip})
+    </insert>
+
+    <insert id="saveEventApply" parameterType="com.abc12366.cms.model.event.EventApplyBbBo">
+        INSERT INTO cms_event_apply (applyId,eventId,source,applytime,STATUS,userid) values
+        (#{applyId},#{eventId},#{source},#{applytime},#{status},#{userid})
+    </insert>
+
+    <insert id="saveEventApplyAttr" parameterType="com.abc12366.cms.model.event.EventApplyCentenBo">
+        insert into cms_event_apply_attr (applyId,attrName,attrValue) values(#{applyId},#{attrName},#{attrValue})
+    </insert>
+
+</mapper>

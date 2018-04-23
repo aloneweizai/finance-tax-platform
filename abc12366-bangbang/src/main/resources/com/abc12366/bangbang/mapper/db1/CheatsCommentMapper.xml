@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CheatsCommentMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_cheats_comment
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.CheatsComment">
+		 INSERT INTO bb_cheats_comment
+ 		(id,cheatsId,userId,classifyCode,commentUserId,commentTxt,status,createTime,lastUpdate,ip,factionId,likeNum,trampleNum,reportNum)
+		 VALUES 
+ 		(#{id},#{cheatsId},#{userId},#{classifyCode},#{commentUserId},#{commentTxt},#{status},#{createTime},#{lastUpdate},#{ip},#{factionId},#{likeNum},#{trampleNum},#{reportNum})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.CheatsComment">
+		 INSERT INTO bb_cheats_comment
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="cheatsId != null">
+				 cheatsId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="commentUserId != null">
+				 commentUserId,
+			</if>
+			<if test="commentTxt != null">
+				 commentTxt,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+			<if test="ip != null">
+				 ip,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="likeNum != null">
+				 likeNum,
+			</if>
+			<if test="trampleNum != null">
+				 trampleNum,
+			</if>
+			<if test="reportNum != null">
+				 reportNum,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="cheatsId!=null">
+				 #{cheatsId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="commentUserId!=null">
+				 #{commentUserId},
+			</if>
+			<if test="commentTxt!=null">
+				 #{commentTxt},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+			<if test="ip!=null">
+				 #{ip},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="likeNum!=null">
+				 #{likeNum},
+			</if>
+			<if test="trampleNum!=null">
+				 #{trampleNum},
+			</if>
+			<if test="reportNum!=null">
+				 #{reportNum},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.CheatsComment">
+		 UPDATE bb_cheats_comment
+ 		 <set> 
+			<if test="cheatsId != null">
+				 cheatsId = #{cheatsId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="commentUserId != null">
+				 commentUserId = #{commentUserId},
+			</if>
+			<if test="commentTxt != null">
+				 commentTxt = #{commentTxt},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+			<if test="ip != null">
+				 ip = #{ip},
+			</if>
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="likeNum != null">
+				 likeNum = #{likeNum},
+			</if>
+			<if test="trampleNum != null">
+				 trampleNum = #{trampleNum},
+			</if>
+			<if test="reportNum != null">
+				 reportNum = #{reportNum},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.CheatsComment">
+		 UPDATE bb_cheats_comment
+		 SET 
+			 cheatsId = #{cheatsId},
+			 userId = #{userId},
+			 commentUserId = #{commentUserId},
+			 commentTxt = #{commentTxt},
+			 status = #{status},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate},
+			 ip = #{ip},
+			 factionId = #{factionId},
+			 likeNum = #{likeNum},
+			 trampleNum = #{trampleNum},
+			 reportNum = #{reportNum}
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改 举报数-->
+	<update id="updateReportNum" parameterType="java.lang.String">
+		UPDATE bb_cheats_comment SET reportNum = reportNum + 1, status ='3' WHERE id = #{id}
+	</update>
+
+</mapper>

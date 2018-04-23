@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.InvoiceDetailRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, invoiceNo, invoiceCode, property, status, createTime, lastUpdate, remark,invoiceRepoId,pdfUrl,spUrl
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.invoice.InvoiceDetail" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        WHERE id = #{id}
+    </select>
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByInvoiceNo" resultType="com.abc12366.uc.model.invoice.InvoiceDetail" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        WHERE invoiceNo = #{invoiceNo}
+    </select>
+
+    <select id="selectByInvoiceNoAndStatus" resultType="com.abc12366.uc.model.invoice.InvoiceDetail" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        WHERE invoiceNo = #{invoiceNo} and status = '0'
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectInvoiceRepo" resultType="com.abc12366.uc.model.invoice.InvoiceDetail" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        WHERE status = #{status} and property = '2' order by (invoiceNo+0) asc,createTime asc LIMIT 1
+    </select>
+
+    <!-- 查询（根据条件查询） -->
+    <select id="selectInvoiceDetailList" resultType="com.abc12366.uc.model.invoice.InvoiceDetail"
+            parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        <where>
+            1 = 1
+            <if test=" invoiceRepoId != null and invoiceRepoId != '' ">
+                and invoiceRepoId = #{invoiceRepoId}
+            </if>
+            <if test=" invoiceNo != null and invoiceNo != '' ">
+                and invoiceNo = #{invoiceNo}
+            </if>
+            <if test=" invoiceCode != null and invoiceCode != '' ">
+                and invoiceCode = #{invoiceCode}
+            </if>
+            <if test=" status != null and status != '' ">
+                and status = #{status}
+            </if>
+        </where>
+        order by invoiceNo*1 asc
+    </select>
+
+    <!-- 查询（根据InvoiceNo，status条件查询） -->
+    <select id="selectInvoiceDetailListByInvoice" resultType="com.abc12366.uc.model.invoice.InvoiceDetail"
+            parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        <where>
+            1 = 1
+            <if test=" invoiceNo != null and invoiceNo != '' ">
+                AND invoiceNo LIKE CONCAT('%',#{invoiceNo},'%')
+            </if>
+            <if test=" status != null and status != '' ">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询（根据InvoiceNo，status条件查询） -->
+    <select id="selectInvoiceDetailByInvoice" resultType="com.abc12366.uc.model.invoice.InvoiceDetail"
+            parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        <where>
+            1 = 1
+            <if test=" invoiceNo != null and invoiceNo != '' ">
+                AND invoiceNo =  #{invoiceNo}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询（根据 invoiceNo，invoiceCode 条件查询） -->
+    <select id="selectByInvoiceNoAndCode" resultType="com.abc12366.uc.model.invoice.InvoiceDetail"
+            parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+                where invoiceNo = #{invoiceNo}
+                and invoiceCode = #{invoiceCode}
+    </select>
+
+    <!-- 查询（根据状态和invoiceRepoId条件查询） -->
+    <select id="selectByIdAndStatus" resultType="com.abc12366.uc.model.invoice.InvoiceDetail" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_detail
+        <where>
+            (status = "1" OR status = "2") and invoiceRepoId = #{invoiceRepoId}
+        </where>
+    </select>
+
+    <select id="selectInvoiceDetail" resultType="com.abc12366.uc.model.invoice.bo.InvoiceDetailBO" parameterType="com.abc12366.uc.model.invoice.InvoiceDistribute">
+        SELECT
+        d.id, d.invoiceNo, d.invoiceCode, d.property, d.status, d.createTime, d.lastUpdate, d.remark,d.invoiceRepoId,d.pdfUrl,d.spUrl
+        FROM uc_invoice_detail d
+        LEFT JOIN uc_invoice_distribute b on b.invoiceRepoId = d.invoiceRepoId
+        where b.signUser = #{signUser} and d.status = '0' and d.property = '2'
+        and b.invoiceTypeCode= #{invoiceTypeCode} order by d.invoiceNo asc LIMIT 1
+    </select>
+
+
+</mapper>

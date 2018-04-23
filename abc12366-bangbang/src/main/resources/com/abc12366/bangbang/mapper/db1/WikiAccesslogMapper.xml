@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.WikiAccesslogMapper">
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_wiki_accesslog
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.WikiAccesslog">
+        INSERT INTO bb_wiki_accesslog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="wikiId != null">
+                wikiId,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="helpful != null">
+                helpful,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="wikiId!=null">
+                #{wikiId},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="helpful!=null">
+                #{helpful},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.bangbang.model.WikiAccesslog">
+        UPDATE bb_wiki_accesslog
+        <set>
+            <if test="wikiId != null">
+                wikiId = #{wikiId},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="helpful != null">
+                helpful = #{helpful},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

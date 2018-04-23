@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.LotteryActivityipRoMapper">
+<select id="selectList" resultType="com.abc12366.uc.model.bo.LotteryActivityipBO" parameterType="java.util.Map">
+SELECT  id,activityId,ip,description,createTime,remake
+ ,(select a.name from uc_lottery_activity a where a.id=z.activityId) as activityName
+ from uc_lottery_activityIp  z
+<where>
+<if test="ip!=null">
+ ip=#{ip}
+</if>
+<if test="activityId!=null">
+and activityId=#{activityId}
+</if>
+</where>
+ORDER BY createTime DESC
+</select>
+<select id="selectOne" resultType="com.abc12366.uc.model.bo.LotteryActivityipBO" parameterType="java.lang.String">
+SELECT  id,activityId,ip,description,createTime,remake
+,(select a.name from uc_lottery_activity a where a.id=z.activityId) as activityName
+ from uc_lottery_activityIp z
+where id=#{id}
+</select>
+
+</mapper>

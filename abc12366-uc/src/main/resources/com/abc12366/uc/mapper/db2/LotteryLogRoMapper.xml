@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.LotteryLogRoMapper">
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.LotteryLogBO" parameterType="java.util.Map">
+        select t2.*from (
+        SELECT id,activityId,lotteryId,createTime,lotteryName,isluck,state,userId,upoint,ip,remake,addressId,address,sendName,phone,activityStartTime,activityEndTime,activityName,lotteryLevel,lotterySend
+        ,kuaidiGS , kuaididanhao, sendRemake ,sendRemake2,endlqDate
+        ,(select a.nickname from uc_user a where a.id=z.userId) as userName
+        from uc_lottery_log z
+        ) t2
+        <where>
+            <if test="isluck!=null">
+                isluck=#{isluck}
+            </if>
+            <if test="userId!=null">
+                and userId=#{userId}
+            </if>
+            <if test="userName!=null">
+                and userName=#{userName}
+            </if>
+            <if test="activityName!=null">
+                and activityName=#{activityName}
+            </if>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+            <if test="startTime!=null">
+                and createTime &gt;=#{startTime}
+            </if>
+            <if test="endTime!=null">
+                and createTime &lt;= #{endTime}
+            </if>
+
+
+        </where>
+        ORDER BY createTime DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.LotteryLogBO" parameterType="java.lang.String">
+        SELECT id,activityId,lotteryId,createTime,lotteryName,isluck,state,userId,upoint,ip,remake,addressId,address,sendName,phone,activityStartTime,activityEndTime,activityName,lotteryLevel,lotterySend
+        ,kuaidiGS , kuaididanhao, sendRemake ,sendRemake2,endlqDate
+        ,(select a.nickname from uc_user a where a.id=z.userId) as userName
+        from uc_lottery_log z
+where id=#{id}
+</select>
+    <!-- 用户今天抽奖次数 -->
+    <select id="selectUserDay" resultType="java.lang.Integer" parameterType="java.lang.String">
+      select count(*) from uc_lottery_log where to_days(createTime) = to_days(now()) and userId=#{id};
+    </select>
+    <!-- 用户今天中奖次数 -->
+    <select id="selectUserDayLuck" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) from uc_lottery_log where to_days(createTime) = to_days(now()) and userId=#{id} and isluck=1;
+    </select>
+</mapper>

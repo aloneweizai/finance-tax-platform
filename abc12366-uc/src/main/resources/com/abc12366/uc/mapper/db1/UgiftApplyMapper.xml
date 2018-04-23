@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.UgiftApplyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.String">
+		 DELETE FROM uc_ugift_apply
+		 WHERE applyId = #{applyId}
+	</delete>
+
+	<select id="getNo" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT NEXTVAL(#{name}) from dual
+	</select>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.uc.model.gift.UgiftApply">
+		 INSERT INTO uc_ugift_apply
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="applyId != null">
+				 applyId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="expressNo != null">
+				 expressNo,
+			</if>
+			<if test="expressComp != null">
+				 expressComp,
+			</if>
+			<if test="name != null">
+				 name,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="address != null">
+				 address,
+			</if>
+			<if test="remark != null">
+				 remark,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="applyId!=null">
+				 #{applyId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="expressNo!=null">
+				 #{expressNo},
+			</if>
+			<if test="expressComp!=null">
+				 #{expressComp},
+			</if>
+			<if test="name!=null">
+				 #{name},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="address!=null">
+				 #{address},
+			</if>
+			<if test="remark!=null">
+				 #{remark},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.uc.model.gift.UgiftApply">
+		 UPDATE uc_ugift_apply
+ 		 <set>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+			<if test="expressNo != null">
+				 expressNo = #{expressNo},
+			</if>
+			<if test="expressComp != null">
+				 expressComp = #{expressComp},
+			</if>
+			<if test="name != null">
+				 name = #{name},
+			</if>
+			<if test="phone != null">
+				 phone = #{phone},
+			</if>
+			<if test="address != null">
+				 address = #{address},
+			</if>
+			<if test="remark != null">
+				 remark = #{remark},
+			</if>
+
+ 		 </set>
+		 WHERE applyId = #{applyId}
+	</update>
+</mapper>

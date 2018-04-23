@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ModelMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        modelId, modelName, modelPath, tplChannelPrefix, tplContentPrefix, titleImgWidth, titleImgHeight,
+        contentImgWidth, contentImgHeight, priority, hasContent, isDisabled, isDef, isGlobal, siteId
+    </sql>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_model
+        WHERE modelId = #{modelId}
+    </delete>
+
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteList">
+        DELETE FROM cms_model
+        WHERE modelId in
+        <foreach item="item" index="index" collection="modelIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Model">
+        INSERT INTO cms_model
+        (modelId,modelName,modelPath,tplChannelPrefix,tplContentPrefix,titleImgWidth,titleImgHeight,contentImgWidth,contentImgHeight,priority,hasContent,isDisabled,isDef,isGlobal,siteId)
+        VALUES
+        (#{modelId},#{modelName},#{modelPath},#{tplChannelPrefix},#{tplContentPrefix},#{titleImgWidth},#{titleImgHeight},#{contentImgWidth},#{contentImgHeight},#{priority},#{hasContent},#{isDisabled},#{isDef},#{isGlobal},#{siteId})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Model">
+        INSERT INTO cms_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelId != null">
+                modelId,
+            </if>
+            <if test="modelName != null">
+                modelName,
+            </if>
+            <if test="modelPath != null">
+                modelPath,
+            </if>
+            <if test="tplChannelPrefix != null">
+                tplChannelPrefix,
+            </if>
+            <if test="tplContentPrefix != null">
+                tplContentPrefix,
+            </if>
+            <if test="titleImgWidth != null">
+                titleImgWidth,
+            </if>
+            <if test="titleImgHeight != null">
+                titleImgHeight,
+            </if>
+            <if test="contentImgWidth != null">
+                contentImgWidth,
+            </if>
+            <if test="contentImgHeight != null">
+                contentImgHeight,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="hasContent != null">
+                hasContent,
+            </if>
+            <if test="isDisabled != null">
+                isDisabled,
+            </if>
+            <if test="isDef != null">
+                isDef,
+            </if>
+            <if test="isGlobal != null">
+                isGlobal,
+            </if>
+            <if test="siteId != null">
+                siteId,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelId!=null">
+                #{modelId},
+            </if>
+            <if test="modelName!=null">
+                #{modelName},
+            </if>
+            <if test="modelPath!=null">
+                #{modelPath},
+            </if>
+            <if test="tplChannelPrefix!=null">
+                #{tplChannelPrefix},
+            </if>
+            <if test="tplContentPrefix!=null">
+                #{tplContentPrefix},
+            </if>
+            <if test="titleImgWidth!=null">
+                #{titleImgWidth},
+            </if>
+            <if test="titleImgHeight!=null">
+                #{titleImgHeight},
+            </if>
+            <if test="contentImgWidth!=null">
+                #{contentImgWidth},
+            </if>
+            <if test="contentImgHeight!=null">
+                #{contentImgHeight},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="hasContent!=null">
+                #{hasContent},
+            </if>
+            <if test="isDisabled!=null">
+                #{isDisabled},
+            </if>
+            <if test="isDef!=null">
+                #{isDef},
+            </if>
+            <if test="isGlobal!=null">
+                #{isGlobal},
+            </if>
+            <if test="siteId!=null">
+                #{siteId},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Model">
+        UPDATE cms_model
+        <set>
+            <if test="modelName != null">
+                modelName = #{modelName},
+            </if>
+            <if test="modelPath != null">
+                modelPath = #{modelPath},
+            </if>
+            <if test="tplChannelPrefix != null">
+                tplChannelPrefix = #{tplChannelPrefix},
+            </if>
+            <if test="tplContentPrefix != null">
+                tplContentPrefix = #{tplContentPrefix},
+            </if>
+            <if test="titleImgWidth != null">
+                titleImgWidth = #{titleImgWidth},
+            </if>
+            <if test="titleImgHeight != null">
+                titleImgHeight = #{titleImgHeight},
+            </if>
+            <if test="contentImgWidth != null">
+                contentImgWidth = #{contentImgWidth},
+            </if>
+            <if test="contentImgHeight != null">
+                contentImgHeight = #{contentImgHeight},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="hasContent != null">
+                hasContent = #{hasContent},
+            </if>
+            <if test="isDisabled != null">
+                isDisabled = #{isDisabled},
+            </if>
+            <if test="isDef != null">
+                isDef = #{isDef},
+            </if>
+            <if test="isGlobal != null">
+                isGlobal = #{isGlobal},
+            </if>
+            <if test="siteId != null">
+                siteId = #{siteId},
+            </if>
+
+        </set>
+        WHERE modelId = #{modelId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Model">
+        UPDATE cms_model
+        SET
+        modelName = #{modelName},
+        modelPath = #{modelPath},
+        tplChannelPrefix = #{tplChannelPrefix},
+        tplContentPrefix = #{tplContentPrefix},
+        titleImgWidth = #{titleImgWidth},
+        titleImgHeight = #{titleImgHeight},
+        contentImgWidth = #{contentImgWidth},
+        contentImgHeight = #{contentImgHeight},
+        priority = #{priority},
+        hasContent = #{hasContent},
+        isDisabled = #{isDisabled},
+        isDef = #{isDef},
+        isGlobal = #{isGlobal},
+        siteId = #{siteId}
+        WHERE modelId = #{modelId}
+    </update>
+
+</mapper>

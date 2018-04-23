@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.AppSettingRoMapper">
+
+    <select id="selectOne" resultType="com.abc12366.gateway.model.AppSetting"
+            parameterType="com.abc12366.gateway.model.AppSetting">
+        select id, appId, apiId, timesPerMinute, timesPerHour, timesPerDay, status, createTime,lastUpdate,isValidate
+        from gw_app_setting WHERE appId = #{appId}
+        AND id = #{id}
+    </select>
+
+    <resultMap id="appSettingMap" type="com.abc12366.gateway.model.bo.AppSettingBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="appId" property="appId" jdbcType="VARCHAR"/>
+        <result column="apiId" property="apiId" jdbcType="VARCHAR"/>
+        <result column="timesPerMinute" property="timesPerMinute" jdbcType="INTEGER"/>
+        <result column="timesPerHour" property="timesPerHour" jdbcType="INTEGER"/>
+        <result column="timesPerDay" property="timesPerDay" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="authentication" property="authentication" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="isValidate" property="isValidate" jdbcType="TINYINT"/>
+        <result column="appName" property="appName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_BO_Column_List">
+        a.id, a.appId, a.apiId, a.timesPerMinute, a.timesPerHour, a.timesPerDay,a.isValidate,
+        b.name, b.uri, b.method, b.version, b.authentication,
+        a.status, a.createTime, a.lastUpdate,d.fieldKey as appName
+    </sql>
+
+    <select id="selectList" resultMap="appSettingMap" parameterType="com.abc12366.gateway.model.bo.AppSettingBO">
+        SELECT
+        <include refid="Base_BO_Column_List"/>
+        FROM gw_app_setting a LEFT JOIN gw_api b ON a.apiId = b.id
+        LEFT JOIN gw_view_sys_dict d ON d.id = b.dictId
+        <where>
+            b.status = true
+            <if test="name != null and uri != ''">AND b.name LIKE CONCAT('%',#{name},'%')</if>
+            <if test="uri != null and uri != '' ">and b.uri LIKE CONCAT('%',#{uri},'%')</if>
+            <if test="method != null and method != ''">AND b.method = #{method}</if>
+            <if test="version != null and version != ''">AND b.version = #{version}</if>
+            <if test="appId != null and appId != ''">AND a.appId = #{appId}</if>
+
+        </where>
+    </select>
+    <select id="selectByAppId" resultMap="appSettingMap" parameterType="com.abc12366.gateway.model.bo.AppSettingBO">
+        SELECT
+        <include refid="Base_BO_Column_List"/>
+        FROM gw_app_setting a LEFT JOIN gw_api b ON a.apiId = b.id
+        LEFT JOIN gw_view_sys_dict d ON d.id = b.dictId
+        <where>
+            b.status = true
+            <if test="uri != null">AND b.uri = #{uri}</if>
+            <if test="appId != null">AND a.appId = #{appId}</if>
+            <if test="method != null">AND b.method = #{method}</if>
+        </where>
+    </select>
+</mapper>

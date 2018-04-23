@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.LotteryActivityipMapper">
+<insert id="insert" parameterType="com.abc12366.uc.model.LotteryActivityip">
+insert into uc_lottery_activityIp(
+id,activityId,ip,description,createTime,remake
+)values(
+#{id},#{activityId},#{ip},#{description},#{createTime},#{remake})
+</insert>
+<update id="update" parameterType="com.abc12366.uc.model.LotteryActivityip">
+update  uc_lottery_activityIp 
+<set>
+    <if test="activityId!=null">activityId=#{activityId},</if>
+    <if test="ip!=null">ip=#{ip},</if>
+    <if test="description!=null">description=#{description},</if>
+    <if test="createTime!=null">createTime=#{createTime},</if>
+    <if test="remake!=null">remake=#{remake}</if>
+</set>
+where id=#{id}
+</update>
+<delete id="delete" parameterType="java.lang.String">
+delete from uc_lottery_activityIp 
+where id=#{id}
+</delete>
+</mapper>

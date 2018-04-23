@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ExpressCompRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, compCode, compName, compUrl, sort, createTime, lastUpdate,templateUrl
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.ExpressComp" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_express_comp
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByCompName" resultType="com.abc12366.uc.model.order.ExpressComp" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_express_comp
+        WHERE compName = #{compName}
+    </select>
+
+    <select id="selectByCompCode" resultType="com.abc12366.uc.model.order.ExpressComp" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_express_comp
+        WHERE compCode = #{compCode}
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.order.ExpressComp"
+            parameterType="com.abc12366.uc.model.order.ExpressComp">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_express_comp
+        <where>
+            1=1
+            <if test="compName != null  and compName!=''">AND compName LIKE CONCAT('%',#{compName},'%')</if>
+        </where>
+    </select>
+
+
+</mapper>

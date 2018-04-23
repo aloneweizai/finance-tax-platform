@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.SubjectMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Subject_Column_List">
+        id, voteId, subject, form, required, sort, createTime, lastUpdate
+    </sql>
+
+    <!-- 通用查询结果列-->
+    <sql id="Item_Column_List">
+        id, subjectId, type, item, image, detail,status, sort
+    </sql>
+
+    <insert id="insertSubject" parameterType="com.abc12366.cms.model.Subject">
+        INSERT INTO cms_subject (<include refid="Subject_Column_List"/>)
+        VALUES (#{id}, #{voteId}, #{subject}, #{form}, #{required}, #{sort}, #{createTime}, #{lastUpdate})
+    </insert>
+
+    <delete id="deleteSubject" parameterType="java.lang.String">
+        DELETE FROM cms_subject WHERE voteId = #{voteId}
+    </delete>
+
+    <insert id="insertItem" parameterType="com.abc12366.cms.model.SubjectItem">
+        INSERT INTO cms_subject_item (<include refid="Item_Column_List"/>)
+        VALUES (#{id}, #{subjectId}, #{type}, #{item}, #{image}, #{detail},#{status}, #{sort})
+    </insert>
+
+    <update id="updateStatus" parameterType="com.abc12366.cms.model.bo.SubItemBo">
+        UPDATE cms_subject_item set status = #{bz} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteItem" parameterType="java.lang.String">
+        DELETE FROM cms_subject_item WHERE subjectId = #{subjectId}
+    </delete>
+</mapper>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ChannelExtMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_channel_ext
+        WHERE channelId = #{channelId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ChannelExt">
+        INSERT INTO cms_channel_ext
+        (channelId,channelName,isStaticChannel,isStaticContent,pageSize,link,tplChannel,tplContent,titleImg,contentImg,hasTitleImg,hasContentImg,titleImgWidth,titleImgHeight,contentImgWidth,contentImgHeight,commentControl,allowUpdown,isBlank,title,keywords,description,txt,allowShare)
+        VALUES
+        (#{channelId},#{channelName},#{isStaticChannel},#{isStaticContent},#{pageSize},#{link},#{tplChannel},#{tplContent},#{titleImg},#{contentImg},#{hasTitleImg},#{hasContentImg},#{titleImgWidth},#{titleImgHeight},#{contentImgWidth},#{contentImgHeight},#{commentControl},#{allowUpdown},#{isBlank},#{title},#{keywords},#{description},#{txt},#{allowShare})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ChannelExt">
+        INSERT INTO cms_channel_ext
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channelId != null">
+                channelId,
+            </if>
+            <if test="channelName != null">
+                channelName,
+            </if>
+            <if test="isStaticChannel != null">
+                isStaticChannel,
+            </if>
+            <if test="isStaticContent != null">
+                isStaticContent,
+            </if>
+            <if test="pageSize != null">
+                pageSize,
+            </if>
+            <if test="link != null">
+                link,
+            </if>
+            <if test="tplChannel != null">
+                tplChannel,
+            </if>
+            <if test="tplContent != null">
+                tplContent,
+            </if>
+            <if test="titleImg != null">
+                titleImg,
+            </if>
+            <if test="contentImg != null">
+                contentImg,
+            </if>
+            <if test="hasTitleImg != null">
+                hasTitleImg,
+            </if>
+            <if test="hasContentImg != null">
+                hasContentImg,
+            </if>
+            <if test="titleImgWidth != null">
+                titleImgWidth,
+            </if>
+            <if test="titleImgHeight != null">
+                titleImgHeight,
+            </if>
+            <if test="contentImgWidth != null">
+                contentImgWidth,
+            </if>
+            <if test="contentImgHeight != null">
+                contentImgHeight,
+            </if>
+            <if test="commentControl != null">
+                commentControl,
+            </if>
+            <if test="allowUpdown != null">
+                allowUpdown,
+            </if>
+            <if test="isBlank != null">
+                isBlank,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="keywords != null">
+                keywords,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="txt != null">
+                txt,
+            </if>
+            <if test="allowShare != null">
+                allowShare,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channelId!=null">
+                #{channelId},
+            </if>
+            <if test="channelName!=null">
+                #{channelName},
+            </if>
+            <if test="isStaticChannel!=null">
+                #{isStaticChannel},
+            </if>
+            <if test="isStaticContent!=null">
+                #{isStaticContent},
+            </if>
+            <if test="pageSize!=null">
+                #{pageSize},
+            </if>
+            <if test="link!=null">
+                #{link},
+            </if>
+            <if test="tplChannel!=null">
+                #{tplChannel},
+            </if>
+            <if test="tplContent!=null">
+                #{tplContent},
+            </if>
+            <if test="titleImg!=null">
+                #{titleImg},
+            </if>
+            <if test="contentImg!=null">
+                #{contentImg},
+            </if>
+            <if test="hasTitleImg!=null">
+                #{hasTitleImg},
+            </if>
+            <if test="hasContentImg!=null">
+                #{hasContentImg},
+            </if>
+            <if test="titleImgWidth!=null">
+                #{titleImgWidth},
+            </if>
+            <if test="titleImgHeight!=null">
+                #{titleImgHeight},
+            </if>
+            <if test="contentImgWidth!=null">
+                #{contentImgWidth},
+            </if>
+            <if test="contentImgHeight!=null">
+                #{contentImgHeight},
+            </if>
+            <if test="commentControl!=null">
+                #{commentControl},
+            </if>
+            <if test="allowUpdown!=null">
+                #{allowUpdown},
+            </if>
+            <if test="isBlank!=null">
+                #{isBlank},
+            </if>
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="keywords!=null">
+                #{keywords},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="txt!=null">
+                #{txt},
+            </if>
+            <if test="allowShare!=null">
+                #{allowShare},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ChannelExt">
+        UPDATE cms_channel_ext
+        <set>
+            <if test="channelName != null">
+                channelName = #{channelName},
+            </if>
+            <if test="isStaticChannel != null">
+                isStaticChannel = #{isStaticChannel},
+            </if>
+            <if test="isStaticContent != null">
+                isStaticContent = #{isStaticContent},
+            </if>
+            <if test="pageSize != null">
+                pageSize = #{pageSize},
+            </if>
+            <if test="link != null">
+                link = #{link},
+            </if>
+            <if test="tplChannel != null">
+                tplChannel = #{tplChannel},
+            </if>
+            <if test="tplContent != null">
+                tplContent = #{tplContent},
+            </if>
+            <if test="titleImg != null">
+                titleImg = #{titleImg},
+            </if>
+            <if test="contentImg != null">
+                contentImg = #{contentImg},
+            </if>
+            <if test="hasTitleImg != null">
+                hasTitleImg = #{hasTitleImg},
+            </if>
+            <if test="hasContentImg != null">
+                hasContentImg = #{hasContentImg},
+            </if>
+            <if test="titleImgWidth != null">
+                titleImgWidth = #{titleImgWidth},
+            </if>
+            <if test="titleImgHeight != null">
+                titleImgHeight = #{titleImgHeight},
+            </if>
+            <if test="contentImgWidth != null">
+                contentImgWidth = #{contentImgWidth},
+            </if>
+            <if test="contentImgHeight != null">
+                contentImgHeight = #{contentImgHeight},
+            </if>
+            <if test="commentControl != null">
+                commentControl = #{commentControl},
+            </if>
+            <if test="allowUpdown != null">
+                allowUpdown = #{allowUpdown},
+            </if>
+            <if test="isBlank != null">
+                isBlank = #{isBlank},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="keywords != null">
+                keywords = #{keywords},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="txt != null">
+                txt = #{txt},
+            </if>
+            <if test="allowShare != null">
+                allowShare = #{allowShare},
+            </if>
+
+        </set>
+        WHERE channelId = #{channelId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ChannelExt">
+        UPDATE cms_channel_ext
+        SET
+        channelName = #{channelName},
+        isStaticChannel = #{isStaticChannel},
+        isStaticContent = #{isStaticContent},
+        pageSize = #{pageSize},
+        link = #{link},
+        tplChannel = #{tplChannel},
+        tplContent = #{tplContent},
+        titleImg = #{titleImg},
+        contentImg = #{contentImg},
+        hasTitleImg = #{hasTitleImg},
+        hasContentImg = #{hasContentImg},
+        titleImgWidth = #{titleImgWidth},
+        titleImgHeight = #{titleImgHeight},
+        contentImgWidth = #{contentImgWidth},
+        contentImgHeight = #{contentImgHeight},
+        commentControl = #{commentControl},
+        allowUpdown = #{allowUpdown},
+        isBlank = #{isBlank},
+        title = #{title},
+        keywords = #{keywords},
+        description = #{description},
+        txt = #{txt},
+        allowShare = #{allowShare}
+        WHERE channelId = #{channelId}
+    </update>
+
+</mapper>

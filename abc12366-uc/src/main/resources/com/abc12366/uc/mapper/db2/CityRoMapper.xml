@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.CityRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        cityId, city, provinceId
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCityList" resultType="com.abc12366.uc.model.City" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_city
+        <where>
+            1=1
+            <if test="cityId != null and cityId!=''">AND cityId = #{cityId}</if>
+        </where>
+    </select>
+
+    <!-- 查询（根据省ID查询） -->
+    <select id="selectCityByProId" resultType="com.abc12366.uc.model.City" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_city
+        <where>
+            1=1
+            <if test="provinceId != null and provinceId!=''">AND provinceId = #{provinceId}</if>
+        </where>
+    </select>
+</mapper>

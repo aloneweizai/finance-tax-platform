@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.TokenMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.Token">
+        insert into uc_token (id, appId, userId, token, lastTokenResetTime)
+        values (#{id}, #{appId}, #{userId}, #{token}, #{lastTokenResetTime})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.Token">
+        update uc_token
+        <set>
+            <if test="appId != null">appId = #{appId},</if>
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="token != null">token = #{token},</if>
+            <if test="lastTokenResetTime != null">lastTokenResetTime = #{lastTokenResetTime}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateLastTokenResetTime" parameterType="java.lang.String">
+        update uc_token
+        SET lastTokenResetTime = now()
+        where token=#{token}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_token where token=#{token}
+    </delete>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.Token">
+        select id, appId, userId, token, lastTokenResetTime
+        from uc_token
+        where userId = #{userId}
+        and appId = #{appId}
+    </select>
+
+    <select id="isAuthentication" resultType="com.abc12366.uc.model.Token" parameterType="java.lang.String">
+        select id, appId, userId, token, lastTokenResetTime
+        from uc_token
+        where token = #{token}
+    </select>
+    
+    
+    <select id="getActiveToken" resultType="com.abc12366.uc.model.Token">
+        SELECT userid,min(lastTokenResetTime) as lastTokenResetTime  
+        FROM uc_token 
+        WHERE DATE_ADD(lastTokenResetTime,INTERVAL 2 HOUR) > now() 
+        GROUP BY userid;
+    </select>
+</mapper>

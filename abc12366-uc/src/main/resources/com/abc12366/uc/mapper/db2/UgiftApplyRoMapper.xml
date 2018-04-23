@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UgiftApplyRoMapper">
+
+    <!--订单对象-->
+    <resultMap id="ugiftBOResultMap" type="com.abc12366.uc.model.gift.bo.UgiftApplyBO">
+        <result column="applyId" property="applyId" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="expressNo" property="expressNo" jdbcType="VARCHAR"/>
+        <result column="expressComp" property="expressComp" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+
+        <collection property="giftApplyBOList" ofType="com.abc12366.uc.model.gift.bo.GiftApplyBO" column="applyId"
+                    select="getGiftApplyBOList"></collection>
+        <collection property="ugiftLogBOList" ofType="com.abc12366.uc.model.gift.bo.UgiftLogBO" column="applyId"
+                    select="getUgiftLogBOList"></collection>
+    </resultMap>
+
+    <!--获取礼包申请表与礼包关联表-->
+    <resultMap id="giftApplyBOMap" type="com.abc12366.uc.model.gift.bo.GiftApplyBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="applyId" property="applyId" jdbcType="VARCHAR"/>
+        <result column="giftId" property="giftId" jdbcType="VARCHAR"/>
+        <result column="giftName" property="giftName" jdbcType="VARCHAR"/>
+        <result column="giftAmount" property="giftAmount" jdbcType="DOUBLE"/>
+        <result column="giftNum" property="giftNum" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--获取礼包申请日志-->
+    <resultMap id="ugiftLogBOMap" type="com.abc12366.uc.model.gift.bo.UgiftLogBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="applyId" property="applyId" jdbcType="VARCHAR"/>
+        <result column="action" property="action" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="adminId" property="adminId" jdbcType="VARCHAR"/>
+        <result column="adminName" property="adminName" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 applyId,	userId,	createTime,	lastUpdate,	status,	expressNo,	expressComp,	name,	phone,	address,	remark
+	</sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.gift.UgiftApply" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_ugift_apply
+        WHERE applyId = #{applyId}
+    </select>
+
+    <sql id="Base_BO_List">
+		u.applyId,	u.userId,	u.createTime,	u.lastUpdate,	u.status,	u.expressNo,	u.expressComp,	u.name,	u.phone,	u.address,	u.remark
+	</sql>
+
+    <!--获取礼包申请表与礼包关联表-->
+    <select id="getGiftApplyBOList" resultMap="giftApplyBOMap" parameterType="java.lang.String">
+        SELECT
+        id,	applyId,	giftId,	giftName,	giftAmount,giftNum
+        FROM uc_gift_apply
+        where applyId = #{applyId}
+    </select>
+    <!--获取交易记录信息-->
+    <select id="getUgiftLogBOList" resultMap="ugiftLogBOMap" parameterType="java.lang.String">
+        SELECT
+        id,	applyId,	action,	createTime,	adminId,	adminName,	remark
+        FROM uc_ugift_log
+        where applyId = #{applyId}
+        order by createTime desc
+    </select>
+
+    <!-- 查询（根据ApplyId查询） -->
+    <select id="selectByApplyId" resultMap="ugiftBOResultMap"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_BO_List"/>
+        FROM uc_ugift_apply u
+        WHERE u.applyId = #{applyId}
+    </select>
+    <!-- （查询会员礼包申请详情） -->
+    <select id="selectUgiftApplyBO" resultMap="ugiftBOResultMap"
+            parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_BO_List"/>
+        FROM uc_ugift_apply u
+        <where>
+            1 = 1
+            <if test="userId != null and userId != ''">
+                and u.userId = #{userId}
+            </if>
+            <if test="applyId != null and applyId != ''">
+                and u.applyId = #{applyId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询（根据ApplyId查询） -->
+    <select id="selectUgiftApplyList" resultMap="ugiftBOResultMap"
+            parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_BO_List"/>
+        FROM uc_ugift_apply u
+        <where>
+            1 = 1
+            <if test="userId != null and userId != ''">
+                and u.userId = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                and u.status = #{status}
+            </if>
+            <if test="name != null and name != ''">
+                and u.name = #{name}
+            </if>
+            <if test="applyId != null and applyId != ''">
+                and u.applyId = #{applyId}
+            </if>
+        </where>
+        order  by u.createTime DESC
+    </select>
+
+    <!-- 查询（待审批礼包） -->
+    <select id="getGiftStatusCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(u.applyId)
+        FROM uc_ugift_apply u where u.status = #{status}
+    </select>
+
+
+</mapper>

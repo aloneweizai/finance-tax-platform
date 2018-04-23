@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db1.UserMsgMapper">
+
+    <sql id="Base_Column">
+        id, fromUserId, toUserId, content, status, type, createTime, lastUpdate
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO msg_user_message (<include refid="Base_Column"/>) VALUES
+        (#{id}, #{fromUserId}, #{toUserId}, #{content}, #{status}, #{type}, #{createTime}, #{lastUpdate})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO msg_user_message (<include refid="Base_Column"/>) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.fromUserId}, #{item.toUserId}, #{item.content}, #{item.status}, #{item.type}, #{item.createTime}, #{item.lastUpdate})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE msg_user_message
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM msg_user_message WHERE id = #{id}
+    </delete>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        update msg_user_message
+        set status='2',lastUpdate=now()
+        where id in
+        <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

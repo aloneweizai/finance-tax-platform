@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.MenuMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.Menu">
+        INSERT INTO uc_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuId != null">
+                menuId,
+            </if>
+            <if test="menuName != null">
+                menuName,
+            </if>
+            <if test="menuUrl != null">
+                menuUrl,
+            </if>
+            <if test="parentId != null">
+                parentId,
+            </if>
+            <if test="perms != null">
+                perms,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuId!=null">
+                #{menuId},
+            </if>
+            <if test="menuName!=null">
+                #{menuName},
+            </if>
+            <if test="menuUrl!=null">
+                #{menuUrl},
+            </if>
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="perms!=null">
+                #{perms},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="icon!=null">
+                #{icon},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.admin.Menu">
+        UPDATE uc_menu
+        <set>
+            <if test="menuName != null">
+                menuName = #{menuName},
+            </if>
+            <if test="menuUrl != null">
+                menuUrl = #{menuUrl},
+            </if>
+            <if test="parentId != null">
+                parentId = #{parentId},
+            </if>
+            <if test="perms != null">
+                perms = #{perms},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+
+        </set>
+        WHERE menuId = #{menuId}
+    </update>
+
+    <delete id="delete">
+        delete from uc_menu
+        where menuId=#{menuId}
+    </delete>
+</mapper>

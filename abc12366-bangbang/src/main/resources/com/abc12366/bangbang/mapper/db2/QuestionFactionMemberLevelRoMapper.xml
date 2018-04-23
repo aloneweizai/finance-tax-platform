@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionMemberLevelRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id, code, name,	answers,	discussions,	adoptions,status,	createTime,	createAdmin,	updateTime,	updateAdmin
+	</sql>
+
+
+	<!-- 查询列表 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.question.QuestionFactionMemberLevel">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bb_question_faction_member_level
+		ORDER BY code ASC
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionMemberLevel" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_member_level
+		 WHERE id = #{id}
+	</select>
+
+
+</mapper>

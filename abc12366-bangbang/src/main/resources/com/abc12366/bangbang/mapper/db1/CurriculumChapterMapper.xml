@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumChapterMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_chapter
+		 WHERE chapterId = #{chapterId}
+	</delete>
+
+    <!--删除：根据课程ID删除-->
+    <delete id="deleteByCurriculumId" parameterType="java.lang.String">
+        DELETE FROM bb_curriculum_chapter
+        WHERE curriculumId = #{curriculumId}
+    </delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapter">
+		 INSERT INTO bb_curriculum_chapter
+ 		(chapterId,curriculumId,chapterName,chapterSeq) 
+		 VALUES 
+ 		(#{chapterId},#{curriculumId},#{chapterName},#{chapterSeq}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapter">
+		 INSERT INTO bb_curriculum_chapter
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="chapterId != null">
+				 chapterId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="chapterName != null">
+				 chapterName,
+			</if>
+			<if test="chapterSeq != null">
+				 chapterSeq,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="chapterId!=null">
+				 #{chapterId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="chapterName!=null">
+				 #{chapterName},
+			</if>
+			<if test="chapterSeq!=null">
+				 #{chapterSeq},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapter">
+		 UPDATE bb_curriculum_chapter
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+			<if test="chapterName != null">
+				 chapterName = #{chapterName},
+			</if>
+			<if test="chapterSeq != null">
+				 chapterSeq = #{chapterSeq},
+			</if>
+
+ 		 </set>
+		 WHERE chapterId = #{chapterId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapter">
+		 UPDATE bb_curriculum_chapter
+		 SET 
+			 curriculumId = #{curriculumId},
+			 chapterName = #{chapterName},
+			 chapterSeq = #{chapterSeq}
+		 WHERE chapterId = #{chapterId}
+	</update>
+
+</mapper>

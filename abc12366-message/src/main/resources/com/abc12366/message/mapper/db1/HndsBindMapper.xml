@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db1.HndsBindMapper">
+
+    <insert id="insert">
+        INSERT INTO abc12366_uc.uc_user_hnds (id,userId,username,subuser,nsrmc,nsrsbh,shxydm,swjgMc,swjgDm,status,createTime,lastUpdate,password) 
+        VALUES
+        (#{id}, #{userid},#{username}, #{subuserid}, #{nsrmc}, #{nsrsbh}, #{nsrsbh}, #{nsr_swjg_mc},#{nsr_swjg_dm}, #{status}, #{createTime}, #{lastUpdate}, #{password})
+    </insert>
+
+    
+</mapper>

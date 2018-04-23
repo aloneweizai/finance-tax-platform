@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.SubjectRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Subject_Column_List">
+        id, voteId, subject, form, required, sort, createTime, lastUpdate
+    </sql>
+
+    <!-- 通用查询结果列-->
+    <sql id="Item_Column_List">
+        id, subjectId, type, item, image, detail,status, sort
+    </sql>
+
+    <select id="selectSubjectList" parameterType="java.lang.String" resultType="com.abc12366.cms.model.Subject">
+        SELECT
+        <include refid="Subject_Column_List"/>
+        FROM cms_subject
+        WHERE voteId = #{voteId}
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectItemList" parameterType="java.lang.String" resultType="com.abc12366.cms.model.SubjectItem">
+        SELECT
+        <include refid="Item_Column_List"/>
+        FROM cms_subject_item
+        WHERE subjectId = #{subjectId}
+        ORDER BY sort ASC
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.WxMsgRoMapper">
+
+    <resultMap id="newsResultMap" type="com.abc12366.uc.model.weixin.bo.message.News">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="ArticleCount" property="articleCount" jdbcType="INTEGER"/>
+        <result column="creatDate" property="creatDate" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <collection property="articles" ofType="newsArticle" column="id" select="getArticleList"></collection>
+    </resultMap>
+
+    <resultMap id="newsArticle" type="com.abc12366.uc.model.weixin.bo.message.Article">
+        <result column="newsId" property="newsId" jdbcType="VARCHAR"/>
+        <result column="Title" property="title" jdbcType="VARCHAR"/>
+        <result column="Description" property="description" jdbcType="VARCHAR"/>
+        <result column="PicUrl" property="picUrl" jdbcType="VARCHAR"/>
+        <result column="Url" property="url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="reMsgMap" type="com.abc12366.uc.model.weixin.bo.message.ReturnMsg">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="setting" property="setting" jdbcType="VARCHAR"/>
+        <result column="keyString" property="keyString" jdbcType="VARCHAR"/>
+        <result column="msgType" property="msgType" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="mediaId" property="mediaId" jdbcType="VARCHAR"/>
+        <result column="imgurl" property="imgurl" jdbcType="VARCHAR"/>
+        <result column="newsId" property="newsId" jdbcType="VARCHAR"/>
+        <result column="searchTp" property="searchTp" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <association property="news" column="newsId" select="getNewsById"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="reMsgMap" parameterType="com.abc12366.uc.model.weixin.bo.message.ReturnMsg">
+        SELECT id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort
+        from uc_wxremsg
+        <where>
+            setting= #{setting}
+            <if test="keyString != null">and keyString = #{keyString}</if>
+            <if test="searchTp != null">and searchTp = #{searchTp}</if>
+        </where>
+    </select>
+
+    <select id="selectOneWxremsg" resultMap="reMsgMap" parameterType="java.lang.String">
+        SELECT id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort
+        from uc_wxremsg where id= #{id}
+    </select>
+
+    <select id="getReMsgOneBysetting" resultMap="reMsgMap" parameterType="java.lang.String">
+        SELECT id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort
+        from uc_wxremsg where setting= #{setting} limit 1
+    </select>
+
+    <select id="getReMsgOneBykeyString" resultMap="reMsgMap" parameterType="java.lang.String">
+        SELECT id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort
+        from uc_wxremsg where setting = 2 and ((keyString= #{keyString} and searchTp='ALL') or (keyString like CONCAT('%',#{keyString},'%') and searchTp='PART') or ( keyString = '*')) order by keyString desc,sort asc limit 1
+    </select>
+    
+    <select id="getAllkeyString" resultMap="reMsgMap">
+        SELECT id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort
+        FROM uc_wxremsg WHERE setting = 2 ORDER BY searchTp ASC
+    </select>
+
+    <select id="getNewsById" resultMap="newsResultMap" parameterType="java.lang.String">
+        SELECT id,ArticleCount,creatDate,lastUpdate
+        from uc_wxnews where id= #{id}
+    </select>
+
+    <select id="getNews" resultMap="newsResultMap" parameterType="com.abc12366.uc.model.weixin.bo.message.News">
+        SELECT id,ArticleCount,creatDate,lastUpdate
+        from uc_wxnews
+        <where>
+            1 = 1
+            <if test="id != null">and id= #{id}</if>
+        </where>
+    </select>
+
+    <select id="selectOne" resultMap="newsResultMap" parameterType="com.abc12366.uc.model.weixin.bo.message.News">
+        SELECT id,ArticleCount,creatDate,lastUpdate
+        from uc_wxnews
+        where id= #{id}
+    </select>
+
+
+    <select id="getArticleList" resultMap="newsArticle" parameterType="java.lang.String">
+        SELECT
+        newsId,Title,Description,PicUrl,Url
+        FROM uc_wxarticle
+        WHERE newsId = #{id}
+    </select>
+</mapper>

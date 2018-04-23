@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.SystemRecordRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.bangbang.model.bo.SystemRecordBO" parameterType="java.util.Map">
+        SELECT * FROM (SELECT id,userId,sessionId,browseDate,year,week,referer,month,day,hour,minute,pageTitle,pageUrl,
+        stayLong,feature,appName,ip,location,browseType,browseVersion,os,device,remark,createTime,ruleCode,nsrsbh,
+        (select username from bb_user bu where bu.id=userId) username
+        from bb_system_record_${yyyyMMdd}) t
+        <where>
+            <if test="userId!=null">
+                userId=#{userId}
+            </if>
+            <if test="appName!=null">
+                and appName=#{appName}
+            </if>
+            <if test="location!=null">
+                and location=#{location}
+            </if>
+            <if test="username!=null">
+                and username=#{username}
+            </if>
+            <if test="feature!=null">
+                and feature LIKE CONCAT('%',#{feature},'%')
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.SystemRecordBO"
+            parameterType="com.abc12366.bangbang.model.SystemRecord">
+        SELECT id,userId,sessionId,browseDate,year,week,referer,month,day,hour,minute,pageTitle,
+        pageUrl,stayLong,feature,appName,ip,location,browseType,browseVersion,os,device,remark,createTime,ruleCode,nsrsbh,
+        (select username from bb_user bu where bu.id=userId) username
+        from bb_system_record_${yyyyMMdd}
+        where id=#{id}
+    </select>
+
+    <select id="findStay" resultType="com.abc12366.bangbang.model.bo.SystemRecordBO"
+            parameterType="com.abc12366.bangbang.model.SystemRecord">
+        SELECT id,userId,sessionId,browseDate,year,week,referer,month,day,hour,minute,pageTitle,
+        pageUrl,stayLong,feature,appName,ip,location,browseType,browseVersion,os,device,remark,createTime,ruleCode,nsrsbh
+        from bb_system_record_${yyyyMMdd}
+        where userId=#{userId} and sessionId=#{sessionId} and day=#{day}
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectRecordCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(id) from bb_system_record_${yyyyMMdd}
+    </select>
+</mapper>

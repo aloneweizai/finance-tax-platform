@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentTxtMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_txt
+        WHERE contentId = #{contentId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentTxt">
+        INSERT INTO cms_content_txt
+        (contentId,txt,txt1,txt2,txt3)
+        VALUES
+        (#{contentId},#{txt},#{txt1},#{txt2},#{txt3})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentTxt">
+        INSERT INTO cms_content_txt
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="txt != null">
+                txt,
+            </if>
+            <if test="txt1 != null">
+                txt1,
+            </if>
+            <if test="txt2 != null">
+                txt2,
+            </if>
+            <if test="txt3 != null">
+                txt3,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="txt!=null">
+                #{txt},
+            </if>
+            <if test="txt1!=null">
+                #{txt1},
+            </if>
+            <if test="txt2!=null">
+                #{txt2},
+            </if>
+            <if test="txt3!=null">
+                #{txt3},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentTxt">
+        UPDATE cms_content_txt
+        <set>
+            <if test="txt != null">
+                txt = #{txt},
+            </if>
+            <if test="txt1 != null">
+                txt1 = #{txt1},
+            </if>
+            <if test="txt2 != null">
+                txt2 = #{txt2},
+            </if>
+            <if test="txt3 != null">
+                txt3 = #{txt3},
+            </if>
+
+        </set>
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentTxt">
+        UPDATE cms_content_txt
+        SET
+        txt = #{txt},
+        txt1 = #{txt1},
+        txt2 = #{txt2},
+        txt3 = #{txt3}
+        WHERE contentId = #{contentId}
+    </update>
+
+</mapper>

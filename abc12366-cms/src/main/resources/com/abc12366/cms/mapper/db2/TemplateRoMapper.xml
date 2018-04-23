@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.TemplateRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        templateId, templateName, parentPath, templatePath, isFolder, templateProperty,templateType, siteId, priority,
+        state, versions, createTime, updateTime
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Template" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_template
+        WHERE templateId = #{templateId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.TemplateBo" parameterType="java.util.Map">
+        SELECT
+        a.templateId, a.templateName, a.parentPath, a.templatePath, a.isFolder,
+        a.templateProperty,a.templateType, a.siteId, a.priority, a.state, a.versions, a.createTime,
+        a.updateTime,b.modelName,c.siteName
+        FROM cms_template a LEFT JOIN cms_model b ON a.templateProperty = b.modelId
+        LEFT JOIN cms_site c ON a.siteId = c.siteId
+        WHERE 1=1
+        <if test="templateProperty != null and templateProperty != ''">
+            AND a.templateProperty = #{templateProperty}
+        </if>
+        <if test="templateType != null and templateType != ''">
+            AND a.templateType = #{templateType}
+        </if>
+        <if test="siteId != null and siteId != ''">
+            AND a.siteId = #{siteId}
+        </if>
+        <if test="parentPath != null and parentPath != ''">
+            AND a.parentPath = #{parentPath}
+        </if>
+        <if test="isFolder != null and isFolder != ''">
+            AND a.isFolder = #{isFolder}
+        </if>
+        <if test="state != null and state != ''">
+            AND a.state = #{state}
+        </if>
+        <if test="templateName != null and templateName != ''">
+            AND a.templateName = #{templateName}
+        </if>
+    </select>
+
+</mapper>

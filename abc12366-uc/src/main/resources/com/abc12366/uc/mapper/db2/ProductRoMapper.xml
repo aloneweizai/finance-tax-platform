@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ProductRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, goodsId, marketPrice, sellingPrice, costPrice, createTime, lastUpdate,stock
+    </sql>
+
+    <resultMap type="com.abc12366.uc.model.order.bo.ProductBO" id="productResultMap">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="goodsId" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="marketPrice" property="marketPrice" jdbcType="DOUBLE"/>
+        <result column="sellingPrice" property="sellingPrice" jdbcType="DOUBLE"/>
+        <result column="costPrice" property="costPrice" jdbcType="DOUBLE"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="stock" property="stock" jdbcType="INTEGER"/>
+        <result column="goodsName" property="goodsName" jdbcType="VARCHAR"/>
+        <collection property="dictList" ofType="com.abc12366.uc.model.bo.DictBO" column="id"
+                    select="getDictBO"></collection>
+    </resultMap>
+
+    <resultMap type="com.abc12366.uc.model.bo.DictBO" id="oneDictBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="dictId" property="dictId" jdbcType="VARCHAR"/>
+        <result column="dictName" property="dictName" jdbcType="VARCHAR"/>
+        <result column="fieldKey" property="fieldKey" jdbcType="VARCHAR"/>
+        <result column="fieldValue" property="fieldValue" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="createUser" property="createUser" jdbcType="VARCHAR"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="lastUser" property="lastUser" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectSpecByGoodsId" parameterType="com.abc12366.uc.model.order.bo.ProductBO" resultMap="oneDictBO">
+        SELECT
+        d.id, d.dictId, d.dictName, d.fieldKey, d.fieldValue, d.status, d.createTime, d.createUser, d.lastUpdate,
+        d.lastUser,d.sort
+        FROM
+        ( SELECT  specId, COUNT(specId) counts FROM (
+            SELECT id FROM uc_product WHERE
+            goodsId = #{goodsId}
+        ) a
+        LEFT JOIN uc_product_spec b ON a.id = b.productId
+        GROUP BY
+        specid
+        ) c
+        LEFT JOIN uc_view_sys_dict d ON c.specId = d.id
+        WHERE
+        <![CDATA[
+                 c.counts > 0
+                ]]>
+    </select>
+
+    <select id="getDictBO" parameterType="java.lang.String" resultMap="oneDictBO">
+        SELECT
+        d.id, d.dictId, d.dictName, d.fieldKey, d.fieldValue, d.status, d.createTime, d.createUser, d.lastUpdate,
+        d.lastUser,d.sort
+        FROM uc_view_sys_dict d
+        LEFT JOIN uc_product_spec s ON s.specId = d.id
+        WHERE s.productId = #{productId}
+        order by d.createTime desc
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectById" resultType="com.abc12366.uc.model.order.Product" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_product
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID和状态查询） -->
+    <select id="selectByIdAndStatus" resultType="com.abc12366.uc.model.order.Product" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_product
+        WHERE id = #{id} and status='1'
+    </select>
+
+    <!-- 查询条件根据） -->
+    <select id="selectList" resultType="com.abc12366.uc.model.order.Product" parameterType="com.abc12366.uc.model.order.Product">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_product
+        <where>
+            1=1
+            <if test="name != null and name!=''">and name = #{name}</if>
+            <if test="category != null and category!=''">and category = #{category}</if>
+            <if test="vipLevel != null and vipLevel!=''">AND vipLevel = #{vipLevel}</if>
+        </where>
+        order by createTime desc
+    </select>
+
+    <!-- 查询条件根据） -->
+    <select id="selectByGoodsId" resultType="com.abc12366.uc.model.order.Product" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_product
+        WHERE goodsId = #{goodsId}
+    </select>
+
+    <!-- 根据goodsId查询ProductBO的List -->
+    <select id="selectBOListByGoodsId" resultMap="productResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_product
+        WHERE goodsId = #{goodsId}
+    </select>
+
+    <!-- 查询条件根据） -->
+    <select id="selectBOList" resultMap="productResultMap" parameterType="com.abc12366.uc.model.order.bo.ProductBO">
+        SELECT
+        p.id, p.goodsId, p.marketPrice, p.sellingPrice, p.costPrice, p.createTime, p.lastUpdate,p.stock,g.name as
+        goodsName
+        FROM uc_product p
+        LEFT JOIN uc_goods g ON g.id = p.goodsId
+        <where>
+            1=1
+            <if test="goodsName != null  and goodsName!=''">AND g.name LIKE CONCAT('%',#{goodsName},'%')</if>
+            <if test="startRepo != null">
+                <![CDATA[
+                  AND p.stock >= #{startRepo}
+                ]]>
+            </if>
+            <if test="endRepo != null">
+                <![CDATA[
+                  AND p.stock <= #{endRepo}
+                ]]>
+            </if>
+        </where>
+        order by p.createTime desc
+    </select>
+    <!-- 查询条件根据） -->
+    <select id="selectBOById" resultMap="productResultMap" parameterType="java.lang.String">
+        SELECT
+        p.id, p.goodsId, p.marketPrice, p.sellingPrice, p.costPrice, p.createTime, p.lastUpdate,p.stock,g.name as
+        goodsName
+        FROM uc_product p
+        LEFT JOIN uc_goods g ON g.id = p.goodsId
+        where p.id = #{id}
+    </select>
+
+</mapper>

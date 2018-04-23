@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionLevelMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_level
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionLevel">
+		 INSERT INTO bb_question_faction_level
+ 		(id, code, name,image,	honorValue,peopleLimit,taskLimit,status,createTime,createAdmin,updateTime,updateAdmin)
+		 VALUES 
+ 		(#{id}, #{code}, #{name}, #{image},#{honorValue},#{peopleLimit},#{taskLimit},#{status},now(),#{createAdmin},now(),#{updateAdmin})
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionLevel">
+		 UPDATE bb_question_faction_level
+ 		 <set> 
+			<if test="name != null">
+				 name = #{name},
+			</if>
+			<if test="code != null">
+				 code = #{code},
+			</if>
+			<if test="image != null">
+				image = #{image},
+			</if>
+			 <if test="honorValue != null">
+				 honorValue = #{honorValue},
+			 </if>
+			 <if test="peopleLimit != null">
+				 peopleLimit = #{peopleLimit},
+			 </if>
+			 <if test="taskLimit != null">
+				 taskLimit = #{taskLimit},
+			 </if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin = #{updateAdmin},
+			</if>
+			 updateTime = now()
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+
+</mapper>

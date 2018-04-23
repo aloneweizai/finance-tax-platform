@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumEvaluateRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 evaluateId,	curriculumId,	grade,	studyFeel,	userId,	evaluateTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumEvaluate" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_evaluate
+		 WHERE evaluateId = #{evaluateId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumEvaluateBo" parameterType="java.util.Map">
+        SELECT
+          evaluateId,	curriculumId,	grade,	studyFeel,	userId,nickname,userPicturePath,evaluateTime
+        FROM bb_curriculum_evaluate e LEFT JOIN bb_user u ON e.userId = u.id
+        WHERE 1=1
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectListBycurrId" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumEvaluateBo" parameterType="java.util.Map">
+        SELECT
+          evaluateId,	curriculumId,	grade,	studyFeel,	userId,nickname,userPicturePath,evaluateTime
+        FROM bb_curriculum_evaluate e LEFT JOIN bb_user u ON e.userId = u.id
+        WHERE 1=1
+        <if test="grade == 1">
+            AND grade in(4,5)
+        </if>
+        <if test="grade == 2">
+            AND grade in(2,3)
+        </if>
+        <if test="grade == 3">
+            AND grade = 1
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+        ORDER BY e.evaluateTime DESC
+    </select>
+
+    <!-- 查询评价次数 -->
+    <select id="selectEvaluateCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(evaluateId)
+        FROM bb_curriculum_evaluate
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+
+
+</mapper>

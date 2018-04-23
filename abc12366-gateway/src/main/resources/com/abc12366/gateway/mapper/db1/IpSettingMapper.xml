@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.IpSettingMapper">
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.gateway.model.IpSetting">
+        UPDATE gw_ip_setting
+        <set>
+            <if test="setTime != null">
+                setTime = #{setTime},
+            </if>
+            <if test="sameThreshold != null">
+                sameThreshold = #{sameThreshold},
+            </if>
+            <if test="distinctThreshold != null">
+                distinctThreshold = #{distinctThreshold},
+            </if>
+            <if test="disableTime != null">
+                disableTime = #{disableTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

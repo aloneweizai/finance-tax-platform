@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionTagRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	factionId,	tagId
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionTag" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_tag
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.QuestionFactionTag" parameterType="java.lang.String">
+        SELECT
+            f.id,	f.factionId,	f.tagId,k.name tagName
+        FROM bb_question_faction_tag f LEFT JOIN bb_knowledge_tag k ON f.tagId = k.id
+        WHERE factionId = #{factionId}
+    </select>
+
+</mapper>

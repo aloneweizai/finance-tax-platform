@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.AdminRoMapper">
+
+    <resultMap id="userBoResultMap" type="com.abc12366.uc.model.admin.bo.AdminBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="orgId" property="orgId" jdbcType="VARCHAR"/>
+        <result column="orgName" property="orgName" jdbcType="VARCHAR"/>
+        <result column="job" property="job" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <collection property="rolesList" ofType="com.abc12366.uc.model.admin.Role">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="roleName"/>
+            <result column="rStatus" property="status"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, username, password, nickname, status, createTime, lastUpdate
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.admin.Admin" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_admin
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="selectList" resultMap="userBoResultMap" parameterType="com.abc12366.uc.model.admin.bo.AdminBO">
+        SELECT
+        t.id,
+        t.username,
+        t.nickname,
+        t.status,
+        t.createTime,
+        t.lastUpdate,
+        e.userId,
+        e.job,
+        e.phone,
+        e.address,
+        e.orgId,
+        s.name AS orgName
+        FROM
+        uc_admin t
+        LEFT JOIN uc_admin_extend e ON e.userId = t.id
+        LEFT JOIN uc_organization s ON s.id = e.orgId
+        <where>
+            1=1
+            <if test="username != null and username!=''">and t.username = #{username}</if>
+            <if test="phone != null and phone!=''">and e.phone = #{phone}</if>
+            <if test="nickname != null and nickname!=''">and t.nickname = #{nickname}</if>
+            <if test="status != null">AND t.status = #{status}</if>
+            <if test="organizationId != null and organizationId!=''">AND e.orgId = #{organizationId}</if>
+        </where>
+        order by t.username+0 asc,t.lastUpdate DESC
+    </select>
+
+    <!--查询单个用户及权限-->
+    <select id="selectOne" resultMap="userBoResultMap" parameterType="java.lang.String">
+        SELECT
+        t.id,
+        t.username,
+        t.password,
+        t.nickname,
+        t.status,
+        t.createTime,
+        t.lastUpdate,
+        e.userId,
+        e.job,
+        e.phone,
+        e.address,
+        e.orgId,
+        s.name AS orgName,
+        o.id AS roleId,
+        o.roleName AS roleName
+        FROM
+        uc_admin t
+        LEFT JOIN uc_user_role r ON t.id = r.userId
+        LEFT JOIN uc_role o ON r.roleId = o.id
+        LEFT JOIN uc_admin_extend e ON e.userId = t.id
+        LEFT JOIN uc_organization s ON s.id = e.orgId
+        <where>
+            t.id = #{id}
+        </where>
+    </select>
+
+    <select id="selectUserBOByLoginName" resultMap="userBoResultMap" parameterType="java.lang.String">
+        SELECT
+        t.id,
+        t.username,
+        t.password,
+        t.nickname,
+        t.status,
+        t.createTime,
+        t.lastUpdate,
+        e.userId,
+        e.job,
+        e.phone,
+        e.address,
+        e.orgId,
+        s.name AS orgName,
+        o.id AS roleId,
+        o.roleName AS roleName,
+        o.status as rStatus
+        FROM
+        uc_admin t
+        LEFT JOIN uc_user_role r ON t.id = r.userId
+        LEFT JOIN uc_role o ON r.roleId = o.id
+        LEFT JOIN uc_admin_extend e ON e.userId = t.id
+        LEFT JOIN uc_organization s ON s.id = e.orgId
+        <where>
+            t.username = #{username}
+        </where>
+    </select>
+
+    <!--	<select id="selectUserByLoginName" resultType="Admin" parameterType="java.lang.String">
+            select
+            <include refid="Base_Column_List"/>
+            from uc_admin
+            where username = #{username}
+        </select>-->
+
+    <select id="selectUserById" resultType="com.abc12366.uc.model.admin.Admin" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_admin
+        where id = #{id}
+    </select>
+
+    <select id="selectUserBoById" resultMap="userBoResultMap" parameterType="java.lang.String">
+        SELECT
+        t.id,
+        t.username,
+        t.password,
+        t.nickname,
+        t.status,
+        t.createTime,
+        t.lastUpdate,
+        o.id AS roleId,
+        o.roleName AS roleName
+        FROM
+        uc_admin t
+        LEFT JOIN uc_user_role r ON t.id = r.userId
+        LEFT JOIN uc_role o ON r.roleId = o.id
+        <where>
+            t.id = #{id}
+        </where>
+    </select>
+
+    <select id="selectAdminByOrgId" resultMap="userBoResultMap" parameterType="java.lang.String">
+        SELECT
+        t.id, t.username, t.password,
+        t.nickname,  t.status, t.createTime, t.lastUpdate, e.userId,
+        e.job, e.phone, e.address, e.orgId, s.name AS orgName
+        FROM
+        uc_admin t
+        LEFT JOIN uc_admin_extend e ON e.userId = t.id
+        LEFT JOIN uc_organization s ON s.id = e.orgId
+        where t.status = true and e.orgId = #{orgId}
+    </select>
+
+</mapper>

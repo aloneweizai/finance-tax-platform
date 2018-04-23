@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumEvaluateMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_evaluate
+		 WHERE evaluateId = #{evaluateId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumEvaluate">
+		 INSERT INTO bb_curriculum_evaluate
+ 		(evaluateId,curriculumId,grade,studyFeel,userId,evaluateTime) 
+		 VALUES 
+ 		(#{evaluateId},#{curriculumId},#{grade},#{studyFeel},#{userId},#{evaluateTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumEvaluate">
+		 INSERT INTO bb_curriculum_evaluate
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="evaluateId != null">
+				 evaluateId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="grade != null">
+				 grade,
+			</if>
+			<if test="studyFeel != null">
+				 studyFeel,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="evaluateTime != null">
+				 evaluateTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="evaluateId!=null">
+				 #{evaluateId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="grade!=null">
+				 #{grade},
+			</if>
+			<if test="studyFeel!=null">
+				 #{studyFeel},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="evaluateTime!=null">
+				 #{evaluateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumEvaluate">
+		 UPDATE bb_curriculum_evaluate
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+			<if test="grade != null">
+				 grade = #{grade},
+			</if>
+			<if test="studyFeel != null">
+				 studyFeel = #{studyFeel},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="evaluateTime != null">
+				 evaluateTime = #{evaluateTime},
+			</if>
+
+ 		 </set>
+		 WHERE evaluateId = #{evaluateId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumEvaluate">
+		 UPDATE bb_curriculum_evaluate
+		 SET 
+			 curriculumId = #{curriculumId},
+			 grade = #{grade},
+			 studyFeel = #{studyFeel},
+			 userId = #{userId},
+			 evaluateTime = #{evaluateTime}
+		 WHERE evaluateId = #{evaluateId}
+	</update>
+
+</mapper>

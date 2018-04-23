@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrderGiftRoMapper">
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,	giftId,operSymbol,	operType,	operValue
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectById" resultType="com.abc12366.uc.model.order.OrderGift" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM uc_order_gift
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByOrderNo" resultType="com.abc12366.uc.model.order.bo.OrderGiftBO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM uc_order_gift
+		WHERE giftId = #{giftId}
+	</select>
+
+	<select id="selectCurriculumGift" resultType="com.abc12366.uc.model.order.OrderGift" parameterType="java.lang.String">
+		SELECT
+		id,	giftId,operSymbol,	operType,	operValue
+		FROM abc12366_bangbang.bb_curriculum_gift
+		WHERE id = #{id}
+	</select>
+</mapper>

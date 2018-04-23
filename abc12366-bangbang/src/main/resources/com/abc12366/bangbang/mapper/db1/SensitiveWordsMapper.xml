@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.SensitiveWordsMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_sensitive_words
+        WHERE id = #{id}
+    </delete>
+
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.SensitiveWords">
+        INSERT INTO bb_sensitive_words
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="keywords != null">
+                keywords,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="updateAdmin != null">
+                updateAdmin,
+            </if>
+            updateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="keywords!=null">
+                #{keywords},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="updateAdmin!=null">
+                #{updateAdmin},
+            </if>
+            now()
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.bangbang.model.SensitiveWords">
+        UPDATE bb_sensitive_words
+        <set>
+            <if test="keywords != null">
+                keywords = #{keywords},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateAdmin != null">
+                updateAdmin = #{updateAdmin},
+            </if>
+            updateTime = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

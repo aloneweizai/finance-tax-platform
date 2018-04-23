@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrderProductRoMapper">
+
+    <sql id="Base_Column_List">
+        orderNo,	goodsPrice,	num,	dealPrice,	name,	categoryId,	category,	weight,	createTime,	lastUpdate,	productId,	goodsId,	specInfo,	isReturn,	isExchange,	imageUrl,	goodsType,	browseUrl,	tradingChannels
+    </sql>
+
+    <resultMap type="com.abc12366.uc.model.order.bo.OrderProductBO" id="orderProductRoMap">
+        <id column="orderNo" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="productId" property="productId" jdbcType="VARCHAR"/>
+        <result column="goodsPrice" property="goodsPrice" jdbcType="DOUBLE"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="dealPrice" property="dealPrice" jdbcType="DOUBLE"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="categoryId" property="categoryId" jdbcType="VARCHAR"/>
+        <result column="category" property="category" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="DOUBLE"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="goodsId" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="specInfo" property="specInfo" jdbcType="VARCHAR"/>
+        <result column="isReturn" property="isReturn" jdbcType="VARCHAR"/>
+        <result column="isExchange" property="isExchange" jdbcType="VARCHAR"/>
+        <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="goodsType" property="goodsType" jdbcType="VARCHAR"/>
+        <result column="browseUrl" property="browseUrl" jdbcType="VARCHAR"/>
+        <result column="tradingChannels" property="tradingChannels" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.OrderProduct" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_order_product
+        WHERE orderNo = #{orderNo}
+    </select>
+
+    <select id="selectByProductId" resultType="com.abc12366.uc.model.order.OrderProduct" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_order_product
+        WHERE productId = #{productId}
+    </select>
+
+    <select id="selectByOrderNo" resultMap="orderProductRoMap" parameterType="com.abc12366.uc.model.order.bo.OrderProductBO">
+        SELECT
+        op.orderNo,	op.goodsPrice,	op.num,	op.dealPrice,	op.name,	op.categoryId,	op.category,	op.weight,	op.createTime,	op.lastUpdate,	op.productId,	op.goodsId,
+        op.specInfo,	op.isReturn,	op.isExchange,	op.imageUrl,	op.goodsType,	op.browseUrl,	op.tradingChannels
+        FROM uc_order_product op
+        WHERE op.orderNo = #{orderNo}
+    </select>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionLikeMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.util.Map">
+        DELETE FROM bb_question_like
+        WHERE id = #{id} and userId = #{userId}
+    </delete>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_like
+		 WHERE likeId = #{likeId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionLike">
+		 INSERT INTO bb_question_like
+ 		(likeId,id,questionId,likeType,likeTarget,userId,toUserId,likeTime,factionId)
+		 VALUES 
+ 		(#{likeId},#{id},#{questionId},#{likeType},#{likeTarget},#{userId},#{toUserId},#{likeTime},#{factionId})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionLike">
+		 INSERT INTO bb_question_like
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="likeId != null">
+				 likeId,
+			</if>
+			<if test="id != null">
+				 id,
+			</if>
+             <if test="questionId != null">
+                 questionId,
+             </if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="likeTime != null">
+				 likeTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="likeId!=null">
+				 #{likeId},
+			</if>
+			<if test="id!=null">
+				 #{id},
+			</if>
+             <if test="questionId!=null">
+                 #{questionId},
+             </if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="likeTime!=null">
+				 #{likeTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionLike">
+		 UPDATE bb_question_like
+ 		 <set> 
+			<if test="id != null">
+				 id = #{id},
+			</if>
+             <if test="questionId != null">
+                 questionId = #{questionId},
+             </if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="likeTime != null">
+				 likeTime = #{likeTime},
+			</if>
+
+ 		 </set>
+		 WHERE likeId = #{likeId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionLike">
+		 UPDATE bb_question_like
+		 SET 
+			 id = #{id},
+			 questionId = #{questionId},
+			 userId = #{userId},
+			 likeTime = #{likeTime}
+		 WHERE likeId = #{likeId}
+	</update>
+
+</mapper>

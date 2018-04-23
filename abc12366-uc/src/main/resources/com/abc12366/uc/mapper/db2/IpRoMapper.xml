@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.IpRoMapper">
+    <select id="selectOne" parameterType="java.lang.String" resultType="com.abc12366.uc.model.Ip">
+        SELECT id,ip,country,countryId,area,areaId,region,regionId,city,cityId,county,countyId,
+        isp,ispId,createTime,updateTime
+        FROM uc_ip
+        WHERE ip = #{ip} order by createTime desc limit 1
+    </select>
+</mapper>

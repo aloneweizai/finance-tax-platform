@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db2.HndsBindRoMapper">
+      
+      <select id="findHndsBind" resultType="long" parameterType="java.util.Map">
+        SELECT count(userId) FROM abc12366_uc.uc_user_hnds
+        where userId=#{userid} and nsrsbh=#{nsrsbh} and status = 1
+        <if test="subuserid!=null">
+            and subuser=#{subuserid}
+        </if>
+      </select>
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ExperienceRoMapper">
+
+    <select id="getMyExperience" resultType="com.abc12366.uc.model.bo.MyExperienceBO" parameterType="java.lang.String">
+        SELECT uu.exp exp,
+        (select sum(uul.income) incomeMonth from uc_uexp_log uul where uul.userId=uu.id and uul.createTime &gt;=(SELECT
+        DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND uul.createTime &lt; (SELECT DATE_ADD(CURDATE() -
+        DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) incomeMonth,
+        (select sum(uul.outgo) outgoMonth from uc_uexp_log uul where uul.userId=uu.id and uul.createTime &gt;=(SELECT
+        DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND uul.createTime &lt; (SELECT DATE_ADD(CURDATE() -
+        DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) outgoMonth,
+        (select sum(uul.income) incomeYear from uc_uexp_log uul where uul.userId=uu.id and uul.createTime &gt;=(SELECT
+        DATE_SUB(CURDATE(),INTERVAL DAYOFYEAR(NOW())-1 DAY)) and uul.createTime &lt; (SELECT
+        CONCAT(YEAR(NOW())+1,'-01-01'))) incomeYear,
+        (select sum(uul.outgo) outgoYear from uc_uexp_log uul where uul.userId=uu.id and uul.createTime &gt;=(SELECT
+        DATE_SUB(CURDATE(),INTERVAL DAYOFYEAR(NOW())-1 DAY)) and uul.createTime &lt; (SELECT
+        CONCAT(YEAR(NOW())+1,'-01-01'))) outgoYear,
+        (select uul.medalIcon from uc_uexp_level uul where uul.status='1' and uu.exp &gt;= uul.minValue and uu.exp &lt;= uul.maxValue limit 1 ) medalIcon,
+        (SELECT uul.minValue FROM uc_uexp_level uul WHERE uul.minValue>uu.exp ORDER BY uul.minValue ASC LIMIT 1 ) nextLevelExp,
+        (select uul.medal from uc_uexp_level uul where uul.status='1' and uu.exp &gt;= uul.minValue and uu.exp &lt;= uul.maxValue limit 1 ) medal,
+        (select uul.name from uc_uexp_level uul where uul.status='1' and uu.exp &gt;= uul.minValue and uu.exp &lt;= uul.maxValue limit 1 ) expLevel
+        from uc_user uu
+        where uu.id=#{userId}
+    </select>
+
+    <select id="codexList" resultType="com.abc12366.uc.model.bo.ExpCodex" >
+        select id,uexpruleId,clientType,uri,uexp,period,degree,remark
+        from uc_uexp_codex
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.ExpCodex" parameterType="com.abc12366.uc.model.bo.ExpComputeBO">
+        select id,uexpruleId,clientType,uexp,period,degree,remark
+        from uc_uexp_codex
+        where uri=#{uri}
+        and clientType=#{clientType}
+    </select>
+
+    <select id="selectExpComputeLog" resultType="com.abc12366.uc.model.bo.ExpComputeLog" parameterType="com.abc12366.uc.model.bo.ExpComputeLogParam">
+        select id,userId,uexpCodexId,timeType,createTime
+        from uc_uexp_compute_log
+        where userId=#{userId}
+        and uexpCodexId=#{uexpCodexId}
+        and timeType=#{timeType}
+        and createTime &gt;= #{starTime}
+        and createTime &lt; #{endTime}
+    </select>
+
+    <select id="selectCalculateLog" resultType="com.abc12366.uc.model.bo.ExpComputeLog" parameterType="com.abc12366.uc.model.bo.ExpComputeLogParam">
+        select id,userId,uexpCodexId,timeType,createTime
+        from uc_uexp_compute_log
+        where userId=#{userId}
+        and timeType=#{timeType}
+        and ruleId = #{ruleId}
+        and createTime &gt;= #{starTime}
+        and createTime &lt; #{endTime}
+    </select>
+
+</mapper>

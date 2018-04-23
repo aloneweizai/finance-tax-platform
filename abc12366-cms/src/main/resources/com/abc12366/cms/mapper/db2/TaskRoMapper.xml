@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.TaskRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        taskId, taskCode, taskType, taskName, jobClass, execycle, dayOfMonth, dayOfWeek, hour, minute, intervalHour,
+        intervalMinute, taskIntervalUnit, cronExpression, isEnable, taskRemark, siteId, userId, createTime
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Task" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_task
+        WHERE taskId = #{taskId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.TaskBo" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_task
+        WHERE 1=1
+        <if test="isEnable != null and isEnable != ''">
+            AND isEnable = #{isEnable}
+        </if>
+        ORDER BY createTime DESC
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCnt" resultType="java.lang.Integer" parameterType="com.abc12366.cms.model.bo.TaskBo">
+        SELECT
+        count(taskId) cnt
+        FROM cms_task
+        WHERE 1=1
+        <if test="taskName != null and taskName != ''">
+            AND taskName = #{taskName}
+        </if>
+        <if test="taskId != null and taskId != ''">
+            AND taskId != #{taskId}
+        </if>
+        <if test="taskType != null and taskType != ''">
+            AND taskType = #{taskType}
+        </if>
+        <if test="siteId != null and siteId != ''">
+            AND siteId = #{siteId}
+        </if>
+        ORDER BY createTime DESC
+    </select>
+
+
+</mapper>

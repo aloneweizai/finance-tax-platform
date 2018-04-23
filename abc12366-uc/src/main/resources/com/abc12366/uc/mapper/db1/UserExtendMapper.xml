@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.UserExtendMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.UserExtend">
+        insert into uc_user_extend (userId,signature,sex,birthday,bloodType,weight,height,marital, education,graduate,
+        occupation,income,postAddress,realName, weixin,qq,safeQuestion,safeAnswer,province,city,area,createTime,
+        lastUpdate,tags,idcard,frontImage,backImage,startTime,endTime,validStatus,validTime,remark,careerDuration, validType)
+        values (#{userId}, #{signature}, #{sex},#{birthday}, #{bloodType}, #{weight}, #{height}, #{marital},
+        #{education}, #{graduate}, #{occupation}, #{income}, #{postAddress}, #{realName}, #{weixin}, #{qq},
+        #{safeQuestion}, #{safeAnswer}, #{province}, #{city}, #{area}, #{createTime}, #{lastUpdate}, #{tags}, #{idcard},
+        #{frontImage}, #{backImage}, #{startTime}, #{endTime}, #{validStatus}, #{validTime}, #{remark},
+        #{careerDuration},#{validType})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.UserExtend">
+        update uc_user_extend
+        <set>
+            <if test="signature != null">signature = #{signature},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="bloodType != null">bloodType = #{bloodType},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="marital != null">marital = #{marital},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="graduate != null">graduate = #{graduate},</if>
+            <if test="occupation != null">occupation = #{occupation},</if>
+            <if test="income != null">income = #{income},</if>
+            <if test="postAddress != null">postAddress = #{postAddress},</if>
+            <if test="realName != null">realName = #{realName},</if>
+            <if test="weixin != null">weixin = #{weixin},</if>
+            <if test="qq != null">qq = #{qq},</if>
+            <if test="safeQuestion != null">safeQuestion = #{safeQuestion},</if>
+            <if test="safeAnswer != null">safeAnswer = #{safeAnswer},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="frontImage != null">frontImage = #{frontImage},</if>
+            <if test="backImage != null">backImage = #{backImage},</if>
+            <if test="startTime != null">startTime = #{startTime},</if>
+            <if test="endTime != null">endTime = #{endTime},</if>
+            <if test="validStatus != null">validStatus = #{validStatus},</if>
+            <if test="validTime != null">validTime = #{validTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="careerDuration != null">careerDuration = #{careerDuration},</if>
+            <if test="validType != null">validType = #{validType}</if>
+        </set>
+        where userId=#{userId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_user_extend
+        where userId=#{userId}
+    </delete>
+    
+    <select id="selectOne" resultType="com.abc12366.uc.model.UserExtend">
+        select userId,signature,sex,birthday,bloodType,weight,height,marital, education,graduate,
+        occupation,income,postAddress,insert(realName, 1, 1, '*') realName, weixin,qq,safeQuestion,safeAnswer,province,city,area,createTime,
+        lastUpdate,tags,insert(idcard, 7, 8, '******') idcard,
+        frontImage,backImage,startTime,endTime,validStatus,validTime,remark,careerDuration,validType
+        from uc_user_extend
+        where userId = #{userId}
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.UserExtendListBO" parameterType="java.util.Map">
+        SELECT userId, signature, sex, birthday, bloodType, weight, height, marital, education, graduate,
+        occupation, income, postAddress, realName, weixin, qq, safeQuestion, safeAnswer, province, city,
+        area, createTime, lastUpdate, tags, idcard, frontImage, backImage, startTime, endTime, validStatus,
+        validTime, remark, careerDuration,validType
+        FROM uc_user_extend
+        <where>
+            <if test="userId != null and userId != ''">
+                userId = #{userId}
+            </if>
+            <if test="realName != null and realName != ''">
+                and realName = #{realName}
+            </if>
+            <if test="validStatus != null and validStatus != ''">
+                and validStatus = #{validStatus}
+            </if>
+            <if test="validType != null and validType != ''">
+                and validType = #{validType}
+            </if>
+        </where>
+        order by lastUpdate desc
+    </select>
+
+    <select id="isRealName" resultType="com.abc12366.uc.model.UserExtend" parameterType="java.lang.String">
+        select validStatus from uc_user_extend where userId =#{userId}
+    </select>
+
+    <select id="selectOneForAdmin" resultType="com.abc12366.uc.model.UserExtend">
+        select userId,signature,sex,birthday,bloodType,weight,height,marital, education,graduate,
+        occupation,income,postAddress,realName, weixin,qq,safeQuestion,safeAnswer,province,city,area,createTime,
+        lastUpdate,tags,idcard,
+        frontImage,backImage,startTime,endTime,validStatus,validTime,remark,careerDuration,validType
+        from uc_user_extend
+        where userId = #{userId}
+    </select>
+    
+    <select id="selectTodoListCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM uc_user_extend
+        WHERE validStatus = '1'
+    </select>
+</mapper>

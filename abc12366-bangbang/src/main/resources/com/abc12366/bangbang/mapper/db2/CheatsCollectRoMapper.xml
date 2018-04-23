@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CheatsCollectRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	cheatsId,	userId,	collectTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.CheatsCollect" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_cheats_collect
+		 WHERE collectId = #{collectId}
+	</select>
+
+    <!-- 查询（我的收藏） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.lang.String">
+        SELECT
+        q.id,	q.userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	classifyCode,	browseNum, isRecommend,
+        q.collectNum
+        FROM bb_cheats_collect c left join bb_cheats q on c.cheatsId = q.id left join bb_user u on q.userId = u.id
+        where c.userId = #{userId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectExist" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(collectId)
+        FROM bb_cheats_collect
+        WHERE cheatsId = #{cheatsId} and userId = #{userId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCollectCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(collectId)
+        FROM bb_cheats_collect
+        WHERE cheatsId = #{cheatsId}
+    </select>
+
+</mapper>

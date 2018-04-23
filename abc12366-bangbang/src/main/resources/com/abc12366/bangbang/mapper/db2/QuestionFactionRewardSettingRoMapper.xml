@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionRewardSettingRoMapper">
+
+    <!-- 查询帮派奖励分配 -->
+    <select id="selectFactionRewardSettingList"
+            resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionRewardSettingBo"
+            parameterType="com.abc12366.bangbang.model.question.bo.QuestionFactionRewardSettingParamBo">
+        SELECT * FROM (
+            SELECT
+                t.*, t1.factionName, t1.awardPoint AS totalPoints,
+                (SELECT nickname FROM abc12366_uc.uc_user WHERE id = t1.userId) leaderName,
+                (SELECT GROUP_CONCAT(classifyName) FROM bb_question_classify WHERE classifyCode IN (SELECT classifyId FROM bb_question_faction_classify WHERE factionId = t.factionId)) classifyname,
+                (SELECT COUNT(1) FROM bb_question_faction_member WHERE factionId = t.factionId) AS memberCnt,
+                IF(t_log.id IS NULL, FALSE, TRUE) status,
+                IF(t_log.id IS NULL, NULL, t_log.updateTime) rewardDate,
+                IF(t_log.id IS NULL, NULL, t_log.rewardsPoints) rewardsPoints
+            FROM
+                (SELECT honorTime AS DATE, factionId, honor
+                    FROM bb_question_faction_honor e1
+                    WHERE
+                    (
+                    SELECT COUNT(1)
+                    FROM bb_question_faction_honor e2
+                    WHERE e2.honorTime=e1.honorTime AND e2.honor>=e1.honor
+                    ) &lt;=
+                    <choose>
+                        <when test="factionNumOfMonth != null and factionNumOfMonth != ''">
+                            #{factionNumOfMonth}
+                        </when>
+                        <otherwise>
+                            5
+                        </otherwise>
+                    </choose>
+                  ORDER BY honorTime DESC, honor DESC)
+            t
+            JOIN bb_question_faction t1 ON t.factionId = t1.factionId
+            LEFT JOIN bb_question_faction_reward_setting t_log ON t_log.factionId = t.factionId AND t_log.date = t.date
+        )
+        temp
+        WHERE 1=1
+        <if test="factionName != null and factionName != ''">
+            AND factionName LIKE CONCAT('%',#{factionName},'%')
+        </if>
+        <if test="date != null and date != ''">
+            AND date = #{date}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:crypt="http://code.google.com/p/spring-crypto-utils/schema/crypt"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.google.com/p/spring-crypto-utils/schema/crypt http://code.google.com/p/spring-crypto-utils/schema/crypt.xsd">
+
+    <crypt:keystore id="keystore" location="classpath:tdps.jks" password="hnabc4000"/>
+    <crypt:privateKey id="privateKey" keystore-ref="keystore" alias="tdps" password="hnabc4000"/>
+    <crypt:publicKey id="publicKey" keystore-ref="keystore" alias="tdps"/>
+    <crypt:publicKey id="jmmPublicKey" keystore-ref="keystore" alias="jmm"/>
+
+    <crypt:b64AsymmetricCipherer id="b64AsymmetricEncrypter" algorithm="RSA" mode="ENCRYPT" key-ref="publicKey"/>
+    <crypt:b64AsymmetricCipherer id="jmmB64AsymmetricEncrypter" algorithm="RSA" mode="ENCRYPT" key-ref="jmmPublicKey"/>
+    <crypt:b64AsymmetricCipherer id="b64AsymmetricDecrypter" algorithm="RSA" mode="DECRYPT" key-ref="privateKey"/>
+
+    <crypt:asymmetricCipherer id="asymmetricDecrypter" algorithm="RSA" mode="DECRYPT" key-ref="privateKey"/>
+
+    <crypt:symmetricCipherer id="symmetricEncrypter" keyAlgorithm="DES" cipherAlgorithm="DES/CBC/PKCS7Padding"  mode="ENCRYPT"/>
+    <crypt:symmetricCipherer id="symmetricDecrypter" keyAlgorithm="DES" cipherAlgorithm="DES/CBC/PKCS7Padding" mode="DECRYPT"/>
+    <crypt:b64SymmetricKeyGenerator id="symmetricKeyGenerator" algorithm="DES"/>
+
+    <crypt:b64Signer id="b64Signer" privateKey-ref="privateKey" algorithm="SHA1withRSA"/>
+    <crypt:digester id="digester" algorithm="MD5" outputMode="BASE64"/>
+</beans>

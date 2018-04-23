@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionLogMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_log
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionLog">
+		 INSERT INTO bb_question_log
+ 		(id,userId,attentionUserId,qcId,answerId,sourceId,qlogType,bbType,commentTxt,createTime)
+		 VALUES 
+ 		(#{id},#{userId},#{attentionUserId},#{qcId},#{answerId},#{sourceId},#{qlogType},#{bbType},#{commentTxt},#{createTime})
+	</insert>
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.ChannelRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        channelId,channelName,contentType, modelId, siteId, parentId, channelPath, priority, isDisplay
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Channel" parameterType="java.lang.String">
+        SELECT
+        a.channelId,a.channelName,a.contentType, a.modelId, a.siteId, a.parentId, a.channelPath, a.priority,
+        a.isDisplay,b.sitePath,b.domain
+        FROM cms_channel a LEFT JOIN cms_site b ON a.siteId = b.siteId
+        WHERE a.channelId = #{channelId}
+    </select>
+
+    <!-- 查询（根据查询条件查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.Channel" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_channel order by priority
+    </select>
+
+    <!-- 查询（根据查询条件查询） -->
+    <select id="selectLists" resultType="com.abc12366.cms.model.bo.ChannelBo" parameterType="java.lang.String">
+        SELECT
+        t.channelId,t.channelName, t.modelId, t.siteId, t.parentId, t.channelPath, t.priority, t.isDisplay,
+        (select count(*) cnt from cms_content where channelId like CONCAT(t.channelId,'%'))
+        cnt,b.link,b.titleImg,c.sitePath,c.domain
+        FROM cms_channel t LEFT JOIN cms_channel_ext b ON t.channelId = b.channelId LEFT JOIN cms_site c ON t.siteId =
+        c.siteId
+        WHERE 1=1
+        <if test="channelId != null and channelId != ''">
+            AND t.channelId like CONCAT(#{channelId},'%')
+        </if>
+        <if test="channelName != null and channelName != ''">
+            AND t.channelName like CONCAT('%',#{channelName},'%')
+        </if>
+        <if test="parentId != null and parentId != ''">
+            AND t.parentId = #{parentId}
+        </if>
+        <if test="siteId != null and siteId != ''">
+            AND t.siteId = #{siteId}
+        </if>
+        <if test="isDisplay != null and isDisplay != ''">
+            AND t.isDisplay = #{isDisplay}
+        </if>
+        order by priority
+    </select>
+
+    <!-- 查询（根据查询条件查询） -->
+    <select id="selectListByparentId" resultType="com.abc12366.cms.model.Channel" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_channel
+        WHERE parentId = #{parentId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectChannelIdCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(channelId) cnt
+        FROM cms_channel
+        WHERE channelId = #{channelId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectChannelPathCnt" resultType="java.lang.Integer"
+            parameterType="com.abc12366.cms.model.bo.ChannelBo">
+        SELECT
+        count(channelId) cnt
+        FROM cms_channel
+        WHERE 1=1
+        <if test="channelPath != null and channelPath != ''">
+            AND channelPath = #{channelPath}
+        </if>
+        <if test="siteId != null and siteId != ''">
+            AND siteId = #{siteId}
+        </if>
+        <if test="channelId != null and channelId != ''">
+            AND channelId != #{channelId}
+        </if>
+    </select>
+
+
+</mapper>

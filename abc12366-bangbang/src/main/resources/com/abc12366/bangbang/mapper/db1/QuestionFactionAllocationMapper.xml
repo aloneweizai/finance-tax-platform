@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionAllocationMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	factionId,	userId,	userRank,awardReason,	proportion,	integral,	createUserId,	createTime,	updateTime,	state
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionAllocation" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_allocation
+		 WHERE id = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_allocation
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionAllocation">
+		 INSERT INTO bb_question_faction_allocation
+ 		(id,factionId,userId,userRank,awardReason,proportion,integral,createUserId,createTime,updateTime,state)
+		 VALUES 
+ 		(#{id},#{factionId},#{userId},#{userRank},#{awardReason},#{proportion},#{integral},#{createUserId},#{createTime},#{updateTime},#{state})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionAllocation">
+		 INSERT INTO bb_question_faction_allocation
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="userRank != null">
+				 userRank,
+			</if>
+			<if test="proportion != null">
+				 proportion,
+			</if>
+			<if test="integral != null">
+				 integral,
+			</if>
+			<if test="createUserId != null">
+				 createUserId,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+			<if test="state != null">
+				 state,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="userRank!=null">
+				 #{userRank},
+			</if>
+			<if test="proportion!=null">
+				 #{proportion},
+			</if>
+			<if test="integral!=null">
+				 #{integral},
+			</if>
+			<if test="createUserId!=null">
+				 #{createUserId},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+			<if test="state!=null">
+				 #{state},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionAllocation">
+		 UPDATE bb_question_faction_allocation
+ 		 <set> 
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="userRank != null">
+				 userRank = #{userRank},
+			</if>
+             <if test="awardReason != null">
+                 awardReason = #{awardReason},
+             </if>
+			<if test="proportion != null">
+				 proportion = #{proportion},
+			</if>
+			<if test="integral != null">
+				 integral = #{integral},
+			</if>
+			<if test="createUserId != null">
+				 createUserId = #{createUserId},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+			<if test="state != null">
+				 state = #{state},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFactionAllocation">
+		 UPDATE bb_question_faction_allocation
+		 SET 
+			 factionId = #{factionId},
+			 userId = #{userId},
+			 userRank = #{userRank},
+			 awardReason = #{awardReason},
+			 proportion = #{proportion},
+			 integral = #{integral},
+			 createUserId = #{createUserId},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime},
+			 state = #{state}
+		 WHERE id = #{id}
+	</update>
+
+
+	<!-- 修 改-->
+	<update id="audit" parameterType="com.abc12366.bangbang.model.question.bo.QuestionFactionAllocationManageBo">
+		UPDATE bb_question_faction_allocation
+		<set>
+			<if test="refuseReason != null">
+				refuseReason = #{refuseReason},
+			</if>
+			state = #{status}, updateTime = now()
+		</set>
+		WHERE id = #{id}
+	</update>
+
+
+</mapper>

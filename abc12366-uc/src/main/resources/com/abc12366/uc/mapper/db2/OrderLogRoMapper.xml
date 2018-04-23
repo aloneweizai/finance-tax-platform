@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrderLogRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, orderNo, action, createTime, createUser, remark,logType,exchangeId
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.OrderLog" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_order_log
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.uc.model.order.bo.GoodsLogBO" parameterType="com.abc12366.uc.model.order.OrderLog">
+        select a.id, a.orderNo, a.action, a.createTime, a.createUser, a.remark,a.createUserName,a.logType,a.exchangeId from(
+        SELECT
+        o.id, o.orderNo, o.action, o.createTime, o.createUser, o.remark,u.nickname as
+        createUserName,o.logType,o.exchangeId
+        FROM uc_user u
+        LEFT JOIN  uc_order_log o ON u.id = o.createUser
+        <where>
+            1=1
+            <if test="orderNo != null and orderNo != '' ">and o.orderNo = #{orderNo}</if>
+            <if test="logType != null and logType != '' ">AND o.logType = #{logType}</if>
+            <if test="exchangeId != null and exchangeId != '' ">AND o.exchangeId = #{exchangeId}</if>
+        </where>
+        UNION ALL
+        SELECT
+        o.id, o.orderNo, o.action, o.createTime, o.createUser, o.remark,u.nickname as
+        createUserName,o.logType,o.exchangeId
+        FROM uc_admin u
+        LEFT JOIN uc_order_log o ON u.id = o.createUser
+        <where>
+            1=1
+            <if test="orderNo != null and orderNo != '' ">and o.orderNo = #{orderNo}</if>
+            <if test="logType != null and logType != '' ">AND o.logType = #{logType}</if>
+            <if test="exchangeId != null and exchangeId != '' ">AND o.exchangeId = #{exchangeId}</if>
+        </where>
+        ) a
+        ORDER BY a.createTime desc
+    </select>
+</mapper>

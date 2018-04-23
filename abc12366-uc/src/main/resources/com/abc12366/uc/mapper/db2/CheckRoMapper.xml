@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.CheckRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 id, userId,	createTime,	checkDate,	orderby, isReCheck
+	</sql>
+
+    <select id="selectByOrder" resultType="com.abc12366.uc.model.Check" parameterType="com.abc12366.uc.model.Check">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_check
+        WHERE userId = #{userId}
+        and checkDate = #{checkDate}
+
+    </select>
+
+    <select id="selectCheckListDesc" parameterType="java.lang.String" resultType="com.abc12366.uc.model.Check">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_check
+        where userId = #{userId}
+        order by lastUpdate desc
+    </select>
+
+    <select id="selectRecheck" resultType="com.abc12366.uc.model.Check" parameterType="com.abc12366.uc.model.Check">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_check
+        WHERE userId = #{userId}
+        and isReCheck = 1
+        and createTime &gt;=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        and createTime &lt;(SELECT DATE_ADD(CURDATE() -DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+    </select>
+
+    <select id="selectCheckList" resultType="com.abc12366.uc.model.Check" parameterType="com.abc12366.uc.model.bo.CheckListParam">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_check
+        WHERE userId = #{userId}
+        and checkDate &gt;= #{startDate}
+        and checkDate &lt; #{endDate}
+    </select>
+
+    <select id="selectIsRecheck" resultType="com.abc12366.uc.model.Check" parameterType="com.abc12366.uc.model.Check">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_check
+        WHERE userId = #{userId}
+        and checkDate = #{checkDate}
+        order by orderby asc
+    </select>
+
+
+    <select id="selectRankList" resultType="com.abc12366.uc.model.CheckRank" parameterType="java.util.Map">
+        SELECT a.userId,uu.nickname,uu.userPicturePath,a.coun COUNT FROM
+        (SELECT uc.userId, COUNT(1) coun FROM uc_check uc
+        WHERE  <![CDATA[  uc.createTime>= #{startTime}]]>
+        AND  <![CDATA[  uc.createTime< #{endTime}]]>
+        GROUP BY uc.userId ORDER BY coun DESC) a
+        JOIN uc_user uu ON a.userId=uu.id
+    </select>
+
+    <select id="selectOneRank" resultType="com.abc12366.uc.model.CheckRank" parameterType="java.util.Map">
+        select id, userId, lastUpdate, count, year
+        from uc_continuing_check
+        where userId=#{userId}
+        and year=#{year}
+    </select>
+
+    <select id="checkTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1)
+        from uc_check a
+        where a.userId=#{userId}
+        and a.createTime &gt;= (SELECT DATE_SUB(CURDATE(),INTERVAL DAYOFYEAR(NOW())-1 DAY))
+        and a.createTime &lt;(SELECT CONCAT(YEAR(NOW())+1,'-01-01'))
+    </select>
+</mapper>

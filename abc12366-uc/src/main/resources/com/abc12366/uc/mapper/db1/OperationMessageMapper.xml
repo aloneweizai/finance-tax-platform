@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.OperateMessageMapper">
+
+    <sql id="Base_Column_List">
+        id,taskname,web,wechat,message,content,url,target,sendTime,
+        startTime,endTime,status,createTime ,lastUpdate ,areaOper,areaIds,
+        tagOper,tagIds,regTimeOper,regStartTime,regEndTime ,userIds,rate
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.OperateMessage">
+        insert into uc_operate_message(<include refid="Base_Column_List"/> )
+        values (#{id},#{taskname},#{web},#{wechat},#{message},#{content},#{url},#{target},#{sendTime},
+        #{startTime},#{endTime},#{status},#{createTime},#{lastUpdate},#{areaOper},#{areaIds},
+        #{tagOper},#{tagIds},#{regTimeOper},#{regStartTime},#{regEndTime},#{userIds},#{rate})
+    </insert>
+    <update id="update" parameterType="com.abc12366.uc.model.admin.bo.OperateMessageBO">
+        update uc_operate_message
+        <set>
+            <if test="taskname != null and taskname != ''">taskname=#{taskname},</if>
+            <if test="web != null">web=#{web},</if>
+            <if test="wechat != null">wechat=#{wechat},</if>
+            <if test="message != null">message=#{message},</if>
+            <if test="content != null and content != ''">content=#{content},</if>
+            <if test="url != null and url != ''">url=#{url},</if>
+            <if test="target != null and target != ''">target=#{target},</if>
+            <if test="sendTime != null and sendTime != ''">sendTime=#{sendTime},</if>
+            <if test="startTime != null">startTime=#{startTime},</if>
+            <if test="endTime != null">endTime=#{endTime},</if>
+            <if test="status != null and status != ''">status=#{status},</if>
+            <if test="lastUpdate != null">lastUpdate=#{lastUpdate},</if>
+            <if test="areaOper != null and areaOper != ''">areaOper=#{areaOper},</if>
+            <if test="sendTime != null and sendTime != ''">sendTime=#{sendTime},</if>
+            <if test="areaIds != null and areaIds != ''">areaIds=#{areaIds},</if>
+            <if test="tagOper != null and tagOper != ''">tagOper=#{tagOper},</if>
+            <if test="tagIds != null and tagIds != ''">tagIds=#{tagIds},</if>
+            <if test="regTimeOper != null and regTimeOper != ''">regTimeOper=#{regTimeOper},</if>
+            <if test="regStartTime != null">regStartTime=#{regStartTime},</if>
+            <if test="regEndTime != null">regEndTime=#{regEndTime},</if>
+            <if test="userIds != null and userIds != ''">userIds=#{userIds}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_operate_message where id=#{id}
+    </delete>
+
+    <insert id="yyxxLog" parameterType="com.abc12366.uc.model.admin.bo.YyxxLogBO">
+        insert INTO  uc_send_yyxx_log(id,userId,messageId,type,createTime)
+        values (#{id},#{userId},#{messageId},#{type},#{createTime})
+    </insert>
+</mapper>

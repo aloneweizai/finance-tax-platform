@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.AskRoMapper">
+    <select id="selectListForAdmin" parameterType="com.abc12366.bangbang.model.bo.AsksQueryParamBO"
+            resultType="com.abc12366.bangbang.model.bo.AskBO">
+        select id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId
+        from bb_ask
+        <where>
+            <if test="ask!=null">ask=#{ask} AND</if>
+            <if test="detail!=null">detail=#{detail} AND</if>
+            <if test="type!=null">type=#{type} AND</if>
+            <if test="status!=null">status=#{status} AND</if>
+            <if test="isSolve!=null">isSolve=#{isSolve} AND</if>
+            <if test="userId!=null">userId=#{userId} AND</if>
+            <if test="askedUserId!=null">askedUserId=#{askedUserId}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectListForUser" parameterType="com.abc12366.bangbang.model.bo.AskQueryParamBO"
+            resultType="com.abc12366.bangbang.model.bo.AskBO">
+        select id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId
+        from bb_ask
+        <where>
+            <if test="ask!=null">ask=#{ask} AND</if>
+            <if test="detail!=null">detail=#{detail} AND</if>
+            <if test="type!=null">type=#{type} AND</if>
+            <if test="isSolve!=null">isSolve=#{isSolve} AND</if>
+            <if test="userId!=null">userId=#{userId} AND</if>
+            <if test="askedUserId!=null">askedUserId=#{askedUserId}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.AskBO" parameterType="java.lang.String">
+        select id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId
+        from bb_ask
+        where id=#{id}
+    </select>
+    <select id="selectHotspotAsks" resultType="com.abc12366.bangbang.model.bo.HotspotAskBO">
+        select id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId,
+        (select count(1) from bb_ask_log bal where bal.askId = ba.id) pageviews
+        from bb_ask ba
+        where ba.status='1'
+        order by pageviews desc
+    </select>
+
+    <select id="selectHotspotComments" resultType="com.abc12366.bangbang.model.bo.AskBO">
+        select id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId,
+        (select count(bc.id) from bb_comment bc, bb_answer ban where bc.answerId=ban.id and ban.askId=ba.id)
+        commentsCount
+        from bb_ask ba
+        where ba.status='1'
+        order by commentsCount desc
+    </select>
+</mapper>

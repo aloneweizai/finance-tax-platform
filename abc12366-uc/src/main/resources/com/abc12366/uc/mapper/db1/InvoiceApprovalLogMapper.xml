@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.InvoiceApprovalLogMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.lang.String">
+		DELETE FROM uc_invoice_approval_log
+		WHERE id = #{id}
+	</delete>
+
+    <delete id="deleteByUseId" parameterType="java.lang.String">
+		DELETE FROM uc_invoice_approval_log
+		WHERE useId = #{useId}
+	</delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.invoice.InvoiceApprovalLog">
+        INSERT INTO uc_invoice_approval_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="useId != null">
+                useId,
+            </if>
+            <if test="approvalResult != null">
+                approvalResult,
+            </if>
+            <if test="approvalOpinions != null">
+                approvalOpinions,
+            </if>
+            <if test="approver != null">
+                approver,
+            </if>
+            <if test="approverTime != null">
+                approverTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="useId!=null">
+                #{useId},
+            </if>
+            <if test="approvalResult!=null">
+                #{approvalResult},
+            </if>
+            <if test="approvalOpinions!=null">
+                #{approvalOpinions},
+            </if>
+            <if test="approver!=null">
+                #{approver},
+            </if>
+            <if test="approverTime!=null">
+                #{approverTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.invoice.InvoiceApprovalLog">
+        UPDATE uc_invoice_approval_log
+        <set>
+            <if test="useId != null">
+                useId = #{useId},
+            </if>
+            <if test="approvalResult != null">
+                approvalResult = #{approvalResult},
+            </if>
+            <if test="approvalOpinions != null">
+                approvalOpinions = #{approvalOpinions},
+            </if>
+            <if test="approver != null">
+                approver = #{approver},
+            </if>
+            <if test="approverTime != null">
+                approverTime = #{approverTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

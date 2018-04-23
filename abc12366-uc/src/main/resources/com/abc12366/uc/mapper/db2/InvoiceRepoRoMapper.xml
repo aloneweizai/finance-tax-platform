@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.InvoiceRepoRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,	invoiceTypeCode,	invoiceCode,	invoiceNoStart,	invoiceNoEnd,	property,	share,	book,	createTime,	lastUpdate,	createUser,	updateUser,status,remark
+    </sql>
+
+    <resultMap id="invoiceRepoMap" type="com.abc12366.uc.model.invoice.bo.InvoiceRepoBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="invoiceTypeCode" property="invoiceTypeCode" jdbcType="VARCHAR"/>
+        <result column="invoiceCode" property="invoiceCode" jdbcType="VARCHAR"/>
+        <result column="invoiceNoStart" property="invoiceNoStart" jdbcType="VARCHAR"/>
+        <result column="invoiceNoEnd" property="invoiceNoEnd" jdbcType="VARCHAR"/>
+        <result column="property" property="property" jdbcType="VARCHAR"/>
+        <result column="share" property="share" jdbcType="INTEGER"/>
+        <result column="book" property="book" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="createUser" property="createUser" jdbcType="VARCHAR"/>
+        <result column="updateUser" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="fieldKey" property="fieldKey" jdbcType="VARCHAR"/>
+        <collection property="invoiceDetailBOList" ofType="com.abc12366.uc.model.invoice.bo.InvoiceDetailBO" column="id"
+                    select="getInvoiceDetailBO">
+        </collection>
+    </resultMap>
+
+    <!-- 发票库存年明细表对象-->
+    <resultMap id="invoiceDetailMap" type="com.abc12366.uc.model.invoice.bo.InvoiceDetailBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="invoiceNo" property="invoiceNo" jdbcType="VARCHAR"/>
+        <result column="invoiceCode" property="invoiceCode" jdbcType="VARCHAR"/>
+        <result column="property" property="property" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="invoiceRepoId" property="invoiceRepoId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 查询发票库存明细 -->
+    <select id="getInvoiceDetailBO" resultMap="invoiceDetailMap" parameterType="java.lang.String">
+        SELECT
+        id, invoiceNo, invoiceCode, property, status, createTime, lastUpdate, remark,invoiceRepoId
+        FROM uc_invoice_detail
+        WHERE invoiceRepoId = #{invoiceRepoId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.invoice.InvoiceRepo" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_repo
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询主键ID -->
+    <select id="selectRepoId" resultType="com.abc12366.uc.model.invoice.InvoiceRepo" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_repo
+        where invoiceTypeCode = #{invoiceTypeCode} ORDER BY substring(id,#{codeLength})*1 asc LIMIT 1
+    </select>
+    <!-- 查询主键ID -->
+    <select id="selectInvoiceRepoNum" resultType="com.abc12366.uc.model.invoice.bo.InvoiceRepoBO" parameterType="java.lang.String">
+        SELECT
+        sum(book) as repoBook,sum(share) as usableShare,id
+        FROM uc_invoice_repo
+        where invoiceTypeCode like CONCAT('%',#{invoiceTypeCode},'%') ORDER BY (invoiceTypeCode+0)
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="selectInvoiceRepo" resultMap="invoiceRepoMap" parameterType="java.lang.String">
+        SELECT
+        r.id,	r.invoiceTypeCode,	r.invoiceCode,	r.invoiceNoStart,	r.invoiceNoEnd,	r.property,	r.share,
+        r.book,	r.createTime,	r.lastUpdate,	r.createUser,	r.updateUser,r.status,r.remark,dt.fieldKey as fieldKey
+        FROM uc_invoice_repo r
+         LEFT JOIN uc_dict dt on dt.id = r.invoiceTypeCode
+         WHERE r.id = #{id}
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="selectList" resultType="com.abc12366.uc.model.invoice.bo.InvoiceRepoBO"
+            parameterType="com.abc12366.uc.model.invoice.bo.InvoiceRepoBO">
+        SELECT
+        r.id,	r.invoiceTypeCode,	r.invoiceCode,	r.invoiceNoStart,	r.invoiceNoEnd,	r.property,	r.share,
+        r.book,	r.createTime,	r.lastUpdate,	r.createUser,	r.updateUser,r.status,r.remark,d.fieldKey as invoiceTypeName,
+        a.nickname as createUserName,b.nickname as updateUserName
+        FROM uc_invoice_repo r
+        LEFT JOIN uc_dict d on d.fieldValue =  r.invoiceTypeCode and d.dictId = 'invoicetype'
+        LEFT JOIN uc_admin a on a.id = r.createUser
+        LEFT JOIN uc_admin b on b.id = r.updateUser
+        <where>
+             1=1
+            <if test="invoiceCode != null  and invoiceCode!=''">AND r.invoiceCode = #{invoiceCode}</if>
+            <if test="status != null  and status!=''">AND r.status = #{status}</if>
+            <if test="invoiceTypeCode != null  and invoiceTypeCode!=''">AND r.invoiceTypeCode = #{invoiceTypeCode}</if>
+            <if test="noStart != null  and noStart!=''">
+                <![CDATA[
+                  AND r.id >= #{noStart}
+                ]]>
+            </if>
+            <if test="noEnd != null  and noEnd != ''">
+                <![CDATA[
+                  AND r.id <= #{noEnd}
+                ]]>
+            </if>
+            <if test="invoiceNoStart != null  and invoiceNoStart!='' and invoiceNoEnd != null  and invoiceNoEnd!=''">
+                <![CDATA[
+                  AND ((r.invoiceNoStart <= #{invoiceNoStart} and r.invoiceNoEnd >= #{invoiceNoStart}) or (r.invoiceNoStart <= #{invoiceNoEnd} and r.invoiceNoEnd >= #{invoiceNoEnd}))
+                ]]>
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(r.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+              and date_format(r.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              ]]>
+            </if>
+        </where>
+        order by  r.lastUpdate desc,substring(r.id,length(r.invoiceTypeCode))*1 desc
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="selectInvoiceRepoList" resultType="com.abc12366.uc.model.invoice.InvoiceRepo"
+            parameterType="com.abc12366.uc.model.invoice.InvoiceRepo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_repo
+        <where>
+            1=1
+            <if test="invoiceCode != null  and invoiceCode!=''">AND invoiceCode = #{invoiceCode}</if>
+        </where>
+        order by createTime desc
+    </select>
+
+</mapper>

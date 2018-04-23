@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.NoticeMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, title, author, content, status, createTime, lastUpdate,count,comefrom,releaseTime
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.cms.model.bo.NoticeBO">
+        INSERT INTO cms_notice(<include refid="Base_Column_List"/>)
+        VALUES (#{id}, #{title}, #{author}, #{content}, #{status}, #{createTime}, #{lastUpdate}, #{count},#{comefrom},#{releaseTime})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.cms.model.bo.NoticeBO">
+        UPDATE cms_notice
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="comefrom != null">comefrom = #{comefrom},</if>
+            <if test="releaseTime != null">releaseTime = #{releaseTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatecount" parameterType="com.abc12366.cms.model.bo.NoticeBO">
+        UPDATE cms_notice
+        <set>
+            <if test="count != null">count = #{count}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_notice WHERE id = #{id}
+    </delete>
+</mapper>

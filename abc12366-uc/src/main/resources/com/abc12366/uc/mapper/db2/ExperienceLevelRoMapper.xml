@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ExperienceLevelRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.ExperienceLevelBO" parameterType="java.util.Map">
+        SELECT id,name,minValue,uc_uexp_level.maxValue,topPerDay,status,lastUpdate,createTime,medal,medalIcon
+        from uc_uexp_level
+        <where>
+            <if test="name!=null">
+                name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        ORDER BY minValue ASC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.ExperienceLevelBO" parameterType="java.lang.String">
+        SELECT id,name,minValue,uc_uexp_level.maxValue,topPerDay,status,lastUpdate,createTime,medal,medalIcon
+        from uc_uexp_level
+        where id=#{id}
+    </select>
+
+    <select id="selectOneByExp" resultType="com.abc12366.uc.model.bo.ExperienceLevelBO" parameterType="java.lang.Integer">
+        SELECT id,name,minValue,uc_uexp_level.maxValue,topPerDay,status,lastUpdate,createTime,medal,medalIcon
+        from uc_uexp_level
+        where #{exp} BETWEEN uc_uexp_level.minValue AND uc_uexp_level.maxValue
+    </select>
+
+    <select id="selectLevelList" resultType="com.abc12366.uc.model.bo.ExpLevelStatistic" parameterType="java.util.Map">
+        SELECT b.name as levelCode,b.medal as levelName,b.maxValue,b.minValue,
+        IFNULL(d.tt,0) as `all` from uc_uexp_level b
+        LEFT JOIN (select uu.name,count(uu.tt) tt from (SELECT ul.name,u.id tt
+        FROM uc_user u LEFT JOIN uc_uexp_level ul on u.exp &gt; ul.minValue and u.exp &lt;= ul.maxValue
+        WHERE ul.name is not null) uu group by uu.name) d on b.name = d.name
+        order by b.minValue
+    </select>
+</mapper>

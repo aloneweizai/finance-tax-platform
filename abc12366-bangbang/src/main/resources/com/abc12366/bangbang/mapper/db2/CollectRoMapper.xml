@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CollectRoMapper">
+    <select id="selectList" resultType="com.abc12366.bangbang.model.bo.CollectListBO" parameterType="java.lang.String">
+        select bc.id,bc.askId,bc.userId,
+        (select ask from bb_ask ba where ba.id=bc.askId) ask,
+        (select detail from bb_ask ba where ba.id=bc.askId) detail,
+        (select status from bb_ask ba where ba.id=bc.askId) status,
+        (select createTime from bb_ask ba where ba.id=bc.askId) createTime,
+        (select lastUpdate from bb_ask ba where ba.id=bc.askId) lastUpdate,
+        (select points from bb_ask ba where ba.id=bc.askId) points,
+        (select isSolve from bb_ask ba where ba.id=bc.askId) isSolve,
+        (select askedUserId from bb_ask ba where ba.id=bc.askId) askedUserId,
+        (select type from bb_ask ba where ba.id=bc.askId) type,
+        (select count(1) from bb_answer bba where bba.askId=bc.askId) answerCount
+        from bb_collect bc
+        where bc.userId=#{userId}
+        ORDER BY bc.lastUpdate DESC
+    </select>
+
+    <select id="selectCount" resultType="java.lang.String" parameterType="java.lang.String">
+        select count(1)
+        from bb_collect
+        where askId=#{askId}
+    </select>
+
+    <select id="selectExist" resultType="com.abc12366.bangbang.model.bo.CollectBO" parameterType="java.util.Map">
+        select id,askId,userId,createTime,lastUpdate
+        from bb_collect
+        where askId=#{askId}
+        and userId=#{userId}
+    </select>
+
+    <select id="selectCollectListByUserId" resultType="com.abc12366.bangbang.model.bo.MyCollectListBO"
+            parameterType="java.lang.String">
+        select
+        bc.askId, askId,
+        (select ba.ask from bb_ask ba where ba.id=bc.askId) ask,
+        (select ba.detail from bb_ask ba where ba.id=bc.askId) detail,
+        bc.createTime collectTime,
+        (select count(1) from bb_answer ban where ban.askId=bc.askId) answerCount,
+        (select count(1) from bb_support bs where bs.subjectId=bc.askId) supportCount,
+        (select bu.username from bb_user bu, bb_ask ba where bu.id=ba.userId and ba.id=bc.askId) createUserName,
+        (select minUserPicturePath from bb_user bu, bb_ask ba where bu.id=ba.userId and ba.id=bc.askId) userPicturePath
+        from bb_collect bc
+        where bc.userId=#{userId}
+    </select>
+</mapper>

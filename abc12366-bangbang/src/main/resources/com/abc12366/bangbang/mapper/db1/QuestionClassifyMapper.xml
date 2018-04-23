@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionClassifyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_classify
+		 WHERE classifyCode = #{classifyCode}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionClassify">
+		 INSERT INTO bb_question_classify
+ 		(classifyId,parentCode,isDisplay,classifyCode,classifyName,priority)
+		 VALUES 
+ 		(#{classifyId},#{parentCode},#{isDisplay},#{classifyCode},#{classifyName},#{priority})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionClassify">
+		 INSERT INTO bb_question_classify
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="classifyId != null">
+				 classifyId,
+			</if>
+			<if test="parentCode != null">
+				 parentCode,
+			</if>
+			<if test="isDisplay != null">
+				 isDisplay,
+			</if>
+			<if test="classifyCode != null">
+				 classifyCode,
+			</if>
+			<if test="classifyName != null">
+				 classifyName,
+			</if>
+			<if test="priority != null">
+				 priority,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="classifyId!=null">
+				 #{classifyId},
+			</if>
+			<if test="parentCode!=null">
+				 #{parentCode},
+			</if>
+			<if test="isDisplay!=null">
+				 #{isDisplay},
+			</if>
+			<if test="classifyCode!=null">
+				 #{classifyCode},
+			</if>
+			<if test="classifyName!=null">
+				 #{classifyName},
+			</if>
+			<if test="priority!=null">
+				 #{priority},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionClassify">
+		 UPDATE bb_question_classify
+ 		 <set>
+			<if test="isDisplay != null">
+				 isDisplay = #{isDisplay},
+			</if>
+			<if test="classifyName != null">
+				 classifyName = #{classifyName},
+			</if>
+			<if test="priority != null">
+				priority = #{priority},
+			</if>
+ 		 </set>
+		 WHERE classifyCode = #{classifyCode}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionClassify">
+		 UPDATE bb_question_classify
+		 SET
+			 isDisplay = #{isDisplay},
+			 classifyName = #{classifyName}
+		 WHERE classifyCode = #{classifyCode}
+	</update>
+
+</mapper>

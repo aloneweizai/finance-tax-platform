@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumApplyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_apply
+		 WHERE applyId = #{applyId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumApply">
+		 INSERT INTO bb_curriculum_apply
+ 		(applyId,curriculumId,userId,company,position,nickname,username,applyTime,phone,signTime,signIP,signSite)
+		 VALUES 
+ 		(#{applyId},#{curriculumId},#{userId},#{company},#{position},#{nickname},#{username},#{applyTime},#{phone},#{signTime},#{signIP},#{signSite})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumApply">
+		 INSERT INTO bb_curriculum_apply
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="applyId != null">
+				 applyId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+             <if test="company != null">
+                 company,
+             </if>
+             <if test="position != null">
+                 position,
+             </if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="applyTime != null">
+				 applyTime,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="signTime != null">
+				 signTime,
+			</if>
+			<if test="signIP != null">
+				 signIP,
+			</if>
+			<if test="signSite != null">
+				 signSite,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="applyId!=null">
+				 #{applyId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+             <if test="company!=null">
+                 #{company},
+             </if>
+             <if test="position!=null">
+                 #{position},
+             </if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="applyTime!=null">
+				 #{applyTime},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="signTime!=null">
+				 #{signTime},
+			</if>
+			<if test="signIP!=null">
+				 #{signIP},
+			</if>
+			<if test="signSite!=null">
+				 #{signSite},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumApply">
+		 UPDATE bb_curriculum_apply
+ 		 <set>
+			<if test="signTime != null">
+				 signTime = #{signTime},
+			</if>
+			<if test="signIP != null">
+				 signIP = #{signIP},
+			</if>
+			<if test="signSite != null">
+				 signSite = #{signSite},
+			</if>
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId} and userId = #{userId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumApply">
+		 UPDATE bb_curriculum_apply
+		 SET 
+			 curriculumId = #{curriculumId},
+			 userId = #{userId},
+			 company = #{company},
+			 position = #{position},
+			 nickname = #{nickname},
+			 username = #{username},
+			 applyTime = #{applyTime},
+			 phone = #{phone},
+			 signTime = #{signTime},
+			 signIP = #{signIP},
+			 signSite = #{signSite}
+		 WHERE applyId = #{applyId}
+	</update>
+
+</mapper>

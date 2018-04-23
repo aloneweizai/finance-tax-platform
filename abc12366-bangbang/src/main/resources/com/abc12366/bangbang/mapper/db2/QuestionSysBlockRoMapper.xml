@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionSysBlockRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,userId,classifyCode, sourceId,	sourceType,	createTime,	updateAdmin, updateTime,status
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionSysBlockBo"
+            parameterType="com.abc12366.bangbang.model.question.bo.QuestionSysBlockParamBo">
+        SELECT id, userId, sourceId, (case
+            when sourceType = 'question' then sourceId
+            when sourceType = 'answer' then answerQuestionId
+            when sourceType = 'cheats' then sourceId
+            when sourceType = 'cheats_comment' then cheatsId
+            when sourceType = 'comment' then commentQuestionId
+            end) as linkId,  sourceType, classifyCode, createTime, updateAdmin, updateTime, status, username, classifyName, content
+        FROM (
+        SELECT t.id, t.userId, t.sourceId, t2.questionId as answerQuestionId, t5.questionId as commentQuestionId, t4.cheatsId, t.sourceType, t.classifyCode, t.createTime, t.updateAdmin, t.updateTime, t.status,
+          t_user.nickname AS username,t_classify.classifyName,
+          (CASE
+            WHEN t1.title IS NOT NULL THEN CONCAT(t1.title,t1.detail)
+            WHEN t2.answer IS NOT NULL THEN t2.answer
+            WHEN t3.title IS NOT NULL THEN CONCAT(t3.title,t3.describ)
+            WHEN t4.commentTxt IS NOT NULL THEN  t4.commentTxt
+            WHEN t5.commentTxt IS NOT NULL THEN  t5.commentTxt
+            END ) AS content
+        FROM bb_question_sys_block t
+        LEFT JOIN bb_question t1 ON (t.sourceId=t1.id AND t.sourceType = 'question')
+        LEFT JOIN bb_question_answer t2 ON (t.sourceId=t2.id  AND t.sourceType = 'answer')
+        LEFT JOIN bb_cheats t3 ON(t.sourceId=t3.id AND t.sourceType ='cheats')
+        LEFT JOIN bb_cheats_comment t4 ON(t.sourceId=t4.id AND t.sourceType ='cheats_comment')
+        LEFT JOIN bb_question_comment t5 ON (t.sourceId=t5.id  AND t.sourceType='comment')
+
+        JOIN abc12366_uc.uc_user t_user ON t.userId = t_user.id
+        JOIN bb_question_classify t_classify ON t.classifyCode = t_classify.classifyCode
+        ) AS temp
+        WHERE content IS NOT NULL
+
+        <if test="content != null and content != ''">
+            AND temp.content like CONCAT('%',#{content},'%')
+        </if>
+        <if test="status != null and status != ''">
+            AND temp.status = #{status}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[
+              and date_format(temp.createTime, '%Y%m%d') >= date_format(#{beginTime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+              and date_format(temp.createTime, '%Y%m%d') <= date_format(#{endTime}, '%Y%m%d')
+              ]]>
+        </if>
+        ORDER BY createTime DESC
+    </select>
+
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionSysBlock" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bb_question_sys_block
+        WHERE id = #{id}
+    </select>
+
+
+    <select id="selectCntByStatus" resultType="java.lang.Long" parameterType="java.lang.String">
+        SELECT COUNT(1) FROM bb_question_sys_block WHERE status = #{status}
+    </select>
+</mapper>

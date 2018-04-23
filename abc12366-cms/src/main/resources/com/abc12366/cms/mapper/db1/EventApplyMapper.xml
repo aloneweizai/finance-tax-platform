@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventApplyMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_event_apply
+        WHERE applyId = #{applyId}
+    </delete>
+
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteList">
+        DELETE FROM cms_event_apply
+        WHERE applyId in
+        <foreach item="item" index="index" collection="applyIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--更新：根据主键ID批量更新-->
+    <update id="updateStatusList">
+        update cms_event_apply SET status = 1
+        WHERE applyId in
+        <foreach item="item" index="index" collection="applyIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateStatusNoList">
+        update cms_event_apply SET status = 2 , bz=#{text}
+        WHERE applyId in
+        <foreach item="item" index="index" collection="applyIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.EventApply">
+        INSERT INTO cms_event_apply
+        (applyId,eventId,source,name,tel,email,applytime,status)
+        VALUES
+        (#{applyId},#{eventId},#{source},#{name},#{tel},#{email},#{applytime},#{status})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.EventApply">
+        INSERT INTO cms_event_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">
+                applyId,
+            </if>
+            <if test="eventId != null">
+                eventId,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="tel != null">
+                tel,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="applytime != null">
+                applytime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId!=null">
+                #{applyId},
+            </if>
+            <if test="eventId!=null">
+                #{eventId},
+            </if>
+            <if test="source!=null">
+                #{source},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="tel!=null">
+                #{tel},
+            </if>
+            <if test="email!=null">
+                #{email},
+            </if>
+            <if test="applytime!=null">
+                #{applytime},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.EventApply">
+        UPDATE cms_event_apply
+        <set>
+            <if test="eventId != null">
+                eventId = #{eventId},
+            </if>
+            <if test="source != null">
+                source = #{source},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="applytime != null">
+                applytime = #{applytime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+
+        </set>
+        WHERE applyId = #{applyId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.EventApply">
+        UPDATE cms_event_apply
+        SET
+        eventId = #{eventId},
+        source = #{source},
+        name = #{name},
+        tel = #{tel},
+        email = #{email},
+        applytime = #{applytime},
+        status = #{status}
+        WHERE applyId = #{applyId}
+    </update>
+
+</mapper>

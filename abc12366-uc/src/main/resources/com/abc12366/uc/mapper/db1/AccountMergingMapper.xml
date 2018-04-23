@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.AccountMergingMapper">
+
+    <update id="updateHngs" parameterType="java.util.Map">
+        update uc_user_hngs set lastUpdate=now(), userId=#{newid} 
+        where userId = #{oldid}
+    </update>
+    
+    <update id="updateHnds" parameterType="java.util.Map">
+        update uc_user_hnds set lastUpdate=now(), userId=#{newid} 
+        where userId = #{oldid}
+    </update>
+    
+    
+    <update id="updateDzsb" parameterType="java.util.Map">
+        update uc_user_dzsb set lastUpdate=now(), userId=#{newid} 
+        where userId = #{oldid}
+    </update>
+    
+    <update id="updateOrder" parameterType="java.util.Map">
+        update uc_order set lastUpdate=now(), userId=#{newid} 
+        where userId = #{oldid}
+    </update>
+    
+    <update id="updateInvoice" parameterType="java.util.Map">
+        update uc_invoice set lastUpdate=now(), userId=#{newid} 
+        where userId = #{oldid}
+    </update>
+    
+</mapper>

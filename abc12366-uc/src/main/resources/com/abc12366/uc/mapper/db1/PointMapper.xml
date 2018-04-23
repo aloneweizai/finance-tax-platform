@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.PointMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.bo.PointCodex">
+        insert into uc_upoints_codex (id,upointruleCode,clientType,upoint,period,degree,remark)
+        values(#{id},#{upointruleCode},#{clientType},#{upoint},#{period},#{degree},#{remark})
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_upoints_codex where id=#{id}
+    </delete>
+
+    <delete id="deleteByRuleCode" parameterType="java.lang.String">
+        delete from uc_upoints_codex where upointruleCode=#{upointruleCode}
+    </delete>
+
+    <insert id="insertComputeLog" parameterType="com.abc12366.uc.model.bo.PointComputeLogParam">
+        insert into uc_upoint_compute_log (id,userId,upointCodexId,timeType,createTime,ruleId)
+        values(#{id},#{userId},#{upointCodexId},#{timeType},#{createTime},#{ruleId})
+    </insert>
+
+</mapper>

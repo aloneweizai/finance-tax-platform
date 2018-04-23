@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.AdminServiceUserMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM uc_admin_service_user
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.uc.model.admin.AdminServiceUser">
+		 INSERT INTO uc_admin_service_user
+ 		(id,userId,nickname,username,gradeId,validity,createTime,lastUpdate,serviceId)
+		 VALUES 
+ 		(#{id},#{userId},#{nickname},#{username},#{gradeId},#{validity},#{createTime},#{lastUpdate},#{serviceId})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.uc.model.admin.AdminServiceUser">
+		 INSERT INTO uc_admin_service_user
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="gradeId != null">
+				 gradeId,
+			</if>
+			<if test="validity != null">
+				 validity,
+			</if>
+             <if test="createTime != null">
+                 createTime,
+             </if>
+             <if test="lastUpdate != null">
+                 lastUpdate,
+             </if>
+			<if test="serviceId != null">
+				 serviceId,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="gradeId!=null">
+				 #{gradeId},
+			</if>
+			<if test="validity!=null">
+				 #{validity},
+			</if>
+             <if test="createTime!=null">
+                 #{createTime},
+             </if>
+             <if test="lastUpdate!=null">
+                 #{lastUpdate},
+             </if>
+			<if test="serviceId!=null">
+				 #{serviceId},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.uc.model.admin.AdminServiceUser">
+		 UPDATE uc_admin_service_user
+ 		 <set> 
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="gradeId != null">
+				 gradeId = #{gradeId},
+			</if>
+			<if test="validity != null">
+				 validity = #{validity},
+			</if>
+             <if test="lastUpdate != null">
+                 lastUpdate = #{lastUpdate},
+             </if>
+             <if test="createUserId != null">
+                 createUserId = #{createUserId},
+             </if>
+			<if test="serviceId != null">
+				 serviceId = #{serviceId},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.uc.model.admin.AdminServiceUser">
+		 UPDATE uc_admin_service_user
+		 SET 
+			 userId = #{userId},
+			 nickname = #{nickname},
+			 username = #{username},
+			 gradeId = #{gradeId},
+			 validity = #{validity},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate},
+			 serviceId = #{serviceId}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

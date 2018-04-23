@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionClassifyRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 classifyId,	parentCode,	isDisplay,	classifyCode,	classifyName
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionClassify" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_classify
+		 WHERE classifyCode = #{classifyCode}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionClassifyBo" parameterType="java.util.Map">
+        SELECT
+        t1.*, t2.classifyName AS parentName
+        FROM bb_question_classify t1
+        LEFT JOIN bb_question_classify t2 ON t1.parentCode = t2.classifyCode
+        WHERE 1=1
+        <if test="parentCode != null and parentCode != ''">
+            AND t1.parentCode = #{parentCode}
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND t1.classifyCode = #{classifyCode}
+        </if>
+        ORDER BY t1.priority ASC
+    </select>
+
+    <!-- 查询分类代码是否已存在 -->
+    <select id="selectClassifyCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(classifyCode) cnt
+        FROM bb_question_classify
+        WHERE classifyCode = #{classifyCode}
+    </select>
+
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectClassifyStatistics" resultType="com.abc12366.bangbang.model.question.QuestionClassifyStatistics" parameterType="java.util.Map">
+        SELECT t.classifyName,
+        (
+         SELECT COUNT(id) FROM bb_question  WHERE classifyCode  LIKE   CONCAT(t.classifyCode,'%')
+            <if test="beginTime != null and beginTime != ''">
+                  and date_format(createTime, '%Y%m%d') &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                  and date_format(createTime, '%Y%m%d') &lt;= #{endTime}
+            </if>
+         ) questionNum,
+        (
+        SELECT COUNT(1) FROM bb_question_like WHERE likeType = 1 AND questionId IN  (SELECT id FROM bb_question WHERE  classifyCode  LIKE   CONCAT(t.classifyCode,'%') )
+            <if test="beginTime != null and beginTime != ''">
+                and date_format(likeTime, '%Y%m%d') &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and date_format(likeTime, '%Y%m%d') &lt;= #{endTime}
+            </if>
+        ) AS likeNum,
+        (
+        SELECT COUNT(1) FROM bb_question_answer WHERE questionId IN  (SELECT id FROM bb_question WHERE  classifyCode  LIKE   CONCAT(t.classifyCode,'%') )
+            <if test="beginTime != null and beginTime != ''">
+                and date_format(createTime, '%Y%m%d') &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and date_format(createTime, '%Y%m%d') &lt;= #{endTime}
+            </if>
+        ) AS answerNum,
+        (
+        SELECT COUNT(1) FROM bb_question_comment WHERE questionId IN  (SELECT id FROM bb_question WHERE  classifyCode  LIKE   CONCAT(t.classifyCode,'%') )
+            <if test="beginTime != null and beginTime != ''">
+                and date_format(createTime, '%Y%m%d') &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and date_format(createTime, '%Y%m%d') &lt;= #{endTime}
+            </if>
+        ) AS commentNum
+        FROM bb_question_classify t WHERE t.parentCode = #{parentCode} ORDER BY t.priority ASC;
+    </select>
+
+
+
+</mapper>

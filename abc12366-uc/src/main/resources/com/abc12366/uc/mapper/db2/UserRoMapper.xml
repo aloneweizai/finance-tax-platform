@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserRoMapper">
+
+    <select id="selectListExcludedId" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname,
+        uu.status,
+        uu.createTime, uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,usernameModifiedTimes,vipExpireDate,uu.wxopenid,uu.wxheadimg,uu.wxnickname 
+        from uc_user uu
+        where uu.id != #{id}
+    </select>
+    
+    <select id="selectByopenid" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,usernameModifiedTimes,vipExpireDate,uu.wxopenid,uu.wxheadimg,uu.wxnickname,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        where uu.wxopenid = #{wxopenid}
+    </select>
+
+    <select id="selectUserById" resultType="com.abc12366.uc.model.User" parameterType="com.abc12366.uc.model.User">
+        SELECT id, username, phone, password, regMail, regIP, salt, nickname, status, createTime,
+          lastUpdate, userPicturePath, maxUserPicturePath, midUserPicturePath, minUserPicturePath,
+          points, exp, vipLevel, usernameModifiedTimes, vipExpireDate, wxopenid, wxheadimg, wxnickname, bdqudao, oldId
+        FROM uc_user
+        <where>
+            <if test="id != null and id != ''">
+                id=#{id}
+            </if>
+            <if test="wxopenid != null and wxopenid != ''">
+                wxopenid=#{wxopenid}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.UserListBO" parameterType="java.util.Map">
+        SELECT id, username, phone, nickname, status, createTime, lastUpdate, points, exp, vipLevel, wxnickname, amount
+        FROM uc_user
+        <where>
+            <if test="status!=null">
+                status=#{status}
+            </if>
+            <if test="vipLevel != null and vipLevel != ''">
+                and vipLevel=#{vipLevel}
+            </if>
+            <if test="exp != null and exp != '' and expOper != null and expOper != ''">
+                and exp ${expOper} #{exp}
+            </if>
+            <if test="points != null and points != '' and pointsOper != null and pointsOper != ''">
+                and points ${pointsOper} #{points}
+            </if>
+            <if test="startDate !=null and startDate != ''">
+                and createTime >= #{startDate}
+            </if>
+            <if test="endDate !=null and endDate != ''">
+                and createTime <![CDATA[<=]]> date_add(#{endDate}, INTERVAL 1 day)
+            </if>
+            <if test="tagId != null and tagId.size > 0">
+                and EXISTS (SELECT DISTINCT a.subjectId FROM
+                <foreach item="item" collection="tagId" separator="union all" open="(" close=")" index="">
+                    SELECT subjectId FROM uc_subject_tag WHERE tagId=#{item}
+                </foreach>
+                a WHERE a.subjectId = id group by a.subjectId HAVING COUNT(subjectId) >= #{tagIdCount})
+            </if>
+            <if test="realName != null and realName != ''">
+                and id in (SELECT userId FROM abc12366_uc.uc_user_extend WHERE realName = #{realName})
+            </if>
+            <if test="username != null and username != ''">
+                and username=#{username}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone=#{phone}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname=#{nickname}
+            </if>
+            <if test="id != null and id != ''">
+                and id=#{id}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+       select uu.id, uu.username, uu.password, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname, uu.oldId,uu.amount,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        where uu.id = #{id}
+    </select>
+
+    <select id="selectByUsernameOrPhone" resultType="com.abc12366.uc.model.User"
+            parameterType="com.abc12366.uc.model.bo.LoginBO">
+        select uu.id, uu.username, uu.password, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        <where>
+            <if test="usernameOrPhone != null">
+                uu.username = #{usernameOrPhone}
+            </if>
+            <if test="usernameOrPhone != null">
+                OR uu.phone = #{usernameOrPhone}
+            </if>
+        </where>
+    </select>
+    <select id="selectOneByToken" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status, uu.createTime,
+        uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu, uc_token ut
+        where uu.id=ut.userId
+        and ut.token=#{userToken}
+    </select>
+
+    <select id="selectValidOne" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        select uu.id, uu.username, uu.password, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname
+        from uc_user uu
+        where uu.id = #{id}
+        and status=1
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectUserVipList" resultType="com.abc12366.uc.model.User" parameterType="java.util.Date">
+        select id
+        from uc_user
+        WHERE status = true
+        <![CDATA[
+                and date_format(vipExpireDate, '%Y-%m-%d %H:%i:%s') <= date_format(#{date}, '%Y-%m-%d %H:%i:%s')
+                ]]>
+    </select>
+
+    <select id="selectContinuePwdWrong" resultType="com.abc12366.uc.model.UserLoginPasswordWrongCount" parameterType="java.lang.String">
+        select id, userId, count, limitTime
+        from uc_login_password_wrong_count
+        where userId = #{userId}
+    </select>
+
+    <select id="selectSimple" parameterType="java.lang.String" resultType="com.abc12366.uc.model.bo.UserSimpleInfoBO">
+        select uu.id, uu.nickName, uu.userPicturePath, uue.tags, uue.signature, uue.education,
+         uue.graduate, uue.occupation, uue.income, uue.careerDuration
+        from uc_user uu
+        left join uc_user_extend uue
+        on uue.userId = uu.id
+        where uu.id = #{userId}
+    </select>
+    
+    <select id="getAllNomalCont" resultType="java.lang.Integer">
+        select count(id) from uc_user where status = true
+    </select>
+    
+    
+    <select id="getNomalList" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.util.Map">
+        SELECT u.id,u.wxopenid,u.phone,u.vipLevel,u.vipExpireDate,l.level as vipLevelName
+        FROM uc_user u, uc_uvip_level l
+        where
+        u.status = true
+        and l.status = true
+        and u.vipLevel=l.levelCode
+        LIMIT #{begin},#{size}
+    </select>
+    
+    <select id="selectByWxUserId" resultType="com.abc12366.uc.model.User" parameterType="com.abc12366.uc.model.User">
+        SELECT id, username, phone, password, regMail,
+          regIP, salt, nickname, status, createTime,
+          lastUpdate, userPicturePath, maxUserPicturePath, midUserPicturePath, minUserPicturePath,
+          points, exp, vipLevel, usernameModifiedTimes, vipExpireDate,
+          wxopenid, wxheadimg, wxnickname, bdqudao
+        FROM uc_user where id=#{id} and wxopenid=#{wxopenid}
+    </select>
+    
+    <select id="findByHngsNsrsbh" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        SELECT u.id, u.username, u.phone, u.password, u.regMail,
+          u.regIP, u.salt, u.nickname, u.status, u.createTime,
+          u.lastUpdate, u.userPicturePath, u.maxUserPicturePath, u.midUserPicturePath, u.minUserPicturePath,
+          u.points, u.exp, u.vipLevel, u.usernameModifiedTimes, u.vipExpireDate,
+          u.wxopenid, u.wxheadimg, u.wxnickname, u.bdqudao
+        FROM  uc_user_hngs h, uc_user u where h.userId=u.id and h.status=1 and h.nsrsbh=#{nsrshb}
+    </select>
+    
+    <select id="findByDzsbNsrsbh" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        SELECT u.id, u.username, u.phone, u.password, u.regMail,
+          u.regIP, u.salt, u.nickname, u.status, u.createTime,
+          u.lastUpdate, u.userPicturePath, u.maxUserPicturePath, u.midUserPicturePath, u.minUserPicturePath,
+          u.points, u.exp, u.vipLevel, u.usernameModifiedTimes, u.vipExpireDate,
+          u.wxopenid, u.wxheadimg, u.wxnickname, u.bdqudao
+        FROM  uc_user_dzsb h, uc_user u where h.userId=u.id and h.status=1 and h.nsrsbh=#{nsrshb}
+    </select>
+
+    <select id="selectOneByPhone" resultType="com.abc12366.uc.model.bo.UserBO"
+            parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId
+        from uc_user uu
+        where phone=#{phone}
+    </select>
+
+    <resultMap id="userStatisBO" type="com.abc12366.uc.model.bo.UserStatisBO">
+        <result column="days" property="days" jdbcType="TIMESTAMP"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="statisUserByDay" resultType="com.abc12366.uc.model.bo.UserStatisBO" parameterType="java.util.Map">
+        select DATE_FORMAT(createTime,#{dateFormat}) days ,count(id) count from uc_user
+        <where>
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+              and date_format(createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              ]]>
+            </if>
+        </where>
+        GROUP BY days
+    </select>
+
+    <select id="statisUserList" resultType="com.abc12366.uc.model.bo.UserSimpleInfoBO" parameterType="java.util.Map">
+        select u.id, u.nickName, u.userPicturePath, e.tags, e.signature, e.education,
+        e.graduate, e.occupation, e.income, e.careerDuration
+        from uc_user u
+        left join uc_user_extend e on e.userId = u.id
+        <where>
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(u.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+              and date_format(u.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="statisUserCount" resultType="com.abc12366.uc.model.bo.UserLossRateBO" parameterType="java.util.Map">
+        select count(id) as userCount from uc_user
+        <where>
+            <if test="endTime != null">
+                <![CDATA[
+                and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="statisUserLossRateCount" resultType="com.abc12366.uc.model.bo.UserLossRateBO" parameterType="java.util.Map">
+        select count(u.id) as lossUserCount from uc_user u
+        ,uc_user_login_log g
+        <where>
+            g.userId = u.id
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(g.createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                and date_format(g.createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="userLivenessSurvey" resultType="com.abc12366.uc.model.bo.UserLivenessSurveyBO">
+        SELECT (
+        SELECT COUNT(DISTINCT userId) yesterday FROM uc_user_login_log WHERE createTime &gt;=(SELECT DATE_SUB(CURDATE(),INTERVAL 1 DAY)) AND createTime &lt;(SELECT DATE_SUB(CURDATE(),INTERVAL 0 DAY))
+        ) yesterday,
+        (SELECT COUNT(DISTINCT userId) lastweek FROM uc_user_login_log WHERE createTime &gt;=(SELECT DATE_SUB(CURDATE(),INTERVAL 7 DAY)) AND createTime &lt;(SELECT DATE_SUB(CURDATE(),INTERVAL 0 DAY))
+        ) lastweek,
+        (SELECT COUNT(DISTINCT userId) last30Days FROM uc_user_login_log WHERE createTime &gt;=(SELECT DATE_SUB(CURDATE(),INTERVAL 30 DAY)) AND createTime &lt;(SELECT DATE_SUB(CURDATE(),INTERVAL 0 DAY))
+        ) last30Days,
+        (SELECT COUNT(DISTINCT userId) thismonth FROM uc_user_login_log WHERE createTime &gt;=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND createTime &lt;(SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        ) thismonth
+        FROM DUAL
+    </select>
+    <select id="statisUserRFM" resultType="com.abc12366.uc.model.bo.UserRFMBO" parameterType="java.util.Map">
+        select r.minTime,r.maxTime,r.avgTime,min(m.sumPrice) as minPrice,max(m.sumPrice) as maxPrice,avg(m.sumPrice) as avgPrice,
+        min(m.consum) as minConsum,max(m.consum) as maxConsum,avg(m.consum) as avgConsum from
+        (SELECT min(datediff(#{endTime},o.createTime)) AS minTime,
+            max(datediff(#{endTime},o.createTime)) AS maxTime,
+            avg(datediff(#{endTime},o.createTime)) AS avgTime
+            FROM
+            uc_user u left join
+            uc_order o on o.userId = u.id
+            WHERE  1 = 1
+            <if test="startTime != null">
+                <![CDATA[
+                  and date_format(o.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                    ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(o.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                    ]]>
+            </if>
+            AND o.orderStatus = #{orderStatus}
+            AND o.tradeMethod = #{tradeMethod}
+        ) r,
+        (SELECT sum(o.totalPrice) AS sumPrice, count(u.id) AS consum FROM
+            uc_user u left join
+            uc_order o on o.userId = u.id
+            WHERE  1 = 1
+            <if test="startTime != null">
+                <![CDATA[
+                  and date_format(o.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                    ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(o.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                    ]]>
+            </if>
+            AND o.orderStatus = #{orderStatus}
+            AND o.tradeMethod = #{tradeMethod}
+          group by u.id
+        ) m
+    </select>
+
+    <select id="userLivenessDetail" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.UserLivenessDetailBO">
+        SELECT
+        (SELECT COUNT(1) register FROM uc_user WHERE createTime &gt;=#{start} AND createTime &lt;#{end}
+        ) register,
+        (SELECT COUNT(DISTINCT a.userId) liveUsers FROM uc_user_login_log a join uc_user b on a.userId=b.id WHERE a.createTime &gt;=#{start} AND a.createTime &lt;#{end}
+        ) liveUsers,
+        (SELECT COUNT(1) FROM uc_user
+        ) allRegister
+        FROM DUAL
+    </select>
+    <select id="selectExpCount" parameterType="java.util.Map" resultType="java.lang.Float">
+        select count(1) now from uc_user where exp &gt;= #{min} and exp &lt;= #{max}
+    </select>
+
+    <select id="statisUserConsumeLevel" resultType="com.abc12366.uc.model.bo.UserExprotInfoBO" parameterType="java.util.Map">
+        select m.sumPrice,m.consum,m.id,m.nickName,m.phone,m.realName,m.area from
+            (SELECT
+            sum(o.totalPrice) AS sumPrice,
+            count(u.id) AS consum,
+            u.id, u.nickName, u.phone, e.realName, CONCAT(p.province,t.city,r.area) as area
+            from uc_order o
+            left join uc_user u on u.id = o.userId
+            left join uc_user_extend e on e.userId = u.id
+            LEFT JOIN uc_province p ON p.provinceId = e.province
+				LEFT JOIN uc_city t on t.cityId = e.city
+				LEFT JOIN uc_area r on r.areaId = e.area
+            where 1=1
+                <![CDATA[
+                and datediff(#{endTime},o.createTime) >=  #{startDay}
+                and datediff(#{endTime},o.createTime) <=  #{endDay}
+                and date_format(o.createTime, '%Y-%m-d%') >= #{startTime}
+                and date_format(o.createTime, '%Y-%m-d%') <= #{endTime}
+               ]]>
+            AND o.orderStatus = #{orderStatus}
+            AND o.tradeMethod = #{tradeMethod}
+            group by u.id) m
+        where
+            1 = 1
+            <![CDATA[
+                and m.sumPrice >= #{startPrice}
+                and m.sumPrice <= #{endPrice}
+                and m.consum <= #{startCount}
+                and m.consum <= #{endCount}
+            ]]>
+    </select>
+
+    <select id="userLivenessDetailUinfo" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserListBO">
+        SELECT a.id, a.username, a.phone, a.nickname, a.status, a.createTime, a.lastUpdate, a.points, a.exp,
+            a.vipLevel, a.wxnickname
+        FROM uc_user a JOIN
+          (SELECT DISTINCT userId FROM uc_user_login_log where createTime &gt;=#{start} and createTime &lt;#{end}
+            ) b ON a.id=b.userId
+    </select>
+
+    <!-- 用户总数 -->
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        SELECT count(id) FROM uc_user
+    </select>
+    <!-- 用户年龄段查询 -->
+    <select id="statisUserAge" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(e.userId) from uc_user_extend e
+          LEFT JOIN uc_user u on u.id = e.userId
+          where 1=1
+            <if test="startAge != null">
+                <![CDATA[
+                  and TIMESTAMPDIFF(YEAR, e.birthday, CURDATE()) >= #{startAge}
+                ]]>
+            </if>
+            <if test="endAge != null">
+                <![CDATA[
+                  and TIMESTAMPDIFF(YEAR, e.birthday, CURDATE()) <= #{endAge}
+                ]]>
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+    </select>
+    <!-- 用户年龄段查询未知用户-->
+    <select id="statisUserUnknownAge" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(e.userId) from uc_user_extend e
+          LEFT JOIN uc_user u on u.id = e.userId
+          where
+              e.birthday is null
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+    </select>
+
+    <!-- 用户年龄段查询用户列表 -->
+    <select id="statisUserAgeList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserBO">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId from uc_user_extend e
+          LEFT JOIN uc_user uu on uu.id = e.userId
+          where 1=1
+            <if test="startAge != null">
+                <![CDATA[
+                  and TIMESTAMPDIFF(YEAR, e.birthday, CURDATE()) >= #{startAge}
+                ]]>
+            </if>
+            <if test="endAge != null">
+                <![CDATA[
+                  and TIMESTAMPDIFF(YEAR, e.birthday, CURDATE()) <= #{endAge}
+                ]]>
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+        order by uu.createTime desc
+    </select>
+    <!-- 用户年龄段查询用户列表未知用户 -->
+    <select id="statisUserUnknownAgeList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserBO">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId from uc_user_extend e
+          LEFT JOIN uc_user uu on uu.id = e.userId
+          where e.birthday is null
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+    </select>
+
+    <!-- 用户性别查询 -->
+    <select id="statisUserSex" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserSexBO">
+        select count(e.userId) as count,e.sex as sexGroup from uc_user_extend e
+          LEFT JOIN uc_user u on u.id = e.userId
+          where 1=1
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(u.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            GROUP BY e.sex
+    </select>
+
+    <!-- 用户性别查询 -->
+    <select id="statisUserSexList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserBO">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId  from uc_user_extend e
+          LEFT JOIN uc_user uu on uu.id = e.userId
+          where
+            <if test="sex != null">
+                e.sex = #{sex}
+            </if>
+            <if test="sex == null">
+                e.sex is null
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(uu.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+        order by uu.createTime desc
+    </select>
+    <!-- 用户服务企业情况统计 -->
+    <select id="statisUserBind" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserBindBO">
+        <![CDATA[
+        select sum(case when 1<= t.tt and t.tt<=5 then 1 else 0 end) as oneToFive,
+        sum(case when 6<= t.tt and t.tt<=10 then 1 else 0 end) as sixToTen,
+        sum(case when 11<= t.tt and t.tt<=20 then 1 else 0 end) as elevenToTwenty,
+        sum(case when 21<= t.tt and t.tt<=30 then 1 else 0 end) as twentyOneToThirty,
+        sum(case when 31<= t.tt and t.tt<=40 then 1 else 0 end) as thirtyOneToForty,
+        sum(case when 41<= t.tt and t.tt<=50 then 1 else 0 end) as fortyOneToFifty,
+        sum(case when 51<= t.tt and t.tt<=100 then 1 else 0 end) as fiftyOneToHundred,
+        sum(case when 101<= t.tt and t.tt<=150 then 1 else 0 end) as hundredOneToHundredFifty,
+        sum(case when 151<= t.tt and t.tt<=200 then 1 else 0 end) as hundredFiftyOneToTwoHundred,
+        sum(case when 201<= t.tt then 1 else 0 end) as twoHundredAbove from
+        (select f.userid,sum(f.tt) as tt from (
+        select userid,count(userid) as tt from uc_user_dzsb use INDEX(idx_createTime) where
+        date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+        group by userid
+        union
+        select userid,count(userid) as tt from uc_user_hnds where
+        date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+        group by userid
+        union
+        select userid,count(userid) as tt from uc_user_hngs where
+        date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+        group by userid) f group by f.userid) t
+        ]]>
+    </select>
+    <!-- 用户服务企业情况统计-用户列表 -->
+    <select id="statisUserBindList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.UserBO">
+        <![CDATA[
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId from uc_user uu ,(select f.userid,sum(f.tt) as tt from (
+        select userid,count(userid) as tt from uc_user_dzsb use INDEX(idx_createTime) where
+          date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+         group by userid
+        union
+        select userid,count(userid) as tt from uc_user_hnds where
+          date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+         group by userid
+        union
+        select userid,count(userid) as tt from uc_user_hngs where
+          date_format(createTime, '%Y-%m') >= date_format(#{startTime}, '%Y-%m')
+        and date_format(createTime, '%Y-%m') <= date_format(#{endTime}, '%Y-%m')
+         group by userid) f group by f.userid
+        HAVING ]]>
+
+        <if test="startNum != null">
+            <![CDATA[
+              tt >= #{startNum}
+            ]]>
+        </if>
+        <if test="endNum != null">
+            <![CDATA[
+            and  tt <= #{endNum}
+            ]]>
+        </if>
+        ) dd where dd.userid = uu.id
+    </select>
+
+    <select id="selectPointsAndExp" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        select uu.id,uu.points, uu.exp
+        from uc_user uu
+        where uu.id = #{id}
+    </select>
+</mapper>

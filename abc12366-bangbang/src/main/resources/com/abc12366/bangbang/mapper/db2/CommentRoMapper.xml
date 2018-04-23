@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CommentRoMapper">
+    <select id="selectListForAdmin" parameterType="java.util.Map"
+            resultType="com.abc12366.bangbang.model.bo.CommentBO">
+        select id,answerId,userId,comment,status,createTime,lastUpdate,commentedUserId
+        from bb_comment
+        <where>
+            <if test="userId!=null">userId=#{userId}</if>
+            <if test="answerId!=null">and answerId=#{answerId}</if>
+            <if test="commentedUserId!=null">and commentedUserId=#{commentedUserId}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectListForUser" parameterType="java.util.Map"
+            resultType="com.abc12366.bangbang.model.bo.CommentBO">
+        select id,answerId,userId,comment,status,createTime,lastUpdate,commentedUserId
+        from bb_comment
+        <where>
+            <if test="userId!=null">userId=#{userId}</if>
+            <if test="answerId!=null">and answerId=#{answerId}</if>
+            <if test="commentedUserId!=null">and commentedUserId=#{commentedUserId}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.CommentBO" parameterType="java.lang.String">
+        select id,answerId,userId,comment,status,createTime,lastUpdate,commentedUserId
+        from bb_comment
+        where id=#{id}
+    </select>
+</mapper>

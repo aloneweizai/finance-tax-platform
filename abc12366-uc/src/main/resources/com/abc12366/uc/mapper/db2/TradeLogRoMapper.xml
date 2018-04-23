@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TradeLogRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        tradeNo, amount, tradeStatus, tradeTime, payMethod, createTime, lastUpdate, compareStatus, compareTime,tradeType,aliTrandeNo
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.TradeLog" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_trade_log
+        WHERE tradeNo = #{tradeNo}
+    </select>
+
+    <select id="selectByOrderNo" resultType="com.abc12366.uc.model.order.TradeLog" parameterType="java.lang.String">
+        SELECT
+        t.tradeNo, t.amount, t.tradeStatus, t.tradeTime, t.payMethod, t.createTime, t.lastUpdate, t.compareStatus, t.compareTime,t.tradeType,t.aliTrandeNo
+        FROM uc_trade_log t
+        LEFT JOIN uc_trade d ON d.tradeNo = t.tradeNo
+        WHERE d.orderNo = #{orderNo}
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.order.TradeLog" parameterType="com.abc12366.uc.model.bo.TradeBillBO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_trade_log
+        <where>
+            <if test="aliTrandeNo != null and aliTrandeNo != ''">aliTrandeNo = #{aliTrandeNo}</if>
+            <if test="tradeNo != null and tradeNo != ''">AND tradeNo = #{tradeNo}</if>
+        </where>
+    </select>
+
+    <select id="selectByAliNo" resultType="com.abc12366.uc.model.order.bo.TradeLogBO" parameterType="com.abc12366.uc.model.order.TradeLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_trade_log
+        <where>
+            <if test="aliTrandeNo != null and aliTrandeNo != ''">aliTrandeNo = #{aliTrandeNo}</if>
+        </where>
+    </select>
+
+    <!-- 查询（根据主键tradeNo查询） -->
+    <select id="selectList" resultType="com.abc12366.uc.model.order.TradeLog" parameterType="com.abc12366.uc.model.order.TradeLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_trade_log 
+        <where>
+            payMethod is not null 
+            <if test="tradeNo != null and tradeNo != ''">AND tradeNo like CONCAT('%',#{tradeNo},'%')</if>
+            <if test="tradeStatus != null and tradeStatus != ''">AND tradeStatus = #{tradeStatus}</if>
+            <if test="tradeType != null and tradeType != ''">AND tradeType = #{tradeType}</if>
+            <if test="payMethod != null and payMethod != ''">AND payMethod = #{payMethod}</if>
+        </where>
+        ORDER BY tradeTime DESC
+    </select>
+
+    <!-- 查询（根据主键tradeNo查询） -->
+    <select id="selectTradeLog" resultType="com.abc12366.uc.model.order.TradeLog" parameterType="com.abc12366.uc.model.order.TradeLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_trade_log
+        <where>
+            payMethod is not null
+            <if test="tradeNo != null and tradeNo != ''">AND tradeNo = #{tradeNo}</if>
+            <if test="tradeStatus != null and tradeStatus != ''">AND tradeStatus = #{tradeStatus}</if>
+            <if test="tradeType != null and tradeType != ''">AND tradeType = #{tradeType}</if>
+            <if test="payMethod != null and payMethod != ''">AND payMethod = #{payMethod}</if>
+        </where>
+        ORDER BY tradeTime DESC
+    </select>
+    <!-- 查询（根据条件查询） -->
+    <select id="selectBOList" resultType="com.abc12366.uc.model.order.bo.TradeLogBO" parameterType="com.abc12366.uc.model.order.TradeLog">
+        SELECT
+        t.tradeNo, t.amount, t.tradeStatus, t.tradeTime, t.payMethod, t.createTime, t.lastUpdate, t.compareStatus, t.compareTime,t.tradeType,t.aliTrandeNo,d.orderNo
+        FROM uc_trade_log t
+        LEFT JOIN uc_trade d ON d.tradeNo = t.tradeNo
+        <where>
+            t.payMethod is not null
+            <if test="tradeNo != null and tradeNo != ''">AND t.tradeNo like CONCAT('%',#{tradeNo},'%')</if>
+            <if test="tradeStatus != null and tradeStatus != ''">AND t.tradeStatus = #{tradeStatus}</if>
+            <if test="payMethod != null and payMethod != ''">AND t.payMethod = #{payMethod}</if>
+        </where>
+        ORDER BY t.tradeTime DESC
+    </select>
+</mapper>

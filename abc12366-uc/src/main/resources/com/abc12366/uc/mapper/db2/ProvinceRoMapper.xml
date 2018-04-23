@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ProvinceRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        provinceId, province
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectProvinceList" resultType="com.abc12366.uc.model.Province" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_province
+        <where>
+            1=1
+            <if test="provinceId != null and provinceId!=''">AND provinceId = #{provinceId}</if>
+        </where>
+    </select>
+
+
+</mapper>

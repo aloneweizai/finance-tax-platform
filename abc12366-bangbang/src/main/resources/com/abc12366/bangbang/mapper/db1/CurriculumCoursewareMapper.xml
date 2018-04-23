@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumCoursewareMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_courseware
+		 WHERE coursewareId = #{coursewareId}
+	</delete>
+
+    <!--删除：根据课程ID删除-->
+    <delete id="deleteByCurriculumId" parameterType="java.lang.String">
+        DELETE FROM bb_curriculum_chapter
+        WHERE curriculumId = #{curriculumId}
+    </delete>
+
+    <!--删除：根据课程ID删除-->
+    <delete id="deleteByChapterId" parameterType="java.lang.String">
+        DELETE FROM bb_curriculum_chapter
+        WHERE chapterId = #{chapterId}
+    </delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumCourseware">
+		 INSERT INTO bb_curriculum_courseware
+ 		(coursewareId,curriculumId,isFree,chapterId,type,title,uploadWay,link,fileName,fileSite,fileSize,duration,isDownload,coursewareSeq,createrId,createrName,createTime,updateTime)
+		 VALUES 
+ 		(#{coursewareId},#{curriculumId},#{isFree},#{chapterId},#{type},#{title},#{uploadWay},#{link},#{fileName},#{fileSite},#{fileSize},#{duration},#{isDownload},#{coursewareSeq},#{createrId},#{createrName},#{createTime},#{updateTime})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumCourseware">
+		 INSERT INTO bb_curriculum_courseware
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="coursewareId != null">
+				 coursewareId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+             <if test="isFree != null">
+                 isFree,
+             </if>
+             <if test="chapterId != null">
+                 chapterId,
+             </if>
+			<if test="type != null">
+				 type,
+			</if>
+			<if test="title != null">
+				 title,
+			</if>
+			<if test="uploadWay != null">
+				  uploadWay,
+			</if>
+			<if test="link != null">
+				 link,
+			</if>
+			<if test="fileName != null">
+				 fileName,
+			</if>
+			<if test="fileSite != null">
+				 fileSite,
+			</if>
+			<if test="fileSize != null">
+				 fileSize,
+			</if>
+			<if test="duration != null">
+				 duration,
+			</if>
+			<if test="isDownload != null">
+				 isDownload,
+			</if>
+             <if test="coursewareSeq != null">
+                 coursewareSeq,
+             </if>
+             <if test="createrId != null">
+                 createrId,
+             </if>
+             <if test="createrName != null">
+                 createrName,
+             </if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="coursewareId!=null">
+				 #{coursewareId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+             <if test="isFree!=null">
+                 #{isFree},
+             </if>
+             <if test="chapterId!=null">
+                 #{chapterId},
+             </if>
+			<if test="type!=null">
+				 #{type},
+			</if>
+			<if test="title!=null">
+				 #{title},
+			</if>
+			<if test="uploadWay!=null">
+				 #{uploadWay},
+			</if>
+			<if test="link!=null">
+				 #{link},
+			</if>
+			<if test="fileName!=null">
+				 #{fileName},
+			</if>
+			<if test="fileSite!=null">
+				 #{fileSite},
+			</if>
+			<if test="fileSize!=null">
+				 #{fileSize},
+			</if>
+			<if test="duration!=null">
+				 #{duration},
+			</if>
+			<if test="isDownload!=null">
+				 #{isDownload},
+			</if>
+             <if test="coursewareSeq!=null">
+                 #{coursewareSeq},
+             </if>
+             <if test="createrId!=null">
+                 #{createrId},
+             </if>
+             <if test="createrName!=null">
+                 #{createrName},
+             </if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumCourseware">
+		 UPDATE bb_curriculum_courseware
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+             <if test="isFree != null">
+                 isFree = #{isFree},
+             </if>
+             <if test="chapterId != null">
+                 chapterId = #{chapterId},
+             </if>
+			<if test="type != null">
+				 type = #{type},
+			</if>
+			<if test="title != null">
+				 title = #{title},
+			</if>
+			<if test="uploadWay != null">
+				 uploadWay = #{uploadWay},
+			</if>
+			<if test="link != null">
+				 link = #{link},
+			</if>
+			<if test="fileName != null">
+				 fileName = #{fileName},
+			</if>
+			<if test="fileSite != null">
+				 fileSite = #{fileSite},
+			</if>
+			<if test="fileSize != null">
+				 fileSize = #{fileSize},
+			</if>
+			<if test="duration != null">
+				 duration = #{duration},
+			</if>
+			<if test="isDownload != null">
+				 isDownload = #{isDownload},
+			</if>
+             <if test="coursewareSeq != null">
+                 coursewareSeq = #{coursewareSeq},
+             </if>
+             <if test="createrId != null">
+                 createrId = #{createrId},
+             </if>
+             <if test="createrName != null">
+                 createrName = #{createrName},
+             </if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE coursewareId = #{coursewareId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumCourseware">
+		 UPDATE bb_curriculum_courseware
+		 SET 
+			 curriculumId = #{curriculumId},
+			 isFree = #{isFree},
+			 chapterId = #{chapterId},
+			 type = #{type},
+			 title = #{title},
+			 uploadWay = #{uploadWay},
+			 link = #{link},
+			 fileName = #{fileName},
+			 fileSite = #{fileSite},
+			 fileSize = #{fileSize},
+			 duration = #{duration},
+			 isDownload = #{isDownload},
+			 coursewareSeq = #{coursewareSeq},
+			 createrId = #{createrId},
+			 createrName = #{createrName},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime}
+		 WHERE coursewareId = #{coursewareId}
+	</update>
+
+</mapper>

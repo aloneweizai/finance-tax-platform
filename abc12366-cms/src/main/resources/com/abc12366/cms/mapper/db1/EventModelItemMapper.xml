@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventModelItemMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_event_model_item
+        WHERE modelitemId = #{modelitemId}
+    </delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByEventId" parameterType="java.lang.String">
+        DELETE FROM cms_event_model_item
+        WHERE eventId = #{eventId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.EventModelItem">
+        INSERT INTO cms_event_model_item
+        (modelitemId,eventId,field,itemLabel,priority,defValue,optValue,textSize,checkWay,areaRows,areaCols,help,helpPosition,dataType,isSingle,isDisplay,isRequired,imageWidth,imageHeight,checkRule)
+        VALUES
+        (#{modelitemId},#{eventId},#{field},#{itemLabel},#{priority},#{defValue},#{optValue},#{textSize},#{checkWay},#{areaRows},#{areaCols},#{help},#{helpPosition},#{dataType},#{isSingle},#{isDisplay},#{isRequired},#{imageWidth},#{imageHeight},#{checkRule})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.EventModelItem">
+        INSERT INTO cms_event_model_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelitemId != null">
+                modelitemId,
+            </if>
+            <if test="eventId != null">
+                eventId,
+            </if>
+            <if test="field != null">
+                field,
+            </if>
+            <if test="itemLabel != null">
+                itemLabel,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="defValue != null">
+                defValue,
+            </if>
+            <if test="optValue != null">
+                optValue,
+            </if>
+            <if test="textSize != null">
+                textSize,
+            </if>
+            <if test="checkWay != null">
+                checkWay,
+            </if>
+            <if test="areaRows != null">
+                areaRows,
+            </if>
+            <if test="areaCols != null">
+                areaCols,
+            </if>
+            <if test="help != null">
+                help,
+            </if>
+            <if test="helpPosition != null">
+                helpPosition,
+            </if>
+            <if test="dataType != null">
+                dataType,
+            </if>
+            <if test="isSingle != null">
+                isSingle,
+            </if>
+            <if test="isDisplay != null">
+                isDisplay,
+            </if>
+            <if test="isRequired != null">
+                isRequired,
+            </if>
+            <if test="imageWidth != null">
+                imageWidth,
+            </if>
+            <if test="imageHeight != null">
+                imageHeight,
+            </if>
+            <if test="checkRule != null">
+                checkRule,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelitemId!=null">
+                #{modelitemId},
+            </if>
+            <if test="eventId!=null">
+                #{eventId},
+            </if>
+            <if test="field!=null">
+                #{field},
+            </if>
+            <if test="itemLabel!=null">
+                #{itemLabel},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="defValue!=null">
+                #{defValue},
+            </if>
+            <if test="optValue!=null">
+                #{optValue},
+            </if>
+            <if test="textSize!=null">
+                #{textSize},
+            </if>
+            <if test="checkWay!=null">
+                #{checkWay},
+            </if>
+            <if test="areaRows!=null">
+                #{areaRows},
+            </if>
+            <if test="areaCols!=null">
+                #{areaCols},
+            </if>
+            <if test="help!=null">
+                #{help},
+            </if>
+            <if test="helpPosition!=null">
+                #{helpPosition},
+            </if>
+            <if test="dataType!=null">
+                #{dataType},
+            </if>
+            <if test="isSingle!=null">
+                #{isSingle},
+            </if>
+            <if test="isDisplay!=null">
+                #{isDisplay},
+            </if>
+            <if test="isRequired!=null">
+                #{isRequired},
+            </if>
+            <if test="imageWidth!=null">
+                #{imageWidth},
+            </if>
+            <if test="imageHeight!=null">
+                #{imageHeight},
+            </if>
+            <if test="checkRule!=null">
+                #{checkRule},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.EventModelItem">
+        UPDATE cms_event_model_item
+        <set>
+            <if test="eventId != null">
+                eventId = #{eventId},
+            </if>
+            <if test="field != null">
+                field = #{field},
+            </if>
+            <if test="itemLabel != null">
+                itemLabel = #{itemLabel},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="defValue != null">
+                defValue = #{defValue},
+            </if>
+            <if test="optValue != null">
+                optValue = #{optValue},
+            </if>
+            <if test="textSize != null">
+                textSize = #{textSize},
+            </if>
+            <if test="checkWay != null">
+                checkWay = #{checkWay},
+            </if>
+            <if test="areaRows != null">
+                areaRows = #{areaRows},
+            </if>
+            <if test="areaCols != null">
+                areaCols = #{areaCols},
+            </if>
+            <if test="help != null">
+                help = #{help},
+            </if>
+            <if test="helpPosition != null">
+                helpPosition = #{helpPosition},
+            </if>
+            <if test="dataType != null">
+                dataType = #{dataType},
+            </if>
+            <if test="isSingle != null">
+                isSingle = #{isSingle},
+            </if>
+            <if test="isDisplay != null">
+                isDisplay = #{isDisplay},
+            </if>
+            <if test="isRequired != null">
+                isRequired = #{isRequired},
+            </if>
+            <if test="imageWidth != null">
+                imageWidth = #{imageWidth},
+            </if>
+            <if test="imageHeight != null">
+                imageHeight = #{imageHeight},
+            </if>
+            <if test="checkRule != null">
+                checkRule = #{checkRule},
+            </if>
+
+        </set>
+        WHERE modelitemId = #{modelitemId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.EventModelItem">
+        UPDATE cms_event_model_item
+        SET
+        eventId = #{eventId},
+        field = #{field},
+        itemLabel = #{itemLabel},
+        priority = #{priority},
+        defValue = #{defValue},
+        optValue = #{optValue},
+        textSize = #{textSize},
+        checkWay = #{checkWay},
+        areaRows = #{areaRows},
+        areaCols = #{areaCols},
+        help = #{help},
+        helpPosition = #{helpPosition},
+        dataType = #{dataType},
+        isSingle = #{isSingle},
+        isDisplay = #{isDisplay},
+        isRequired = #{isRequired},
+        imageWidth = #{imageWidth},
+        imageHeight = #{imageHeight},
+        checkRule = #{checkRule}
+        WHERE modelitemId = #{modelitemId}
+    </update>
+
+</mapper>

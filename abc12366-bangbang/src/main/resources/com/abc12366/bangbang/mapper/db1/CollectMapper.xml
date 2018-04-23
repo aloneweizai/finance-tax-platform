@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CollectMapper">
+
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.Collect">
+        insert into bb_collect(id,askId,userId,createTime,lastUpdate)
+        values (#{id}, #{askId}, #{userId}, #{createTime}, #{lastUpdate})
+    </insert>
+
+    <delete id="delete" parameterType="java.util.Map">
+        delete from bb_collect where askId=#{askId} and userId=#{userId}
+    </delete>
+</mapper>

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 curriculumId,title,browseNum,watchNum,classify,goodsId,	recommend,	teachingMethod,	trainTimeBegin,	trainTimeEnd,	isApply,	applyTimeBegin,	applyTimeEnd,	applyPay,	isSign,	signTimeBegin,	signTimeEnd,	issueTime,	peopleLimit,	trainSite,	cover,	label,	issueScope,	isFree,costPrice,sellPrice,marketPrice,integralPrice,	freeMember,	lecturerId,	lecturerName,	lecturerPicture,	curriculumidIntro,	status,	createrId,	createrName,	createrTime,	updateTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.Curriculum" parameterType="java.lang.String">
+		 SELECT
+             curriculumId,title,browseNum,watchNum,classify,cl.classifyName,goodsId,	recommend,	teachingMethod,	trainTimeBegin,	trainTimeEnd,	isApply,	applyTimeBegin,	applyTimeEnd,	applyPay,	isSign,	signTimeBegin,	signTimeEnd,	issueTime,	peopleLimit,	trainSite,	cover,	label,	issueScope,	isFree,costPrice,sellPrice,marketPrice,integralPrice,	freeMember,	lecturerId,	lecturerName,	lecturerPicture,	curriculumidIntro,	status,	createrId,	createrName,	createrTime,	updateTime
+        FROM bb_curriculum c LEFT JOIN bb_curriculum_classify cl ON c.classify = cl.classifyId
+		 WHERE curriculumId = #{curriculumId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListBo" parameterType="java.util.Map">
+        SELECT
+          curriculumId,title,browseNum,sellPrice,watchNum,cover,recommend,cl.classifyName classify,teachingMethod,issueTime,isFree,r.status,nickname createrName,updateTime
+        FROM bb_curriculum r LEFT JOIN bb_curriculum_classify cl ON r.classify = cl.classifyId
+        LEFT JOIN abc12366_uc.uc_admin u ON r.createrId = u.id
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="label != null and label != ''">
+            AND label like CONCAT('%',#{label},'%')
+        </if>
+        <if test="status != null and status != ''">
+            AND r.status = #{status}
+        </if>
+        <if test="isFree != null and isFree != ''">
+            AND r.isFree = #{isFree}
+        </if>
+        <if test="recommend != null">
+            AND r.recommend = #{recommend}
+        </if>
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+        <choose>
+            <when test="sortFieldName != null and sortFieldName != '' and sortName !=null and sortName !=''">
+                ORDER BY ${sortFieldName} ${sortName}
+            </when>
+            <otherwise>
+                ORDER BY updateTime DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCurrCntByGoodsId" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(curriculumId)
+        FROM bb_curriculum
+        WHERE goodsId = #{goodsId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCurrCntByClassify" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+          COUNT(curriculumId)
+        FROM bb_curriculum
+        WHERE 1=1
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+    </select>
+
+    <!-- 查询最新课程 -->
+    <select id="selectListNew" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.util.Map">
+        SELECT
+        curriculumId,title,sellPrice,browseNum,watchNum,goodsId,cover,issueTime,isFree,freeMember,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree,
+        (select count(coursewareId) from bb_curriculum_courseware where curriculumId = c.curriculumId) coursewareNum
+        FROM bb_curriculum c
+        WHERE 1=1 and status = 1
+        <if test="label != null and label != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_label where labelId = #{label})
+        </if>
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+        <if test="freeMember != null and freeMember != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_membergrade where memberGrade = #{freeMember})
+        </if>
+        <if test="isFree != null and isFree != ''">
+            AND isFree = #{isFree}
+        </if>
+        ORDER BY issueTime DESC
+    </select>
+
+    <!-- 查询会员专享课程 -->
+    <select id="selectListVIP" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.util.Map">
+        SELECT
+        curriculumId,title,sellPrice,browseNum,watchNum,goodsId,cover,issueTime,isFree,freeMember,curriculumidIntro,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree,
+        (select count(coursewareId) from bb_curriculum_courseware where curriculumId = c.curriculumId) coursewareNum
+        FROM bb_curriculum c
+        WHERE 1=1 and status = 1
+        <if test="label != null and label != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_label where labelId = #{label})
+        </if>
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+            AND curriculumId in (select curriculumId from bb_curriculum_membergrade group by curriculumId)
+        <if test="isFree != null and isFree != ''">
+            AND isFree = #{isFree}
+        </if>
+        <if test="freeMember != null and freeMember != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_membergrade where memberGrade = #{freeMember})
+        </if>
+        ORDER BY issueTime DESC
+    </select>
+
+    <!-- 查询热播课程 -->
+    <select id="selectListWatch" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.util.Map">
+        SELECT
+        curriculumId,title,sellPrice,browseNum,watchNum,goodsId,cover,issueTime,isFree,freeMember,curriculumidIntro,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree,
+        (select count(coursewareId) from bb_curriculum_courseware where curriculumId = c.curriculumId) coursewareNum
+        FROM bb_curriculum c
+        WHERE 1=1 and status = 1
+        <if test="label != null and label != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_label where labelId = #{label})
+        </if>
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+        <if test="freeMember != null and freeMember != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_membergrade where memberGrade = #{freeMember})
+        </if>
+        <if test="isFree != null and isFree != ''">
+            AND isFree = #{isFree}
+        </if>
+        ORDER BY watchNum DESC,issueTime DESC
+    </select>
+
+    <!-- 查询推荐课程 -->
+    <select id="selectRecommend" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.lang.String">
+        SELECT
+        curriculumId,title,sellPrice,browseNum,watchNum,goodsId,cover,issueTime,isFree,freeMember,curriculumidIntro,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree,
+        (select count(coursewareId) from bb_curriculum_courseware where curriculumId = c.curriculumId) coursewareNum
+        FROM bb_curriculum c
+        WHERE 1=1 and status = 1 and recommend = 'recommend'
+        <if test="label != null and label != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_label where labelId = #{label})
+        </if>
+        <if test="classify != null and classify != ''">
+            AND classify like CONCAT(#{classify},'%')
+        </if>
+        <if test="freeMember != null and freeMember != ''">
+            AND curriculumId in (select curriculumId from bb_curriculum_membergrade where memberGrade = #{freeMember})
+        </if>
+        <if test="isFree != null and isFree != ''">
+            AND isFree = #{isFree}
+        </if>
+        ORDER BY issueTime DESC
+    </select>
+
+    <!-- 查询授课情况 -->
+    <select id="selectSituation" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumSituationBo" parameterType="java.lang.String">
+        SELECT
+            curriculumId,title,browseNum,watchNum,teachingMethod,peopleLimit,applyTimeBegin,applyTimeEnd,signTimeBegin,signTimeEnd,
+            (SELECT ifnull(count(o.orderNo),0) FROM abc12366_uc.uc_order o LEFT JOIN abc12366_uc.uc_order_product p on o.orderNo = p.orderNo WHERE p.goodsId = c.curriculumId and o.orderStatus = '6') orderNum,
+            (SELECT ifnull(sum(o.totalPrice),0) FROM abc12366_uc.uc_order o LEFT JOIN abc12366_uc.uc_order_product p on o.orderNo = p.orderNo WHERE p.goodsId = c.curriculumId and o.tradeMethod = 'RMB' and o.orderStatus = '6') generalIncome,
+            (SELECT ifnull(sum(o.totalPrice),0) FROM abc12366_uc.uc_order o LEFT JOIN abc12366_uc.uc_order_product p on o.orderNo = p.orderNo WHERE p.goodsId = c.curriculumId and o.tradeMethod = 'POINTS' and o.orderStatus = '6') aggregateScore,
+			(SELECT ifnull(count(applyId),0) FROM bb_curriculum_apply where curriculumId = c.curriculumId) applyNum,
+            (SELECT ifnull(count(applyId),0) FROM bb_curriculum_apply where curriculumId = c.curriculumId and signTime is not null) signNum
+        FROM bb_curriculum c
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+    <!-- 查询课程信息(前端用) -->
+    <select id="selectCurriculum" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumsyBo" parameterType="java.lang.String">
+        SELECT
+        curriculumId,title,browseNum,watchNum,goodsId,issueTime,cover,isFree,costPrice,sellPrice,marketPrice,integralPrice,curriculumidIntro,
+        trainTimeBegin,trainTimeEnd,isApply,peopleLimit,applyTimeBegin,applyTimeEnd,applyPay,isSign,signTimeBegin,signTimeEnd,teachingMethod,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where curriculumId =c.curriculumId) evaluateNum,
+            (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(4,5) and curriculumId =c.curriculumId) evaluateNum45,
+            (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(2,3) and curriculumId =c.curriculumId) evaluateNum23,
+            (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade = 1 and curriculumId =c.curriculumId) evaluateNum1
+        FROM bb_curriculum c
+        WHERE curriculumId = #{curriculumId} and c.status = 1
+    </select>
+
+    <!-- 查询课程信息(查询下架课程) -->
+    <select id="selectCurriculum2" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumsyBo" parameterType="java.lang.String">
+        SELECT
+        curriculumId,title,browseNum,watchNum,goodsId,issueTime,cover,isFree,costPrice,sellPrice,marketPrice,integralPrice,curriculumidIntro,
+        trainTimeBegin,trainTimeEnd,isApply,peopleLimit,applyTimeBegin,applyTimeEnd,applyPay,isSign,signTimeBegin,signTimeEnd,teachingMethod,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where curriculumId =c.curriculumId) evaluateNum,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(4,5) and curriculumId =c.curriculumId) evaluateNum45,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(2,3) and curriculumId =c.curriculumId) evaluateNum23,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade = 1 and curriculumId =c.curriculumId) evaluateNum1
+        FROM bb_curriculum c
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+
+    <!-- 查询课程评价统计信息(前端用) -->
+    <select id="selectEvaluateTj" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumEvaluateTjBo" parameterType="java.lang.String">
+        SELECT
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where curriculumId =c.curriculumId) evaluateNum,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(4,5) and curriculumId =c.curriculumId) evaluateNum45,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade in(2,3) and curriculumId =c.curriculumId) evaluateNum23,
+        (SELECT count(evaluateId) FROM bb_curriculum_evaluate where grade = 1 and curriculumId =c.curriculumId) evaluateNum1
+        FROM bb_curriculum c
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+    <!-- 查询相关课程 -->
+    <select id="selectListxgNew" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.lang.String">
+        SELECT
+        curriculumId,title,sellPrice,browseNum,watchNum,goodsId,cover,issueTime,isFree,freeMember,curriculumidIntro,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree
+        FROM bb_curriculum c
+        WHERE 1=1 and status = 1 and curriculumId != #{curriculumId}
+            AND curriculumId in (select curriculumId from bb_curriculum_label where labelId in(select labelId from bb_curriculum_label where curriculumId = #{curriculumId}))
+        ORDER BY issueTime DESC limit 4
+    </select>
+
+    <!-- 查询课程学习历史 -->
+    <select id="selectStudyHistory" resultType="com.abc12366.bangbang.model.curriculum.bo.CurrMyStudyBo" parameterType="java.util.Map">
+        select s.curriculumId,s.userId,orderTime,orderPrice,orderIntegral,isIntegral,orderStatus,c.title,c.teachingMethod,c.cover,c.isFree,
+            (select studyTime from bb_curriculum_study where curriculumId = s.curriculumId order by studyTime desc limit 1) studyTime,
+            (select coursewareId from bb_curriculum_study where curriculumId = s.curriculumId order by studyTime desc limit 1) coursewareId,
+            (SELECT count(evaluateId) FROM bb_curriculum_evaluate where curriculumId = s.curriculumId and userId = s.userId) evaluateNum
+            from (SELECT curriculumId,userId FROM bb_curriculum_study
+            WHERE 1=1
+            <if test="userId != null and userId != ''">
+                AND userId = #{userId}
+            </if>
+            group by curriculumId,userId order by studyTime desc) s
+            left join bb_curriculum_order o on (s.curriculumId = o.curriculumId and s.userId = o.userId)
+            left join bb_curriculum c on s.curriculumId = c.curriculumId
+    </select>
+
+    <!-- 查询本月学习课程数 -->
+    <select id="selectStudyNumByMonth" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT count(distinct curriculumId) FROM bb_curriculum_study
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        and date_format(studyTime,'%Y-%m')=date_format(now(),'%Y-%m')
+    </select>
+
+    <!-- 查询本年学习课程数 -->
+    <select id="selectStudyNumByYear" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT count(distinct curriculumId) FROM bb_curriculum_study
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        and YEAR(studyTime)=YEAR(NOW())
+    </select>
+
+    <!-- 查询学习勤奋榜 -->
+    <select id="selectStudyQfb" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT ranking FROM bb_curriculum_study_qfb
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+    </select>
+
+    <!-- 查询收藏课程 -->
+    <select id="selectListCollect" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListsyBo" parameterType="java.util.Map">
+        SELECT
+        col.curriculumId,title,c.teachingMethod,sellPrice,browseNum,watchNum,goodsId,cover,collectTime,issueTime,
+        isFree,freeMember,curriculumidIntro,
+        (SELECT count(*) FROM bb_curriculum_membergrade where curriculumId = c.curriculumId) isVipFree,
+        (select count(coursewareId) from bb_curriculum_courseware where curriculumId = c.curriculumId) coursewareNum
+        FROM bb_curriculum_collect col left join bb_curriculum c on col.curriculumId = c.curriculumId
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND col.userId = #{userId}
+        </if>
+        ORDER BY collectTime DESC
+    </select>
+
+    <!-- 查询课件是否免费 -->
+    <select id="selectCoursewareCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+          COUNT(coursewareId)
+        FROM
+        bb_curriculum_courseware
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+
+    <!-- 查询课程标题是否重复 -->
+    <select id="selectCurriculumCnt" resultType="java.lang.Integer"
+            parameterType="java.util.Map">
+        SELECT
+        count(curriculumId) cnt
+        FROM bb_curriculum
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title = #{title}
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId != #{curriculumId}
+        </if>
+    </select>
+
+    <select id="selectByKnowledgeId"  resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListBo">
+        SELECT curriculumId,title,sellPrice,updateTime,browseNum,watchNum,cover,issueTime,isFree
+          FROM  bb_curriculum WHERE STATUS =  '1' AND curriculumId IN (
+            SELECT DISTINCT(curriculumId) FROM bb_curriculum_label WHERE labelId IN(
+                SELECT tagId FROM bb_knowledge_tag_rel WHERE knowledgeId = #{knowledgeId}
+            )
+        )
+        ORDER BY browseNum DESC
+        LIMIT #{num}
+    </select>
+
+</mapper>

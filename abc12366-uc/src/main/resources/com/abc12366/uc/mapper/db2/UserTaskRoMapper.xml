@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserTaskRoMapper">
+
+
+    <select id="selectMyTask" parameterType="java.lang.String" resultType="com.abc12366.uc.model.bo.MyTaskBO">
+        <!-- SELECT
+        uu.points currentPoints,
+        (SELECT SUM(uutt.award) FROM uc_user_task_todo uutt WHERE uutt.status=0 AND uutt.userId=uu.id and uutt.awardType = '1') unReceivePoints,
+        NULL taskRange,
+        (SELECT COUNT(1) finishedTaskCount FROM uc_user_task_todo uutt WHERE uutt.status=1 AND uutt.userId = uu.id AND
+        uutt.createTime &gt;=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND uutt.createTime &lt; (SELECT
+        DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) finishedTaskCount
+        FROM
+        uc_user uu
+        WHERE uu.id=#{userId} -->
+        <![CDATA[
+            SELECT 
+            max(t.currentPoints) currentPoints, sum(t.unReceivePoints)  unReceivePoints, max(t.taskRange)  taskRange, sum(t.finishedTaskCount)  finishedTaskCount 
+			FROM
+			(SELECT
+			        uu.points currentPoints,
+			        (SELECT SUM(uutt.award) FROM uc_user_task_todo uutt WHERE uutt.status=0 AND uutt.userId=uu.id and uutt.awardType = '1') unReceivePoints,
+			        NULL taskRange,
+			        (SELECT COUNT(1) finishedTaskCount FROM uc_user_task_todo uutt WHERE uutt.status=1 AND uutt.userId = uu.id AND
+			        uutt.createTime >=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND uutt.createTime < (SELECT
+			        DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) finishedTaskCount
+			        FROM
+			        uc_user uu
+			        WHERE uu.id=#{userId}
+			UNION
+			SELECT
+			        uu.points currentPoints,
+			        (SELECT SUM(uutt.award) FROM uc_user_task_archive uutt WHERE uutt.status=0 AND uutt.userId=uu.id and uutt.awardType = '1') unReceivePoints,
+			        NULL taskRange,
+			        (SELECT COUNT(1) finishedTaskCount FROM uc_user_task_archive uutt WHERE uutt.status=1 AND uutt.userId = uu.id AND
+			        uutt.createTime >=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY)) AND uutt.createTime < (SELECT
+			        DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))) finishedTaskCount
+			        FROM
+			        uc_user uu
+			        WHERE uu.id=#{userId}
+			) t
+        ]]>
+    </select>
+
+    <select id="selectTaskRangeList" resultType="com.abc12366.uc.model.bo.TaskRangeBO">
+        SELECT a.userId,SUM(a.award) sumPoints
+        FROM
+        (SELECT uutt.userId,uutt.award
+        FROM uc_user_task_todo uutt
+        WHERE uutt.status=1
+        AND uutt.createTime &gt;= (SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        AND uutt.createTime &lt; (SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        ) a
+        GROUP BY a.userId
+        ORDER BY sumPoints DESC
+    </select>
+
+    <select id="selectMyTaskSurvey" parameterType="java.lang.String" resultType="com.abc12366.uc.model.MyTaskSurvey">
+
+               SELECT
+        (SELECT SUM(uul.income)
+        FROM uc_uexp_log uul
+        WHERE uul.userId=#{userId}
+        <![CDATA[
+                AND uul.createTime >=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        ]]>
+        <![CDATA[
+                AND uul.createTime < (SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        ]]>
+        ) earnedExp,
+        (SELECT SUM(upl.income)
+        FROM uc_upoints_log upl
+        WHERE upl.userId=#{userId}
+        <![CDATA[
+                AND upl.createTime >=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        ]]>
+        <![CDATA[
+                AND upl.createTime < (SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        ]]>
+        )earnedPoint,
+        (SELECT COUNT(1)
+        FROM uc_user_task_todo uutt
+        WHERE uutt.userId=#{userId}
+        AND uutt.status=1
+        <![CDATA[
+                AND uutt.createTime >=(SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        ]]>
+        <![CDATA[
+                AND uutt.createTime < (SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        ]]>
+        )completedTaskCount
+        FROM DUAL
+    </select>
+</mapper>

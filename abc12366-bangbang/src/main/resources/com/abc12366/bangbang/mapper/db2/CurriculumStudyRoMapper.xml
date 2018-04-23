@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumStudyRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 studyId,	curriculumId,	coursewareId,	userId,	username,	nickname,	memberGrade,	studyTime,	studyDuration,	coursewareDuration,	visitIP,	visitSite
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumStudy" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_study
+		 WHERE studyId = #{studyId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumStudyBo" parameterType="java.util.Map">
+        SELECT
+        studyId,	s.curriculumId,	s.coursewareId,c.title coursewareName,s.userId,	u.username,	u.nickname,	(select l.level from bb_uvip_level l WHERE s.memberGrade = l.levelCode) memberGrade,	studyTime,	studyDuration,	coursewareDuration,	visitIP,	visitSite
+        FROM bb_curriculum_study s left join bb_user u on s.userId = u.id
+        left join bb_curriculum_courseware c on s.coursewareId = c.coursewareId
+        WHERE 1=1
+        <if test="username != null and username != ''">
+            AND u.username like CONCAT('%',#{username},'%')
+        </if>
+        <if test="begintime != null">
+            <![CDATA[
+              and date_format(studyTime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endtime != null">
+            <![CDATA[
+              and date_format(studyTime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')
+              ]]>
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND s.curriculumId = #{curriculumId}
+        </if>
+        order by s.studyTime desc
+    </select>
+
+    <!-- 查询学习次数 -->
+    <select id="selectStudyCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(studyId)
+        FROM bb_curriculum_study
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.GiftApplyRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	applyId,	giftId,	giftName,	giftAmount,giftNum
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.gift.GiftApply" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM uc_gift_apply
+		 WHERE id = #{id}
+	</select>
+
+	<!-- 查询（根据applyId查询） -->
+	<select id="selectByApplyId" resultType="com.abc12366.uc.model.gift.GiftApply" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM uc_gift_apply
+		 WHERE applyId = #{applyId}
+	</select>
+
+	<!-- 查询（根据giftId查询） -->
+	<select id="selectByGiftId" resultType="com.abc12366.uc.model.gift.GiftApply" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM uc_gift_apply
+		 WHERE giftId = #{giftId}
+	</select>
+
+
+</mapper>

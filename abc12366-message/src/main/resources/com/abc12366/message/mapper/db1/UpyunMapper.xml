@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db1.UpyunMapper">
+
+    <sql id="Base_Column">
+        id,title,sign,type,content,status,reason,createTime,synchronizeTime,templateId,
+        ownerId,ownerName,ownerIndustry,ownerMarketing
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.message.model.UpyunTemplate">
+        insert into msg_upyun_template (<include refid="Base_Column"/>)
+        VALUES (#{id},#{title},#{sign},#{type},#{content},#{status},#{reason},#{createTime}
+                ,#{synchronizeTime},#{templateId},#{ownerId},#{ownerName},
+                #{ownerIndustry},#{ownerMarketing})
+    </insert>
+    <delete id="delete">
+        delete from msg_upyun_template
+    </delete>
+</mapper>

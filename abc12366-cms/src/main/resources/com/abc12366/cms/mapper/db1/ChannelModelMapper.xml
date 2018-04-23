@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ChannelModelMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_channel_model
+        WHERE channelId = #{channelId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ChannelModel">
+        INSERT INTO cms_channel_model
+        (channelId,modelId,tplContent,priority)
+        VALUES
+        (#{channelId},#{modelId},#{tplContent},#{priority})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ChannelModel">
+        INSERT INTO cms_channel_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channelId != null">
+                channelId,
+            </if>
+            <if test="modelId != null">
+                modelId,
+            </if>
+            <if test="tplContent != null">
+                tplContent,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channelId!=null">
+                #{channelId},
+            </if>
+            <if test="modelId!=null">
+                #{modelId},
+            </if>
+            <if test="tplContent!=null">
+                #{tplContent},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ChannelModel">
+        UPDATE cms_channel_model
+        <set>
+            <if test="modelId != null">
+                modelId = #{modelId},
+            </if>
+            <if test="tplContent != null">
+                tplContent = #{tplContent},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+
+        </set>
+        WHERE channelId = #{channelId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ChannelModel">
+        UPDATE cms_channel_model
+        SET
+        modelId = #{modelId},
+        tplContent = #{tplContent},
+        priority = #{priority}
+        WHERE channelId = #{channelId}
+    </update>
+
+</mapper>

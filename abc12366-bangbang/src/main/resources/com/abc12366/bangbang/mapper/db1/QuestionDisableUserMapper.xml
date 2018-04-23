@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionDisableUserMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_disable_user
+		 WHERE userId = #{userId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionDisableUser">
+		 INSERT INTO bb_question_disable_user
+ 		(userId,reason,activeTime,updateAdmin,updateTime) 
+		 VALUES 
+ 		(#{userId},#{reason},#{activeTime},#{updateAdmin},now())
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionDisableUser">
+		 INSERT INTO bb_question_disable_user
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="reason != null">
+				 reason,
+			</if>
+			<if test="activeTime != null">
+				 activeTime,
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin,
+			</if>
+			updateTime
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="reason!=null">
+				 #{reason},
+			</if>
+			<if test="activeTime!=null">
+				 #{activeTime},
+			</if>
+			<if test="updateAdmin!=null">
+				 #{updateAdmin},
+			</if>
+			now()
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionDisableUser">
+		 UPDATE bb_question_disable_user
+ 		 <set> 
+			<if test="reason != null">
+				 reason = #{reason},
+			</if>
+			<if test="activeTime != null">
+				 activeTime = #{activeTime},
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin = #{updateAdmin},
+			</if>
+				 updateTime = now()
+ 		 </set>
+		 WHERE userId = #{userId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionDisableUser">
+		 UPDATE bb_question_disable_user
+		 SET 
+			 reason = #{reason},
+			 activeTime = #{activeTime},
+			 updateAdmin = #{updateAdmin},
+			 updateTime = now()
+		 WHERE userId = #{userId}
+	</update>
+
+</mapper>

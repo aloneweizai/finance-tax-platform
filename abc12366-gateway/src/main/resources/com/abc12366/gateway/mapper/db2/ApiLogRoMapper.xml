@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.ApiLogRoMapper">
+
+    <!--列表查询-->
+    <select id="selectList" resultType="com.abc12366.gateway.model.ApiLog">
+        select id, uri, userAgent, userId, appId, ip, inTime, outTime, status, version,method
+        from gw_api_log_${yyyyMMdd}
+    </select>
+
+    <!--根据appId统计-->
+    <select id="selectApiList" resultType="com.abc12366.gateway.model.bo.ApiLogBO" parameterType="java.util.Map">
+        SELECT p.nickname as nickname,g.appId as appId,count(g.appId) as appAccessCount FROM gw_api_log_${startTime} g
+        LEFT JOIN gw_app p on p.id = g.appId where g.appId is not null GROUP BY g.appId
+    </select>
+
+    <!--根据apiId统计-->
+    <select id="selectApiListByAppId" resultType="com.abc12366.gateway.model.bo.ApiLogBO" parameterType="java.util.Map">
+        select a.name as nickname,a.uri,a.method,a.version,i.num as appAccessCount  from
+        (SELECT g.uri,g.method,g.version,g.appId,count(g.uri) as num FROM gw_api_log_${startTime} g
+         where g.appId = #{appId}
+         GROUP BY g.uri,g.method,g.version) i,
+        gw_api a
+        where
+            i.version = a.version
+            AND i.method = a.method
+            AND i.uri = a.uri
+        ORDER BY appAccessCount DESC
+    </select>
+
+    <!--根据apiId列表查询-->
+    <select id="selectApiListByApiId" resultType="com.abc12366.gateway.model.bo.ApiLogBO" parameterType="java.util.Map">
+        select id, uri, userAgent, userId, appId, ip, inTime, outTime, status, version,method
+        from gw_api_log_${startTime}
+        <where>
+            1 = 1
+            <if test="version != null and version != ''">
+             AND   version = #{version}
+            </if>
+            <if test="method != null and method != ''">
+              AND  method = #{method}
+            </if>
+            <if test="uri != null and uri != ''">
+              AND  uri = #{uri}
+            </if>
+            <if test="appId != null and appId != ''">
+              AND  appId = #{appId}
+            </if>
+        </where>
+        order by inTime desc
+    </select>
+
+    <!--根据列表查询-->
+    <select id="selectListPage" resultType="com.abc12366.gateway.model.ApiLog">
+        select id, uri, userAgent, userId, appId, ip, inTime, outTime, status, version,method
+        from gw_api_log_${yyyyMMdd}
+        <where>
+            <if test="uri != null">
+                uri = #{uri}
+            </if>
+        </where>
+    </select>
+
+    <!--根据查询数量-->
+    <select id="selectApiLogCount" resultType="java.lang.Integer" parameterType="com.abc12366.gateway.model.ApiLog">
+        select count(*)
+        from gw_api_log_${yyyyMMdd}
+        <where>
+            <if test="startTime != null">
+                <![CDATA[
+            and inTime >= #{startTime}
+            ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+            and inTime <= #{endTime}
+              ]]>
+            </if>
+
+            <if test="uri != null">
+                and uri = #{uri}
+            </if>
+            <if test="appId != null">
+                and appId = #{appId}
+            </if>
+            <if test="ip != null">
+                and ip = #{ip}
+            </if>
+            <if test="method != null">
+                and method = #{method}
+            </if>
+        </where>
+    </select>
+
+</mapper>

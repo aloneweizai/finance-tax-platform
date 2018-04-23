@@ -1,0 +1,19 @@
+#Tue Jun 30 11:41:10 GMT+08:00 2015
+com.abc12366.uc.jrxt.model.tiripPackage.ControlType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ControlTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.SubPackageType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.SubPackageTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ParamList=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ParamListDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ReturnStateType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ReturnStateTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ReturnState=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ReturnStateDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ContentControl=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ContentControlDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.BusinessContentType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.BusinessContentTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.IdentityType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.IdentityTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.RouterSession=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.RouterSessionDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.TiripPackageType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.TiripPackageTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ParamListType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ParamListTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.Control=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ControlDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.BusinessContent=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.BusinessContentDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.Identity=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.IdentityDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.RouterSessionType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.RouterSessionTypeDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.SubPackage=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.SubPackageDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.TiripPackage=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.TiripPackageDescriptor
+com.abc12366.uc.jrxt.model.tiripPackage.ContentControlType=com.abc12366.uc.jrxt.model.tiripPackage.descriptors.ContentControlTypeDescriptor

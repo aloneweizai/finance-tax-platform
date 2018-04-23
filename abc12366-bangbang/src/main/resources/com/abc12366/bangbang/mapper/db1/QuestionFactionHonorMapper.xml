@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionHonorMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_honor
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionHonor">
+		 INSERT INTO bb_question_faction_honor
+ 		(id,factionId,honor,honorTime,answerNum,discussNum,adoptNum,splendidNum,createTime,updateTime) 
+		 VALUES 
+ 		(#{id},#{factionId},#{honor},#{honorTime},#{answerNum},#{discussNum},#{adoptNum},#{splendidNum},#{createTime},#{updateTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionHonor">
+		 INSERT INTO bb_question_faction_honor
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="honor != null">
+				 honor,
+			</if>
+			<if test="honorTime != null">
+				 honorTime,
+			</if>
+			<if test="answerNum != null">
+				 answerNum,
+			</if>
+			<if test="discussNum != null">
+				 discussNum,
+			</if>
+			<if test="adoptNum != null">
+				 adoptNum,
+			</if>
+			<if test="splendidNum != null">
+				 splendidNum,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="honor!=null">
+				 #{honor},
+			</if>
+			<if test="honorTime!=null">
+				 #{honorTime},
+			</if>
+			<if test="answerNum!=null">
+				 #{answerNum},
+			</if>
+			<if test="discussNum!=null">
+				 #{discussNum},
+			</if>
+			<if test="adoptNum!=null">
+				 #{adoptNum},
+			</if>
+			<if test="splendidNum!=null">
+				 #{splendidNum},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionHonor">
+		 UPDATE bb_question_faction_honor
+ 		 <set> 
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="honor != null">
+				 honor = #{honor},
+			</if>
+			<if test="honorTime != null">
+				 honorTime = #{honorTime},
+			</if>
+			<if test="answerNum != null">
+				 answerNum = #{answerNum},
+			</if>
+			<if test="discussNum != null">
+				 discussNum = #{discussNum},
+			</if>
+			<if test="adoptNum != null">
+				 adoptNum = #{adoptNum},
+			</if>
+			<if test="splendidNum != null">
+				 splendidNum = #{splendidNum},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFactionHonor">
+		 UPDATE bb_question_faction_honor
+		 SET 
+			 factionId = #{factionId},
+			 honor = #{honor},
+			 honorTime = #{honorTime},
+			 answerNum = #{answerNum},
+			 discussNum = #{discussNum},
+			 adoptNum = #{adoptNum},
+			 splendidNum = #{splendidNum},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

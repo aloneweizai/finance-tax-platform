@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	userId,	title,	detail,	status,tag,ip,	createTime,	lastUpdate,	points,	isSolve,	classifyCode,	browseNum, isRecommend
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.Question" parameterType="java.lang.String">
+		 SELECT
+             q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        (SELECT count(likeId) FROM bb_question_like where questionId = q.id) likeNum,
+	      (SELECT count(id) FROM bb_question_answer where questionId = q.id) answerNum
+		 FROM bb_question q left join bb_user u on q.userId = u.id
+		 WHERE q.id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectQuestion" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.lang.String">
+        SELECT
+        q.id,	userId,	q.title,collectNum,answerNum,reportNum,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        (SELECT count(likeId) FROM bb_question_like where questionId = q.id) likeNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.id = #{id}
+    </select>
+
+    <!-- 最新问题 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        select aa.*,a.shortAnswer,a.answerImage,a.likeNum,a.trampleNum,a.commentNum from (SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0'
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.createTime DESC, q.isRecommend DESC) aa left join bb_question_answer a on aa.answerId = a.id
+    </select>
+
+    <!-- 推荐问题 -->
+    <select id="selectListRecommend" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId,
+        (select shortAnswer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) shortAnswer,
+        (select answer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answer,
+        (select answerImage from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerImage,
+        (select likeNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) likeNum,
+        (select trampleNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) trampleNum,
+        (select commentNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) commentNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0' and isRecommend = '1'
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.createTime DESC
+    </select>
+
+    <!-- 高悬赏问题 -->
+    <select id="selectListByPoints" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId,
+        (select shortAnswer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) shortAnswer,
+        (select answerImage from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerImage,
+        (select likeNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) likeNum,
+        (select trampleNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) trampleNum,
+        (select commentNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) commentNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0' and q.points >0
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.isRecommend DESC, q.createTime DESC
+    </select>
+
+    <!-- 热门问题 -->
+    <select id="selectListByBrowseNum" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId,
+        (select shortAnswer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) shortAnswer,
+        (select answerImage from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerImage,
+        (select likeNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) likeNum,
+        (select trampleNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) trampleNum,
+        (select commentNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) commentNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0'
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.isRecommend DESC, browseNum DESC
+    </select>
+
+    <!-- 0回答问题 -->
+    <select id="selectListWait" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0' and q.answerNum = 0
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.isRecommend DESC, q.createTime DESC
+    </select>
+
+    <!-- 已解决问题 -->
+    <select id="selectListAccept" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId,
+        (select shortAnswer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) shortAnswer,
+        (select answerImage from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerImage,
+        (select likeNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) likeNum,
+        (select trampleNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) trampleNum,
+        (select commentNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) commentNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0' and q.id in(SELECT questionId FROM bb_question_answer where isAccept = '1')
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY q.isRecommend DESC, q.createTime DESC
+    </select>
+
+    <!-- 查询帮友热议 -->
+    <select id="selectListry" resultType="com.abc12366.bangbang.model.question.bo.QuestionryBo" parameterType="java.util.Map">
+        SELECT
+        q.id,q.title,u.userPicturePath,u.nickname,q.createTime,	q.points,q.browseNum,detail,
+        collectNum,answerNum,
+        (select id from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) answerId,
+        (select shortAnswer from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) shortAnswer,
+        (select commentNum from bb_question_answer where status = '0' and questionId = q.id order by likeNum desc limit 1) commentNum, 
+        (select count(id) from bb_question_comment where status = '0' and questionId = q.id ) ttcommentNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE q.status = '0'
+        and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt; date(q.createtime)
+        ORDER BY isRecommend DESC, (answerNum+ttcommentNum) DESC
+    </select>
+
+    <!-- 我的举报 -->
+    <select id="selectTipList" resultType="com.abc12366.bangbang.model.question.bo.QuestionjbBo" parameterType="java.lang.String">
+        SELECT
+             t.sourceId,t.sourceType,t.createTime,t.status,
+             CASE sourceType
+                 WHEN 'question' THEN (select title from bb_question where id = t.sourceId)
+                 WHEN 'cheats' THEN (select title from bb_cheats where id = t.sourceId)
+                 WHEN 'answer' THEN (select title from bb_question where id = t.questionId)
+                 WHEN 'comment' THEN (select title from bb_question where id = t.questionId)
+                 WHEN 'cheats_comment' THEN (select title from bb_cheats where id = t.questionId)
+                 ELSE '' END  as title,
+            CASE sourceType
+				 WHEN 'question' THEN (select detail from bb_question where id = t.sourceId)
+                 WHEN 'cheats' THEN (select detail from bb_cheats where id = t.sourceId)
+                 WHEN 'answer' THEN (select answer from bb_question_answer where id = t.sourceId)
+                 WHEN 'comment' THEN (select commentTxt from bb_question_comment where id = t.sourceId)
+                 WHEN 'cheats_comment' THEN (select commentTxt  from bb_cheats_comment where id = t.sourceId)
+                 ELSE '' END  as answer
+        FROM
+            bb_question_tip_off t
+        where t.createUser = #{userId}
+        ORDER BY t.createTime DESC
+    </select>
+
+    <!-- 查找分类代码 -->
+    <select id="selectclassifyCode" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT classifyCode FROM bb_question where id = #{questionId}
+    </select>
+
+    <!-- 查找邦派ID -->
+    <select id="selectfactionId" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT factionId FROM bb_question_faction_classify where factionId in(SELECT factionId FROM bb_question_faction_member where userId = #{userId})
+        and classifyId = #{classifyCode} limit 1
+    </select>
+
+
+    <!-- 话题推荐管理 -->
+    <select id="selectListTopicRecommend" resultType="com.abc12366.bangbang.model.question.bo.RecommendBo" parameterType="com.abc12366.bangbang.model.bo.TopicRecommendParamBO">
+        SELECT * FROM (
+            SELECT id,	title,createTime,isRecommend,(SELECT COUNT(likeId) FROM bb_question_like WHERE questionId = q.id) likeNum,
+            q.answerNum,
+            (SELECT COUNT(id) FROM bb_question_comment WHERE questionId = q.id) commentNum, 'question' AS type
+            FROM bb_question q
+            UNION ALL
+            SELECT  id,  title, createTime, isRecommend,likeNum,0 AS answerNum, commentNum, 'cheats' AS type    FROM bb_cheats
+        )
+        temp
+        WHERE 1=1
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="keywords != null and keywords != ''">
+            AND title like CONCAT('%',#{keywords},'%')
+        </if>
+        <if test="isRecommend != null">
+            <choose>
+                <when test="isRecommend == true">
+                    AND isRecommend = 1
+                </when>
+                <otherwise>
+                    AND (isRecommend = 0 OR isRecommend is NULL )
+                </otherwise>
+            </choose>
+        </if>
+        <choose>
+            <when test="sortFieldName != null and sortFieldName != '' and sortName !=null and sortName !=''">
+                ORDER BY ${sortFieldName} ${sortName}
+            </when>
+            <otherwise>
+                ORDER BY createTime DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 邀我答的问题 -->
+    <select id="selectInviteList" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.lang.String">
+        SELECT
+        q.id,	q.userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        q.answerNum
+        FROM bb_question_invite i left join bb_question q on i.questionId = q.id left join bb_user u on q.userId = u.id
+        WHERE i.userId = #{userId}
+        ORDER BY q.createTime DESC
+    </select>
+
+    <!-- 我的提问 -->
+    <select id="selectMyQuestionList" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.util.Map">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        (SELECT count(id) FROM bb_question_answer where questionId = q.id and isAccept = '1') isAccept,
+        (SELECT count(id) FROM abc12366_bangbang.bb_question_tip_off where sourceId = q.id and sourceType = 'question' and createUser = q.userId) isTip,
+        q.browseNum,q.collectNum,q.answerNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE 1=1
+        <if test="isAccept != null and isAccept != ''">
+            AND (SELECT count(id) FROM bb_question_answer where questionId = q.id and isAccept = '1') > 0
+        </if>
+        <if test="isTip != null and isTip != ''">
+            AND (SELECT count(id) FROM abc12366_bangbang.bb_question_tip_off where sourceId = q.id and sourceType = 'question' and createUser = q.userId) > 0
+        </if>
+        <if test="userId != null and userId != ''">
+            AND q.userId = #{userId}
+        </if>
+        ORDER BY q.createTime DESC
+    </select>
+
+    <!-- 我的帮帮 -->
+    <select id="selectMybangbang" resultType="com.abc12366.bangbang.model.question.bo.MyQuestionTjBo" parameterType="java.lang.String">
+        select
+        (SELECT COUNT(1) FROM bb_question WHERE userId = #{userId}) questionNum,
+        (SELECT COUNT(1) FROM bb_question_like WHERE likeType = 1 and  userId = #{userId}) likeNum,
+        (SELECT COUNT(1) FROM bb_question_like WHERE likeType = 1 and toUserId = #{userId}) quiltLikeNum,
+        (SELECT COUNT(1) FROM bb_question_collect WHERE userId = #{userId}) collectNum,
+        (SELECT COUNT(1) FROM bb_question_attention WHERE userId = #{userId}) attentionNum,
+        (SELECT count(*) FROM bb_question_attention where attentionUserId = #{userId}) fansNum,
+        (SELECT count(*) FROM bb_question_answer where userId = #{userId}) answerNum,
+        (SELECT count(*) FROM bb_question_comment where userId = #{userId}) commentNum,
+        (SELECT count(*) FROM bb_question_answer where isAccept = '1' and userId = #{userId}) acceptNum,
+        (SELECT count(*) FROM bb_question_attention where isRead = 0 and attentionUserId = #{userId}) newFansNum,
+        (SELECT count(*) FROM bb_question_medal_user mu where mu.userId = #{userId}) medalNum,
+        (select count(*) from bb_question_answer a where a.isRead = 0 and
+          a.questionId in(select q.id from bb_question q where q.userId = #{userId})) newAnswerNum,
+		(select count(*) from bb_question q where
+          q.id in(SELECT i.questionId FROM bb_question_invite i where i.isRead = 0 and i.userId = #{userId})) newInviteNum
+        from dual
+    </select>
+
+    <!-- 我管理的话题 -->
+    <select id="selectMyManageQuesList" resultType="com.abc12366.bangbang.model.question.bo.QuestionBo" parameterType="java.lang.String">
+        SELECT
+        q.id,	userId,	q.title,	detail,u.userPicturePath,u.nickname,q.status,tag,ip,	q.createTime,	q.lastUpdate,	q.points,	isSolve,	classifyCode,	browseNum, isRecommend,
+        q.browseNum,q.collectNum,q.answerNum
+        FROM bb_question q left join bb_user u on q.userId = u.id
+        WHERE 1=1
+        and q.classifyCode in (SELECT classifyCode FROM bb_question_headman where userId = #{userId} and status = 'success')
+        ORDER BY q.createTime DESC
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectQcDtList" resultType="com.abc12366.bangbang.model.question.bo.QuestionDtBo" parameterType="java.lang.String">
+        SELECT
+            l.qlogType,l.createTime,
+				CASE
+				WHEN qlogType in(1,2,3,5) THEN q.id
+                WHEN qlogType in(6,7,9) THEN ch.id
+                 ELSE '' END  as titleId,
+
+                 CASE
+				WHEN qlogType in(2,3,5) THEN a.id
+                WHEN qlogType in(6,7,9) THEN ch.id
+                 ELSE '' END  as answerId,
+
+				CASE
+				WHEN qlogType in(1,2,3,5) THEN q.status
+                WHEN qlogType in(6,7,9) THEN ch.status
+                 ELSE '' END  as status,
+
+				CASE
+				WHEN qlogType in(2,3,5) THEN a.userId
+                WHEN qlogType in(6,7,9) THEN ch.userId
+                 ELSE '' END  as userId,
+
+				CASE
+				WHEN qlogType in(2,3,5) THEN u1.nickname
+                WHEN qlogType in(6,7,9) THEN u2.nickname
+                 ELSE '' END  as nickname,
+
+                 CASE
+				WHEN qlogType in(2,3,5) THEN u1.userPicturePath
+                WHEN qlogType in(6,7,9) THEN u2.userPicturePath
+                 ELSE '' END  as userPicturePath,
+
+				CASE
+				WHEN qlogType in(1,2,3,5) THEN q.title
+                WHEN qlogType in(6,7,9) THEN ch.title
+                 ELSE '' END  as title,
+                 CASE
+                WHEN qlogType in(2,3,5) THEN a.shortAnswer
+                WHEN qlogType in(6,7,9) THEN ch.describ
+                 ELSE '' END  as shortAnswer,
+                 CASE
+                WHEN qlogType in(2,3,5) THEN ifnull(a.answerImage,'')
+                 ELSE '' END  as answerImage,
+                 CASE
+                 WHEN qlogType in(1,2,3,5) THEN q.answerNum
+                 ELSE 0 END  as answerNum,
+                 CASE
+				WHEN qlogType in(1,2,3,5) THEN q.collectNum
+                WHEN qlogType in(6,7,9) THEN ch.collectNum
+                 ELSE 0 END  as collectNum,
+                 CASE
+				WHEN qlogType in(2,3,5) THEN a.likeNum
+                WHEN qlogType in(6,7,9) THEN ch.likeNum
+                 ELSE 0 END  as likeNum,
+                 CASE
+				WHEN qlogType in(2,3,5) THEN a.trampleNum
+                WHEN qlogType in(6,7,9) THEN ch.trampleNum
+                 ELSE 0 END  as trampleNum,
+                 CASE
+				WHEN qlogType in(2,3,5) THEN a.commentNum
+                WHEN qlogType in(6,7,9) THEN ch.commentNum
+                 ELSE 0 END  as commentNum,
+                 CASE
+				WHEN qlogType in(3,7) THEN l.commentTxt
+                 ELSE '' END  as commentTxt
+             FROM bb_question_log l
+             left join bb_question q on l.qcId = q.id
+             left join bb_question_answer a on l.answerId = a.id
+             left join bb_cheats ch on l.qcId = ch.id
+             left join bb_user u1 on a.userId = u1.id
+             left join bb_user u2 on ch.userId = u2.id
+             where l.userId = #{userId} order by l.createTime
+    </select>
+
+</mapper>

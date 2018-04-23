@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.ContentRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		contentId,	channelId,	typeId,contentType,	modelId,	siteId,	sortDate,	topLevel,	hasTitleImg,	isRecommend,	status,	viewsDay,	commentsDay,	downloadsDay,	upsDay,username,userid,	recommendLevel
+	</sql>
+
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Content" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM cms_content
+		 WHERE contentId = #{contentId}
+	</select>
+
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByChannelId" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT count(contentId) cnt
+		FROM cms_content
+		WHERE channelId like CONCAT(#{channelId},'%')
+	</select>
+    
+    
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectList" resultType="com.abc12366.cms.model.bo.ContentListBo" parameterType="java.util.Map">
+		SELECT
+			a.contentId contentId,
+            a.userid userid,
+            a.username username,
+			b.title title,
+			b.titleColor titleColor,
+			a.channelId channelId,
+			c.channelName channelName,
+			a.topLevel topLevel,
+			a.typeId typeId,
+			b.author author,
+			a.viewsDay views,
+			b.releaseDate releaseDate,
+			a.status STATUS,
+			b.needRegenerate needRegenerate,
+			b.staticLink,
+            c.isDisplay,
+            s.siteId,
+            s.siteName,
+            s.sitePath,s.domain,
+            s.siteStatus,
+			a.recommendLevel recommendLevel
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId
+        LEFT JOIN cms_site s ON a.siteId = s.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+		WHERE 1=1
+		<if test="title != null and title != ''">
+			AND b.title like CONCAT('%',#{title},'%')
+		</if>
+		<if test="username != null and username != ''">
+			AND a.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="typeId != null and typeId != ''">
+			AND a.typeId = #{typeId}
+		</if>
+		<if test="topLevel != null and topLevel != ''">
+			AND a.topLevel = #{topLevel}
+		</if>
+        <if test="siteId != null and siteId != ''">
+            AND a.siteId = #{siteId}
+        </if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		<if test="recommendLevel != null and recommendLevel != ''">
+			AND a.recommendLevel = #{recommendLevel}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		ORDER BY b.releaseDate DESC
+	</select>
+	
+
+    <!-- 查询（根据查询条件查询） -->
+    <select id="selectListByviews" resultType="com.abc12366.cms.model.bo.ContentViewListBo" parameterType="java.util.Map">
+      <![CDATA[
+        SELECT
+        a.contentId contentId,
+        a.userid userid,
+        a.username username,
+        b.title title,
+        b.shortTitle,
+        a.contentType,
+        b.titleImg,
+        b.origin,
+        b.description,
+        b.titleColor titleColor,
+        a.channelId channelId,
+        c.channelName channelName,
+        a.topLevel topLevel,
+        a.typeId typeId,
+        b.author author,
+        a.viewsDay views,
+        b.releaseDate releaseDate,
+        a.status STATUS,
+        b.needRegenerate needRegenerate,
+        a.recommendLevel recommendLevel,
+        b.staticLink,
+        d.siteName,
+        c.channelPath,d.sitePath,d.domain
+        FROM cms_content a
+        LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+        LEFT JOIN cms_channel c ON a.channelId = c.channelId
+        LEFT JOIN cms_site d ON a.siteId = d.siteId
+        LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+        WHERE a.status = 2 AND b.needRegenerate = 1
+        AND date(b.releaseDate) >= date_sub(curdate(), INTERVAL 7 DAY)
+      ]]>
+        <if test="tagId != null and tagId != ''">
+            AND a.contentType like CONCAT('%',#{channelId},'%')
+        </if>
+        <if test="channelId != null and channelId != ''">
+            AND a.channelId like CONCAT(#{channelId},'%')
+        </if>
+        <if test="siteId != null and siteId != ''">
+            AND a.siteId = #{siteId}
+        </if>
+		<if test="exceptChannelId != null and exceptChannelId != ''">
+			AND a.channelId != #{exceptChannelId}
+		</if>
+        ORDER BY a.topLevel DESC,e.viewsDay DESC
+    </select>
+
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectListByTplContent" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+		SELECT
+		a.contentId contentId,
+		a.typeId typeId
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		WHERE 1=1
+		<if test="typeId != null and typeId != ''">
+			AND a.typeId = #{typeId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		<if test="tplContent != null and tplContent != ''">
+			AND b.tplContent = #{tplContent}
+		</if>
+		<if test="needRegenerate != null and needRegenerate != ''">
+			AND b.needRegenerate = #{needRegenerate}
+		</if>
+		<if test="startTime!=null and startTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &lt;= #{endTime}
+		</if>
+		ORDER BY a.topLevel DESC,a.recommendLevel DESC,b.releaseDate DESC
+	</select>
+
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectListByContentType" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+		SELECT
+		a.contentId contentId,
+        a.userid userid,
+        a.username username,
+		b.title title,
+        b.shortTitle,
+		a.contentType,
+		b.titleImg,
+        b.origin,
+		b.description,
+		b.titleColor titleColor,
+		a.channelId channelId,
+		c.channelName channelName,
+		a.topLevel topLevel,
+		a.typeId typeId,
+		b.author author,
+        a.viewsDay views,
+		b.releaseDate releaseDate,
+		a.status STATUS,
+		b.needRegenerate needRegenerate,
+		a.recommendLevel recommendLevel,
+		b.staticLink,
+        d.siteName,
+		c.channelPath,d.sitePath,d.domain
+		FROM cms_content a
+		<if test="tagId != null and tagId != ''">
+			LEFT JOIN cms_contenttagid t ON t.contentId = a.contentId
+		</if>
+        LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId
+		LEFT JOIN cms_site d ON a.siteId = d.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+		WHERE a.status = 2 AND b.needRegenerate = 1 and c.isDisplay != 0 and d.siteStatus != 0
+		<if test="tagId != null and tagId != ''">
+			AND t.tagId = #{tagId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		<if test="exceptChannelId != null and exceptChannelId != ''">
+			and a.channelId != #{exceptChannelId}
+		</if>
+		<if test="siteId != null and siteId != ''">
+			AND a.siteId = #{siteId}
+		</if>
+		<if test="startTime!=null and startTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &lt;= #{endTime}
+		</if>
+		ORDER BY b.releaseDate DESC
+	</select>
+
+	<!-- 查询（根据channelId查询） -->
+	<select id="selectContentType" resultType="com.abc12366.cms.model.bo.ContenttagidBo" parameterType="java.util.Map">
+		SELECT t.tagId, t.priority, t.tagName FROM
+		(
+			SELECT
+			a.tagId,COUNT(a.tagId) priority,(select name from abc12366_bangbang.bb_knowledge_tag where id = a.tagId) tagName
+			FROM cms_contenttagid a LEFT JOIN cms_content b ON a.contentId = b.contentId LEFT JOIN cms_content_ext c on
+			a.contentId = c.contentId
+			WHERE 1=1
+			<if test="siteId != null and siteId != ''">
+				AND b.siteId = #{siteId}
+			</if>
+			<if test="channelId != null and channelId != ''">
+				AND b.channelId like CONCAT(#{channelId},'%')
+			</if>
+			AND b.status = 2 AND c.needRegenerate= 1
+			GROUP BY a.tagId
+			ORDER BY priority DESC
+		)t
+		WHERE t.tagName IS NOT null
+	</select>
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectCntByChannelId" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+		COUNT(a.contentId) cnt
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId
+		LEFT JOIN cms_site d ON a.siteId = d.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+        LEFT JOIN cms_content_topic t ON a.contentId = t.contentId
+		WHERE a.status = 2 and b.needRegenerate = 0 and c.isDisplay != 0 and d.siteStatus != 0
+		<if test="typeId != null and typeId != ''">
+			AND a.typeId = #{typeId}
+		</if>
+		<if test="channelName != null and channelName != ''">
+			AND c.channelName = #{channelName}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		<if test="tplContent != null and tplContent != ''">
+			AND b.tplContent = #{tplContent}
+		</if>
+        <if test="topicId != null and topicId != ''">
+            AND t.topicId = #{topicId}
+        </if>
+		<if test="startTime!=null and startTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &lt;= #{endTime}
+		</if>
+		ORDER BY a.topLevel DESC,a.recommendLevel DESC,b.releaseDate DESC
+	</select>
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectListByChannelId" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+		SELECT
+		a.contentId contentId,
+        a.userid userid,
+        a.username username,
+		b.title title,
+        b.shortTitle,
+		a.contentType,
+		b.titleImg,
+        b.origin,
+		b.description,
+		b.titleColor titleColor,
+		a.channelId channelId,
+		c.channelName channelName,
+		a.topLevel topLevel,
+		a.typeId typeId,
+		b.author author,
+        a.viewsDay views,
+		b.releaseDate releaseDate,
+		a.status STATUS,
+		b.needRegenerate needRegenerate,
+		a.recommendLevel recommendLevel,
+		b.staticLink,
+        d.siteName,
+		c.channelPath,d.sitePath,d.domain
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId
+		LEFT JOIN cms_site d ON a.siteId = d.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+        LEFT JOIN cms_content_topic t ON a.contentId = t.contentId
+		WHERE a.status = 2 and c.isDisplay != 0 and d.siteStatus != 0
+		<if test="typeId != null and typeId != ''">
+			AND a.typeId = #{typeId}
+		</if>
+		<if test="channelName != null and channelName != ''">
+			AND c.channelName = #{channelName}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		<if test="exceptChannelId != null and exceptChannelId != ''">
+			AND a.channelId != #{exceptChannelId}
+		</if>
+		<if test="tplContent != null and tplContent != ''">
+			AND b.tplContent = #{tplContent}
+		</if>
+		<if test="needRegenerate != null and needRegenerate != ''">
+			AND b.needRegenerate = #{needRegenerate}
+		</if>
+        <if test="topicId != null and topicId != ''">
+            AND t.topicId = #{topicId}
+        </if>
+		<if test="startTime!=null and startTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+			AND UNIX_TIMESTAMP(b.releaseDate) &lt;= #{endTime}
+		</if>
+		ORDER BY a.topLevel DESC,b.releaseDate DESC
+	</select>
+
+    <!-- 查询（根据查询条件查询） -->
+    <select id="selectListByTagName" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+        SELECT
+        a.contentId contentId,
+        a.userid userid,
+        a.username username,
+        b.title title,
+        b.shortTitle,
+        a.contentType,
+        b.titleImg,
+        b.origin,
+        b.description,
+        b.titleColor titleColor,
+        a.channelId channelId,
+        c.channelName channelName,
+        a.topLevel topLevel,
+        a.typeId typeId,
+        b.author author,
+        a.viewsDay views,
+        b.releaseDate releaseDate,
+        a.status STATUS,
+        b.needRegenerate needRegenerate,
+        a.recommendLevel recommendLevel,
+        b.staticLink,
+        d.siteName,
+        c.channelPath,d.sitePath,d.domain
+        FROM cms_content a
+		<if test="tagName != null and tagName != ''">
+			LEFT JOIN cms_contenttagid t ON t.contentId = a.contentId
+		</if>
+        LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+        LEFT JOIN cms_channel c ON a.channelId = c.channelId
+        LEFT JOIN cms_site d ON a.siteId = d.siteId
+        LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+        WHERE a.status = 2 AND b.needRegenerate = 1 and c.isDisplay != 0 and d.siteStatus != 0
+        <if test="tagName != null and tagName != ''">
+            AND t.tagId in (select id from abc12366_bangbang.bb_knowledge_tag where name = #{tagName})
+        </if>
+        <if test="channelName != null and channelName != ''">
+            AND c.channelName = #{channelName}
+        </if>
+        <if test="siteName != null and siteName != ''">
+            AND d.siteName = #{siteName}
+        </if>
+        ORDER BY b.releaseDate DESC, a.topLevel DESC
+    </select>
+
+    <!-- 查询财税资讯网 -->
+    <select id="selectListcszxw" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+        SELECT
+        a.contentId contentId,
+        a.userid userid,
+        a.username username,
+        b.title title,
+        b.shortTitle,
+        a.contentType,
+        b.titleImg,
+        b.origin,
+        b.description,
+        b.titleColor titleColor,
+        a.channelId channelId,
+        c.channelName channelName,
+        a.topLevel topLevel,
+        a.typeId typeId,
+        b.author author,
+        a.viewsDay views,
+        b.releaseDate releaseDate,
+        a.status STATUS,
+        b.needRegenerate needRegenerate,
+        a.recommendLevel recommendLevel,
+        b.staticLink,
+        d.siteName,
+        c.channelPath,d.sitePath,d.domain
+        FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+        LEFT JOIN cms_channel c ON a.channelId = c.channelId
+        LEFT JOIN cms_site d ON a.siteId = d.siteId
+        LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+        LEFT JOIN cms_content_topic t ON a.contentId = t.contentId
+        WHERE a.status = 2 and c.isDisplay != 0 and d.siteStatus != 0
+        and c.channelId != '0ne8sy4'
+        <if test="siteId != null and siteId != ''">
+            AND d.siteId = #{siteId}
+        </if>
+        ORDER BY a.topLevel DESC,b.releaseDate DESC
+    </select>
+
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectListBytopicId" resultType="com.abc12366.cms.model.bo.ContentsListBo" parameterType="java.util.Map">
+		SELECT
+		a.contentId contentId,
+        a.userid userid,
+        a.username username,
+		b.title title,
+        b.shortTitle,
+		a.contentType,
+		b.titleImg,
+        b.origin,
+		b.description,
+		b.titleColor titleColor,
+		a.channelId channelId,
+		a.topLevel topLevel,
+		a.typeId typeId,
+		b.author author,
+        a.viewsDay views,
+		b.releaseDate releaseDate,
+		a.status STATUS,
+		b.needRegenerate needRegenerate,
+		a.recommendLevel recommendLevel,
+		b.staticLink,
+        d.siteName,
+		f.channelPath,d.sitePath,d.domain
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_content_topic c ON a.contentId = c.topicId
+        LEFT JOIN cms_channel f ON a.channelId =f.channelId
+		LEFT JOIN cms_site d ON a.siteId = d.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+		WHERE a.status = 2 and f.isDisplay != 0 and d.siteStatus != 0
+		<if test="topicId != null and topicId != ''">
+			AND c.topicId = #{topicId}
+		</if>
+		<if test="channelName != null and channelName != ''">
+			AND f.channelName = #{channelName}
+		</if>
+		ORDER BY a.topLevel DESC,a.recommendLevel DESC,b.releaseDate DESC
+	</select>
+
+
+	<!-- 查询（根据contentId查询） -->
+	<select id="selectByContentId" resultType="com.abc12366.cms.model.Content" parameterType="java.lang.String">
+		SELECT
+			a.contentId,a.userid userid,
+            a.username username,	a.channelId,	a.typeId,a.contentType,	a.modelId,	a.siteId,
+			a.sortDate,	a.topLevel,	a.hasTitleImg,	a.isRecommend,	a.status,
+			a.viewsDay,	a.commentsDay,	a.downloadsDay,	a.upsDay,a.recommendLevel,
+			b.channelPath,c.sitePath,c.domain
+		FROM cms_content a LEFT JOIN cms_channel b ON a.channelId = b.channelId
+			LEFT JOIN cms_site c ON a.siteId = c.siteId
+		WHERE a.contentId = #{contentId}
+	</select>
+
+
+	<!-- 查询（根据ReleaseDate查询下一篇） -->
+	<select id="selectByReleaseDateAsc" resultType="com.abc12366.cms.model.bo.ContentudBo" parameterType="java.util.Map">
+		SELECT a.contentId,b.title,b.shortTitle,c.channelPath,d.sitePath,'down' upordown FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+			LEFT JOIN cms_channel c ON a.channelId = c.channelId LEFT JOIN cms_site d ON a.siteId = d.siteId
+		WHERE UNIX_TIMESTAMP(b.releaseDate) &gt; #{releaseDate} AND a.channelId = #{channelId} ORDER BY UNIX_TIMESTAMP(b.releaseDate) ASC LIMIT 1
+	</select>
+
+	<!-- 查询（根据ReleaseDate查询上一篇） -->
+	<select id="selectByReleaseDateDesc" resultType="com.abc12366.cms.model.bo.ContentudBo" parameterType="java.util.Map">
+		SELECT a.contentId,b.title,b.shortTitle,c.channelPath,d.sitePath,d.domain domain,'up' upordown FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId LEFT JOIN cms_site d ON a.siteId = d.siteId
+		WHERE UNIX_TIMESTAMP(b.releaseDate) &lt; #{releaseDate} AND a.channelId = #{channelId} ORDER BY UNIX_TIMESTAMP(b.releaseDate) DESC LIMIT 1
+	</select>
+
+	<!-- 查询（根据查询条件查询） -->
+	<select id="selectListSearch" resultType="com.abc12366.cms.model.bo.ContentListBo" parameterType="java.util.Map">
+		SELECT
+		DISTINCT a.contentId contentId,
+		a.userid userid,
+		a.username username,
+		a.contentType,
+		b.title title,
+		b.titleColor titleColor,
+		a.channelId channelId,
+		c.channelName channelName,
+		a.topLevel topLevel,
+		a.typeId typeId,
+		b.author author,
+		a.viewsDay views,
+		b.releaseDate releaseDate,
+		a.status STATUS,
+		b.needRegenerate needRegenerate,
+		b.staticLink,
+		c.isDisplay,
+		s.siteId,
+		s.siteName,
+		s.sitePath,s.domain,
+		s.siteStatus,
+		a.recommendLevel recommendLevel,
+		b.shortTitle,
+		b.titleImg
+
+		FROM cms_content a LEFT JOIN cms_content_ext b ON a.contentId = b.contentId
+		LEFT JOIN cms_content_txt t ON a.contentId = t.contentId
+		LEFT JOIN cms_channel c ON a.channelId = c.channelId
+		LEFT JOIN cms_site s ON a.siteId = s.siteId
+		LEFT JOIN cms_content_count e ON a.contentId = e.contentId
+		LEFT JOIN cms_contenttagid tg ON tg.contentId = a.contentId
+		WHERE a.status = 2
+		<if test="text != null and text != ''">
+			 AND (MATCH(b.title, b.shortTitle, b.description) AGAINST(#{text1} IN BOOLEAN MODE)
+			OR MATCH(txt) AGAINST(#{text1} IN BOOLEAN MODE)
+			OR tg.tagId in (select id from abc12366_bangbang.bb_knowledge_tag where name = #{text}))
+		</if>
+		<if test="siteId != null and siteId != ''">
+			AND a.siteId = #{siteId}
+		</if>
+		<if test="channelId != null and channelId != ''">
+			AND a.channelId like CONCAT(#{channelId},'%')
+		</if>
+		ORDER BY b.releaseDate DESC
+
+	</select>
+
+
+
+</mapper>

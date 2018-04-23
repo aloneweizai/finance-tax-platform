@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.PointsLogMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.PointsLog">
+        insert into uc_upoints_log(id,userId,ruleId,income,outgo,usablePoints,createTime,logType,remark)
+        values(#{id}, #{userId}, #{ruleId}, #{income}, #{outgo}, #{usablePoints}, #{createTime}, #{logType}, #{remark})
+    </insert>
+    <select id="updatePointAndLog" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.bo.PointsLogBO" statementType="CALLABLE">
+        {call updatePointAndLog(
+        #{userId,jdbcType=VARCHAR,mode=IN},
+        #{points,jdbcType=INTEGER,mode=IN},
+        #{ruleId,jdbcType=VARCHAR,mode=IN}
+        )
+        }
+    </select>
+</mapper>

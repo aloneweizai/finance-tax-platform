@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumCollectMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.util.Map">
+		 DELETE FROM bb_curriculum_collect
+		 WHERE curriculumId = #{curriculumId} and userId = #{userId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumCollect">
+		 INSERT INTO bb_curriculum_collect
+ 		(collectId,curriculumId,userId,collectTime)
+		 VALUES 
+ 		(#{collectId},#{curriculumId},#{userId},#{collectTime})
+	</insert>
+
+</mapper>

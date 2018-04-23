@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionCollectMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_collect
+		 WHERE collectId = #{collectId}
+	</delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.util.Map">
+        DELETE FROM bb_question_collect
+        WHERE questionId = #{questionId} and userId = #{userId}
+    </delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionCollect">
+		 INSERT INTO bb_question_collect
+ 		(collectId,questionId,userId,collectTime) 
+		 VALUES 
+ 		(#{collectId},#{questionId},#{userId},#{collectTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionCollect">
+		 INSERT INTO bb_question_collect
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="collectId != null">
+				 collectId,
+			</if>
+			<if test="questionId != null">
+				 questionId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="collectTime != null">
+				 collectTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="collectId!=null">
+				 #{collectId},
+			</if>
+			<if test="questionId!=null">
+				 #{questionId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="collectTime!=null">
+				 #{collectTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionCollect">
+		 UPDATE bb_question_collect
+ 		 <set> 
+			<if test="questionId != null">
+				 questionId = #{questionId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="collectTime != null">
+				 collectTime = #{collectTime},
+			</if>
+
+ 		 </set>
+		 WHERE collectId = #{collectId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionCollect">
+		 UPDATE bb_question_collect
+		 SET 
+			 questionId = #{questionId},
+			 userId = #{userId},
+			 collectTime = #{collectTime}
+		 WHERE collectId = #{collectId}
+	</update>
+
+</mapper>

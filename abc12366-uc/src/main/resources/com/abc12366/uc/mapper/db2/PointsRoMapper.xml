@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.PointsRoMapper">
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.PointsBO" parameterType="java.lang.String">
+        select uu.points myPoints,
+        (select sum(income) from uc_upoints_log up where up.userId=uu.id) income,
+        (select sum(outgo) from uc_upoints_log up where up.userId=uu.id) outgo
+        from uc_user uu
+        where uu.id = #{userId}
+    </select>
+
+    <select id="selectPointComputeLog" resultType="com.abc12366.uc.model.bo.PointComputeLogParam" parameterType="com.abc12366.uc.model.bo.PointComputeBO">
+        select id,userId,upointCodexId,timeType,createTime
+        from uc_upoint_compute_log
+        where userId=#{userId}
+        and upointCodexId=#{upointCodexId}
+        and timeType=#{timeType}
+        and createTime &gt;= #{startTime}
+        and createTime &lt; #{endTime}
+    </select>
+    <select id="selectCalculateLog" resultType="com.abc12366.uc.model.bo.PointComputeLogParam" parameterType="com.abc12366.uc.model.bo.PointComputeBO">
+        select id,userId,upointCodexId,timeType,createTime,ruleId
+        from uc_upoint_compute_log
+        where userId=#{userId}
+        and ruleId=#{ruleId}
+        and timeType=#{timeType}
+        and createTime &gt;= #{startTime}
+        and createTime &lt; #{endTime}
+    </select>
+    <select id="selectCodexList" parameterType="com.abc12366.uc.model.bo.PointComputeBO" resultType="com.abc12366.uc.model.bo.PointCodex" >
+        select id,upointruleCode,clientType,upoint,period,degree,remark
+        from uc_upoints_codex
+        where uri=#{uri}
+        and clientType=#{clientType}
+    </select>
+
+    <select id="codexList" resultType="com.abc12366.uc.model.bo.PointCodex" >
+        select id,upointruleCode,clientType,uri,upoint,period,degree,remark
+        from uc_upoints_codex
+
+    </select>
+
+    <select id="selectCodexByRuleCode" resultType="com.abc12366.uc.model.bo.PointCodex" >
+        select id,upointruleCode,clientType,uri,upoint,period,degree,remark
+        from uc_upoints_codex
+        where upointruleCode=#{upointruleCode}
+    </select>
+
+
+</mapper>

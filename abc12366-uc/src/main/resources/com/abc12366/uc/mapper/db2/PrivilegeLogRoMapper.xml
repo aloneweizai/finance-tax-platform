@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.PrivilegeLogRoMapper">
+
+    <select id="selectListMonth" parameterType="java.lang.String" resultType="com.abc12366.uc.model.PrivilegeLog">
+        select id,userId,dateType,logType,createTiem
+        from uc_uvip_privilege_log
+        where logType = #{logType}
+        and userId = #{userId}
+        and createTime &gt;= (SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        and createTime &lt;(SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+    </select>
+
+    <select id="selectListYear" parameterType="java.lang.String" resultType="com.abc12366.uc.model.PrivilegeLog">
+        select id,userId,dateType,logType,createTiem
+        from uc_uvip_privilege_log
+        where logType = #{logType}
+        and userId = #{userId}
+        and createTime &gt;= (SELECT DATE_SUB(CURDATE(),INTERVAL DAYOFYEAR(NOW())-1 DAY))
+        and createTime &lt;(SELECT CONCAT(YEAR(NOW())+1,'-01-01'))
+    </select>
+
+    <select id="selectList" parameterType="java.lang.String" resultType="com.abc12366.uc.model.PrivilegeLog">
+        select id,userId,dateType,logType,createTiem
+        from uc_uvip_privilege_log
+        where logType = #{logType}
+        and userId = #{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.VipLevelRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.VipLevelBO" parameterType="java.util.Map">
+        SELECT id,level,factor,status,lastUpdate,createTime,levelCode,costPrice,marketPrice,salePrice,sendPoints,imgUrl,pointsPrice
+        from uc_uvip_level
+        <where>
+            <if test="level!=null">
+                level=#{level}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        ORDER BY levelCode ASC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.VipLevelBO" parameterType="java.lang.String">
+        SELECT id,level,factor,status,lastUpdate,createTime,levelCode,costPrice,marketPrice,salePrice,sendPoints,imgUrl,pointsPrice
+        from uc_uvip_level
+        where id = #{id}
+    </select>
+
+    <select id="selectByLevel" resultType="com.abc12366.uc.model.bo.VipLevelBO" parameterType="java.lang.String">
+        SELECT id,level,factor,status,lastUpdate,createTime,levelCode,costPrice,marketPrice,salePrice,sendPoints,imgUrl,pointsPrice
+        from uc_uvip_level
+        where level = #{level}
+    </select>
+    <select id="selectByLevelCode" resultType="com.abc12366.uc.model.bo.VipLevelBO" parameterType="java.lang.String">
+        SELECT id,level,factor,status,lastUpdate,createTime,levelCode,costPrice,marketPrice,salePrice,sendPoints,imgUrl,pointsPrice
+        from uc_uvip_level
+        where levelCode = #{levelCode}
+    </select>
+
+    <select id="selectUserByVipLevelCode" parameterType="java.lang.String" resultType="com.abc12366.uc.model.User">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+         uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel
+        from uc_user uu
+        inner join uc_uvip_level uul
+        on uu.vipLevel = uul.levelCode
+        where uul.id =#{id}
+    </select>
+</mapper>

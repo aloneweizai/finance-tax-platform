@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionExpertMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		DELETE FROM bb_question_expert
+		WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionExpert">
+		INSERT INTO bb_question_expert
+		(id,userId,type,yearWork,goodField,intro,createTime,createAdmin,updateTime,updateAdmin,status)
+		VALUES
+		(#{id},#{userId},#{type},#{yearWork},#{goodField},#{intro},now(),#{createAdmin},now(),#{updateAdmin},#{status})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionExpert">
+		INSERT INTO bb_question_expert
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="yearWork != null">
+				yearWork,
+			</if>
+			<if test="goodField != null">
+				goodField,
+			</if>
+			<if test="intro != null">
+				intro,
+			</if>
+			<if test="createAdmin != null">
+				createAdmin,
+			</if>
+			<if test="updateAdmin != null">
+				updateAdmin,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			createTime,updateTime
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="userId!=null">
+				#{userId},
+			</if>
+			<if test="type!=null">
+				#{type},
+			</if>
+			<if test="yearWork!=null">
+				#{yearWork},
+			</if>
+			<if test="goodField!=null">
+				#{goodField},
+			</if>
+			<if test="intro!=null">
+				#{intro},
+			</if>
+			<if test="createAdmin!=null">
+				#{createAdmin},
+			</if>
+			<if test="updateAdmin!=null">
+				#{updateAdmin},
+			</if>
+			<if test="status!=null">
+				#{status},
+			</if>
+			now(),now()
+		</trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionExpert">
+		UPDATE bb_question_expert
+		<set>
+			<if test="userId != null">
+				userId = #{userId},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="yearWork != null">
+				yearWork = #{yearWork},
+			</if>
+			<if test="goodField != null">
+				goodField = #{goodField},
+			</if>
+			<if test="intro != null">
+				intro = #{intro},
+			</if>
+			<if test="createAdmin != null">
+				createAdmin = #{createAdmin},
+			</if>
+			<if test="updateAdmin != null">
+				updateAdmin = #{updateAdmin},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			createTime = now(), updateTime = now()
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionExpert">
+		 UPDATE bb_question_expert
+		 SET
+			 userId = #{userId},
+			 type = #{type},
+			 yearWork = #{yearWork},
+			 goodField = #{goodField},
+			 intro = #{intro},
+			 createTime = now(),
+			 updateTime = now(),
+			 createAdmin = #{createAdmin},
+			 updateAdmin = #{updateAdmin},
+			 status = #{status}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

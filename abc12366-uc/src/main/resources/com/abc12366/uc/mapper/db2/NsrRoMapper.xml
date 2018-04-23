@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.NsrRoMapper">
+    <select id="selectOne" resultType="com.abc12366.uc.model.Nsr">
+        select id, userId, djxh, nsrsbh, shxydm, status, createTime, lastUpdate
+        from uc_user_nsr
+        where id=#{id}
+    </select>
+    <select id="selectList" resultType="com.abc12366.uc.model.Nsr">
+        select id, userId, djxh, nsrsbh, shxydm, status, createTime, lastUpdate
+        from uc_user_nsr
+        <where>
+            <if test="userId != null">
+                userId = #{userId}
+            </if>
+            <if test="djxh != null">
+                AND djxh = #{djxh}
+            </if>
+            <if test="nsrsbh != null">
+                AND nsrsbh = #{nsrsbh}
+            </if>
+            <if test="shxydm != null">
+                AND shxydm = #{shxydm}
+            </if>
+        </where>
+    </select>
+</mapper>

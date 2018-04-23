@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.ReturnVisitMapper">
+
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM bb_return_visit
+		WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.ReturnVisit">
+		INSERT INTO bb_return_visit
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				id,
+			</if>
+			<if test="nsrsbh != null">
+				nsrsbh,
+			</if>
+			<if test="nsrmc != null">
+				nsrmc,
+			</if>
+			<if test="productName != null">
+				productName,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="visitDate != null">
+				visitDate,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="nsrsbh!=null">
+				#{nsrsbh},
+			</if>
+			<if test="nsrmc!=null">
+				#{nsrmc},
+			</if>
+			<if test="productName!=null">
+				#{productName},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="phone!=null">
+				#{phone},
+			</if>
+			<if test="visitDate!=null">
+				#{visitDate},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.bangbang.model.ReturnVisit">
+		UPDATE bb_return_visit
+		<set>
+			<if test="nsrsbh != null">
+				nsrsbh = #{nsrsbh},
+			</if>
+			<if test="nsrmc != null">
+				nsrmc = #{nsrmc},
+			</if>
+			<if test="productName != null">
+				productName = #{productName},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="visitDate != null">
+				visitDate = #{visitDate},
+			</if>
+
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

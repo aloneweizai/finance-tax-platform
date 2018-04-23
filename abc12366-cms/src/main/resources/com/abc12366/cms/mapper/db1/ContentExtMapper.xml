@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentExtMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_ext
+        WHERE contentId = #{contentId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentExt">
+        INSERT INTO cms_content_ext
+        (contentId,title,shortTitle,author,origin,originUrl,description,releaseDate,mediaPath,mediaType,isBold,titleColor,titleImg,contentImg,typeImg,link,tplContent,needRegenerate,toplevelDate,staticLink,pigeonholeDate)
+        VALUES
+        (#{contentId},#{title},#{shortTitle},#{author},#{origin},#{originUrl},#{description},#{releaseDate},#{mediaPath},#{mediaType},#{isBold},#{titleColor},#{titleImg},#{contentImg},#{typeImg},#{link},#{tplContent},#{needRegenerate},#{toplevelDate},#{staticLink},#{pigeonholeDate})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentExt">
+        INSERT INTO cms_content_ext
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="shortTitle != null">
+                shortTitle,
+            </if>
+            <if test="author != null">
+                author,
+            </if>
+            <if test="origin != null">
+                origin,
+            </if>
+            <if test="originUrl != null">
+                originUrl,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="releaseDate != null">
+                releaseDate,
+            </if>
+            <if test="mediaPath != null">
+                mediaPath,
+            </if>
+            <if test="mediaType != null">
+                mediaType,
+            </if>
+            <if test="isBold != null">
+                isBold,
+            </if>
+            <if test="titleColor != null">
+                titleColor,
+            </if>
+            <if test="titleImg != null">
+                titleImg,
+            </if>
+            <if test="contentImg != null">
+                contentImg,
+            </if>
+            <if test="typeImg != null">
+                typeImg,
+            </if>
+            <if test="link != null">
+                link,
+            </if>
+            <if test="tplContent != null">
+                tplContent,
+            </if>
+            <if test="needRegenerate != null">
+                needRegenerate,
+            </if>
+            <if test="toplevelDate != null">
+                toplevelDate,
+            </if>
+            <if test="staticLink != null">
+                staticLink,
+            </if>
+            <if test="pigeonholeDate != null">
+                pigeonholeDate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="shortTitle!=null">
+                #{shortTitle},
+            </if>
+            <if test="author!=null">
+                #{author},
+            </if>
+            <if test="origin!=null">
+                #{origin},
+            </if>
+            <if test="originUrl!=null">
+                #{originUrl},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="releaseDate!=null">
+                #{releaseDate},
+            </if>
+            <if test="mediaPath!=null">
+                #{mediaPath},
+            </if>
+            <if test="mediaType!=null">
+                #{mediaType},
+            </if>
+            <if test="isBold!=null">
+                #{isBold},
+            </if>
+            <if test="titleColor!=null">
+                #{titleColor},
+            </if>
+            <if test="titleImg!=null">
+                #{titleImg},
+            </if>
+            <if test="contentImg!=null">
+                #{contentImg},
+            </if>
+            <if test="typeImg!=null">
+                #{typeImg},
+            </if>
+            <if test="link!=null">
+                #{link},
+            </if>
+            <if test="tplContent!=null">
+                #{tplContent},
+            </if>
+            <if test="needRegenerate!=null">
+                #{needRegenerate},
+            </if>
+            <if test="toplevelDate!=null">
+                #{toplevelDate},
+            </if>
+            <if test="staticLink!=null">
+                #{staticLink},
+            </if>
+            <if test="pigeonholeDate!=null">
+                #{pigeonholeDate},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentExt">
+        UPDATE cms_content_ext
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="shortTitle != null">
+                shortTitle = #{shortTitle},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+            <if test="origin != null">
+                origin = #{origin},
+            </if>
+            <if test="originUrl != null">
+                originUrl = #{originUrl},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="releaseDate != null">
+                releaseDate = #{releaseDate},
+            </if>
+            <if test="mediaPath != null">
+                mediaPath = #{mediaPath},
+            </if>
+            <if test="mediaType != null">
+                mediaType = #{mediaType},
+            </if>
+            <if test="isBold != null">
+                isBold = #{isBold},
+            </if>
+            <if test="titleColor != null">
+                titleColor = #{titleColor},
+            </if>
+            <if test="titleImg != null">
+                titleImg = #{titleImg},
+            </if>
+            <if test="contentImg != null">
+                contentImg = #{contentImg},
+            </if>
+            <if test="typeImg != null">
+                typeImg = #{typeImg},
+            </if>
+            <if test="link != null">
+                link = #{link},
+            </if>
+            <if test="tplContent != null">
+                tplContent = #{tplContent},
+            </if>
+            <if test="needRegenerate != null">
+                needRegenerate = #{needRegenerate},
+            </if>
+            <if test="toplevelDate != null">
+                toplevelDate = #{toplevelDate},
+            </if>
+            <if test="staticLink != null">
+                staticLink = #{staticLink},
+            </if>
+            <if test="pigeonholeDate != null">
+                pigeonholeDate = #{pigeonholeDate},
+            </if>
+
+        </set>
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentExt">
+        UPDATE cms_content_ext
+        SET
+        title = #{title},
+        shortTitle = #{shortTitle},
+        author = #{author},
+        origin = #{origin},
+        originUrl = #{originUrl},
+        description = #{description},
+        releaseDate = #{releaseDate},
+        mediaPath = #{mediaPath},
+        mediaType = #{mediaType},
+        isBold = #{isBold},
+        titleColor = #{titleColor},
+        titleImg = #{titleImg},
+        contentImg = #{contentImg},
+        typeImg = #{typeImg},
+        link = #{link},
+        tplContent = #{tplContent},
+        needRegenerate = #{needRegenerate},
+        toplevelDate = #{toplevelDate},
+        staticLink = #{staticLink},
+        pigeonholeDate = #{pigeonholeDate}
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!--更新：根据主键ID批量更新-->
+    <update id="updatRegenerateList">
+        UPDATE cms_content_ext t SET t.needRegenerate = 1,
+        t.staticLink = (SELECT CONCAT(a.channelPath,'/',b.contentId,'.html') FROM cms_channel a,cms_content b WHERE
+        a.channelId = b.channelId AND b.contentId = t.contentId)
+        WHERE contentId in
+        <foreach item="item" index="index" collection="contentIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--更新：根据主键ID批量更新-->
+    <update id="updatRegenerateList0">
+        UPDATE cms_content_ext SET needRegenerate = 0
+        WHERE contentId in
+        <foreach item="item" index="index" collection="contentIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--更新：根据主键ID批量更新-->
+    <update id="updateReleaseDate">
+        update cms_content_ext SET releaseDate = null
+        WHERE contentId in
+        <foreach item="item" index="index" collection="contentIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--更新：根据主键ID批量更新-->
+    <update id="updateReleaseDate2" parameterType="java.lang.String">
+        update cms_content_ext SET releaseDate = now()
+        WHERE contentId = #{contentId}
+    </update>
+
+</mapper>

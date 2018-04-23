@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.TeamMemberRoMapper">
+    <select id="selectList" resultType="com.abc12366.bangbang.model.bo.TeamMemberBO">
+        select teamId,userId,type,createUser,status,createTime,lastUpdate
+        from bb_team_member
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.TeamMemberBO"
+            parameterType="com.abc12366.bangbang.model.TeamMember">
+        select teamId,userId,type,createUser,status,createTime,lastUpdate
+        from bb_team_member
+        where teamId=#{teamId}
+        and userId=#{userId}
+    </select>
+</mapper>

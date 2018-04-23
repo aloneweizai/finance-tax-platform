@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventSponsorMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_event_sponsor
+        WHERE sponsorId = #{sponsorId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.EventSponsor">
+        INSERT INTO cms_event_sponsor
+        (sponsorId,sponsorName,sponsorLxr,sponsorTel,sponsorEmail,sponsorIntro)
+        VALUES
+        (#{sponsorId},#{sponsorName},#{sponsorLxr},#{sponsorTel},#{sponsorEmail},#{sponsorIntro})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.EventSponsor">
+        INSERT INTO cms_event_sponsor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sponsorId != null">
+                sponsorId,
+            </if>
+            <if test="sponsorName != null">
+                sponsorName,
+            </if>
+            <if test="sponsorLxr != null">
+                sponsorLxr,
+            </if>
+            <if test="sponsorTel != null">
+                sponsorTel,
+            </if>
+            <if test="sponsorEmail != null">
+                sponsorEmail,
+            </if>
+            <if test="sponsorIntro != null">
+                sponsorIntro,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sponsorId!=null">
+                #{sponsorId},
+            </if>
+            <if test="sponsorName!=null">
+                #{sponsorName},
+            </if>
+            <if test="sponsorLxr!=null">
+                #{sponsorLxr},
+            </if>
+            <if test="sponsorTel!=null">
+                #{sponsorTel},
+            </if>
+            <if test="sponsorEmail!=null">
+                #{sponsorEmail},
+            </if>
+            <if test="sponsorIntro!=null">
+                #{sponsorIntro},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.EventSponsor">
+        UPDATE cms_event_sponsor
+        <set>
+            <if test="sponsorName != null">
+                sponsorName = #{sponsorName},
+            </if>
+            <if test="sponsorLxr != null">
+                sponsorLxr = #{sponsorLxr},
+            </if>
+            <if test="sponsorTel != null">
+                sponsorTel = #{sponsorTel},
+            </if>
+            <if test="sponsorEmail != null">
+                sponsorEmail = #{sponsorEmail},
+            </if>
+            <if test="sponsorIntro != null">
+                sponsorIntro = #{sponsorIntro},
+            </if>
+
+        </set>
+        WHERE sponsorId = #{sponsorId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.EventSponsor">
+        UPDATE cms_event_sponsor
+        SET
+        sponsorName = #{sponsorName},
+        sponsorLxr = #{sponsorLxr},
+        sponsorTel = #{sponsorTel},
+        sponsorEmail = #{sponsorEmail},
+        sponsorIntro = #{sponsorIntro}
+        WHERE sponsorId = #{sponsorId}
+    </update>
+
+</mapper>

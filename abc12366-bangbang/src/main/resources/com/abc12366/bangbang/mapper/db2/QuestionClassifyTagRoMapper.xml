@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionClassifyTagRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	classifyId,	tagId
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionClassifyTag" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_classify_tag
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.QuestionClassifyTag" parameterType="java.lang.String">
+        SELECT
+            c.tagId,k.name tagName
+        FROM bb_question_classify_tag c left join bb_knowledge_tag k on c.tagId = k.id
+        WHERE 1=1
+        <if test="classifyId != null and classifyId != ''">
+            AND c.classifyId like CONCAT(#{classifyId},'%')
+        </if>
+        group by tagId,tagName
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectClassifyTagList" resultType="com.abc12366.bangbang.model.question.bo.QuestionClassifyTagBo" parameterType="java.util.Map">
+        SELECT
+            c.tagId,k.name tagName
+        FROM bb_question_classify_tag c JOIN bb_knowledge_tag k ON c.tagId = k.id
+        WHERE 1=1
+        <if test="classifyId != null and classifyId != ''">
+            AND c.classifyId like CONCAT(#{classifyId},'%')
+        </if>
+        group by tagId,tagName
+    </select>
+
+
+</mapper>

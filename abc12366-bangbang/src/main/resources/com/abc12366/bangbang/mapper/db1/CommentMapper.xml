@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CommentMapper">
+
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.Comment">
+        insert into bb_comment(id,answerId,userId,comment,status,createTime,lastUpdate,commentedUserId)
+        values (#{id},#{answerId},#{userId},#{comment},#{status},#{createTime},#{lastUpdate},#{commentedUserId})
+    </insert>
+    <update id="update" parameterType="com.abc12366.bangbang.model.Comment">
+        update bb_comment
+        <set>
+            <if test="answerId!=null">answerId=#{answerId},</if>
+            <if test="userId!=null">userId=#{userId},</if>
+            <if test="comment!=null">comment=#{comment},</if>
+            <if test="status!=null">status=#{status} ,</if>
+            <if test="createTime!=null">createTime=#{createTime},</if>
+            <if test="lastUpdate!=null">lastUpdate=#{lastUpdate},</if>
+            <if test="commentedUserId!=null">commentedUserId=#{commentedUserId}</if>
+        </set>
+        where
+        id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from bb_comment where id = #{id}
+    </delete>
+</mapper>

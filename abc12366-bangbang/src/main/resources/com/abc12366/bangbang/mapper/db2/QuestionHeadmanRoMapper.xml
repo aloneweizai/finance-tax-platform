@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionHeadmanRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	name,	phone,	applyReason,	createTime,	userId, factionId,classifyCode,	status,	updateTime,	updateAdmin
+	</sql>
+
+	<!-- 列表查询 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.question.QuestionHeadman">
+		SELECT
+		t1.*,t2.classifyName as classifyName
+		FROM bb_question_headman t1
+		JOIN bb_question_classify  t2 ON t1.classifyCode = t2.classifyCode
+		LEFT JOIN bb_question_faction  t3 ON t1.factionId = t3.factionId
+		ORDER BY t1.createTime DESC
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.bo.QuestionHeadmanBo" parameterType="java.lang.String">
+		 SELECT *,
+			(SELECT COUNT(1) FROM bb_question_answer WHERE userId = t1.userId AND parentId ='') AS answerNum,
+			(SELECT COUNT(1) FROM bb_question_answer WHERE userId = t1.userId AND parentId !='') AS commentNum,
+			(SELECT COUNT(1) FROM bb_question WHERE userId = t1.userId) AS questionNum,
+			(SELECT factionName FROM bb_question_faction WHERE factionId = t1.factionId) AS factionName
+		 FROM bb_question_headman  t1
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectExist" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(id)
+        FROM bb_question_headman
+        WHERE userId = #{userId}
+    </select>
+
+</mapper>

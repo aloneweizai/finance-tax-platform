@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.SubjectsRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, questionId, title, simpleDesc, isRequired, optionType, isQuestion, pages, picPath, picName, randomOrder,
+        displayMultiple, mostOptional, number
+    </sql>
+    <resultMap id="subjectsBOResultMap" type="com.abc12366.cms.model.questionnaire.bo.SubjectsBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="questionId" property="questionId" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="simpleDesc" property="simpleDesc" jdbcType="INTEGER"/>
+        <result column="isRequired" property="isRequired" jdbcType="INTEGER"/>
+        <result column="optionType" property="optionType" jdbcType="VARCHAR"/>
+        <result column="isQuestion" property="isQuestion" jdbcType="VARCHAR"/>
+        <result column="pages" property="pages" jdbcType="INTEGER"/>
+        <result column="picPath" property="picPath" jdbcType="VARCHAR"/>
+        <result column="picName" property="picName" jdbcType="VARCHAR"/>
+        <result column="randomOrder" property="randomOrder" jdbcType="INTEGER"/>
+        <result column="displayMultiple" property="displayMultiple" jdbcType="INTEGER"/>
+        <result column="mostOptional" property="mostOptional" jdbcType="INTEGER"/>
+        <result column="number" property="number" jdbcType="INTEGER"/>
+        <collection property="optionList" ofType="com.abc12366.cms.model.questionnaire.Option" column="id"
+                    select="getOption"></collection>
+    </resultMap>
+
+    <resultMap type="com.abc12366.cms.model.questionnaire.Option" id="oneOption">
+        <id property="id" column="id"/>
+        <result property="subjectsId" column="subjectsId"/>
+        <result property="optionString" column="optionString"/>
+        <result property="status" column="status"/>
+        <result property="sequence" column="sequence"/>
+    </resultMap>
+
+    <!-- 查询（根据主键id查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.questionnaire.Subjects"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_subjects
+        WHERE id = #{id}
+    </select>
+
+    <select id="getOption" parameterType="java.lang.String" resultMap="oneOption">
+        SELECT
+        id, subjectsId, optionString, status,sequence
+        FROM cms_paper_option
+        WHERE subjectsId = #{subjectsId}
+    </select>
+
+    <!-- 查询（根据主键id查询） -->
+    <select id="selectOne" resultMap="subjectsBOResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_subjects
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键Pages查询） -->
+    <select id="selectSubjectsByPages" resultMap="subjectsBOResultMap"
+            parameterType="com.abc12366.cms.model.questionnaire.Subjects">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_subjects
+        <where>
+            1 = 1
+            <if test=" questionId != null and questionId != '' ">
+                and questionId = #{questionId}
+            </if>
+            <if test=" pages != null and pages != '' ">
+                and pages = #{pages}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 根据条件查询所有题目 -->
+    <select id="selectList" resultMap="subjectsBOResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_subjects
+        <where>
+            1 = 1
+            <if test=" id != null and id != '' ">
+                and id = #{id}
+            </if>
+            <if test=" questionId != null and questionId != '' ">
+                and questionId = #{questionId}
+            </if>
+            <if test=" isQuestion != null and isQuestion != '' ">
+                and isQuestion = #{isQuestion}
+            </if>
+        </where>
+    </select>
+
+    <resultMap type="com.abc12366.cms.model.bo.SubjectsdtxxtjBo" id="subjectsdtxxtjBoMap">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="cnt" property="cnt" jdbcType="INTEGER"/>
+        <collection property="dtlist" ofType="com.abc12366.cms.model.bo.AnswerdttjBo" column="id"
+                    select="getAnswerdttjBo"></collection>
+    </resultMap>
+
+    <resultMap type="com.abc12366.cms.model.bo.AnswerdttjBo" id="AnswerdttjBoMap">
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="cnt" property="cnt" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getAnswerdttjBo" parameterType="java.lang.String" resultMap="AnswerdttjBoMap">
+        SELECT a.content,COUNT(a.subjectsId) as cnt FROM cms_paper_answer a LEFT JOIN cms_paper_answer_log b ON a.answerLogId
+        = b.id
+        WHERE a.subjectsId = #{subjectsId}
+        GROUP BY a.content
+    </select>
+
+    <!-- 根据条件查询所有题目 -->
+    <select id="selectListdttj" resultMap="subjectsdtxxtjBoMap" parameterType="java.util.Map">
+        SELECT s.id,s.title ,count(m.subjectsId) as cnt from cms_paper_subjects s LEFT JOIN cms_paper_answer m ON s.id = m.subjectsId
+        <where>
+            s.optionType IN (1,2)
+            <if test=" questionId != null and questionId != '' ">
+                and s.questionId = #{questionId}
+            </if>
+        </where>
+        GROUP BY s.id
+    </select>
+
+</mapper>

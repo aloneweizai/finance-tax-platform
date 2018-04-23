@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ChannelCountMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_channel_count
+        WHERE channelId = #{channelId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ChannelCount">
+        INSERT INTO cms_channel_count
+        (channelId,views,viewsMonth,viewsWeek,viewsDay,contentCountTotal,contentCountDay,contentCountWeek,contentCountMonth,contentCountYear)
+        VALUES
+        (#{channelId},#{views},#{viewsMonth},#{viewsWeek},#{viewsDay},#{contentCountTotal},#{contentCountDay},#{contentCountWeek},#{contentCountMonth},#{contentCountYear})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ChannelCount">
+        INSERT INTO cms_channel_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channelId != null">
+                channelId,
+            </if>
+            <if test="views != null">
+                views,
+            </if>
+            <if test="viewsMonth != null">
+                viewsMonth,
+            </if>
+            <if test="viewsWeek != null">
+                viewsWeek,
+            </if>
+            <if test="viewsDay != null">
+                viewsDay,
+            </if>
+            <if test="contentCountTotal != null">
+                contentCountTotal,
+            </if>
+            <if test="contentCountDay != null">
+                contentCountDay,
+            </if>
+            <if test="contentCountWeek != null">
+                contentCountWeek,
+            </if>
+            <if test="contentCountMonth != null">
+                contentCountMonth,
+            </if>
+            <if test="contentCountYear != null">
+                contentCountYear,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channelId!=null">
+                #{channelId},
+            </if>
+            <if test="views!=null">
+                #{views},
+            </if>
+            <if test="viewsMonth!=null">
+                #{viewsMonth},
+            </if>
+            <if test="viewsWeek!=null">
+                #{viewsWeek},
+            </if>
+            <if test="viewsDay!=null">
+                #{viewsDay},
+            </if>
+            <if test="contentCountTotal!=null">
+                #{contentCountTotal},
+            </if>
+            <if test="contentCountDay!=null">
+                #{contentCountDay},
+            </if>
+            <if test="contentCountWeek!=null">
+                #{contentCountWeek},
+            </if>
+            <if test="contentCountMonth!=null">
+                #{contentCountMonth},
+            </if>
+            <if test="contentCountYear!=null">
+                #{contentCountYear},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ChannelCount">
+        UPDATE cms_channel_count
+        <set>
+            <if test="views != null">
+                views = #{views},
+            </if>
+            <if test="viewsMonth != null">
+                viewsMonth = #{viewsMonth},
+            </if>
+            <if test="viewsWeek != null">
+                viewsWeek = #{viewsWeek},
+            </if>
+            <if test="viewsDay != null">
+                viewsDay = #{viewsDay},
+            </if>
+            <if test="contentCountTotal != null">
+                contentCountTotal = #{contentCountTotal},
+            </if>
+            <if test="contentCountDay != null">
+                contentCountDay = #{contentCountDay},
+            </if>
+            <if test="contentCountWeek != null">
+                contentCountWeek = #{contentCountWeek},
+            </if>
+            <if test="contentCountMonth != null">
+                contentCountMonth = #{contentCountMonth},
+            </if>
+            <if test="contentCountYear != null">
+                contentCountYear = #{contentCountYear},
+            </if>
+
+        </set>
+        WHERE channelId = #{channelId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ChannelCount">
+        UPDATE cms_channel_count
+        SET
+        views = #{views},
+        viewsMonth = #{viewsMonth},
+        viewsWeek = #{viewsWeek},
+        viewsDay = #{viewsDay},
+        contentCountTotal = #{contentCountTotal},
+        contentCountDay = #{contentCountDay},
+        contentCountWeek = #{contentCountWeek},
+        contentCountMonth = #{contentCountMonth},
+        contentCountYear = #{contentCountYear}
+        WHERE channelId = #{channelId}
+    </update>
+
+</mapper>

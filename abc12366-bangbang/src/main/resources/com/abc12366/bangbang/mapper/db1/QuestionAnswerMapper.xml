@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionAnswerMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_answer
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionAnswer">
+		 INSERT INTO bb_question_answer
+ 		(id,parentId,questionId,factionId,userId,classifyCode,isRead,ip,answerUserId,answer,shortAnswer,answerImage,status,createTime,lastUpdate,isAccept)
+		 VALUES 
+ 		(#{id},#{parentId},#{questionId},#{factionId},#{userId},#{classifyCode},#{isRead},#{ip},#{answerUserId},#{answer},#{shortAnswer},#{answerImage},#{status},#{createTime},#{lastUpdate},#{isAccept})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionAnswer">
+		 INSERT INTO bb_question_answer
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="parentId != null">
+				 parentId,
+			</if>
+			<if test="questionId != null">
+				 questionId,
+			</if>
+             <if test="factionId != null">
+                 factionId,
+             </if>
+			<if test="userId != null">
+				 userId,
+			</if>
+             <if test="ip != null">
+                 ip,
+             </if>
+			<if test="answerUserId != null">
+				 answerUserId,
+			</if>
+			<if test="answer != null">
+				 answer,
+			</if>
+             <if test="shortAnswer != null">
+                 shortAnswer,
+             </if>
+             <if test="answerImage != null">
+                 answerImage,
+             </if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+			<if test="isAccept != null">
+				 isAccept,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="parentId!=null">
+				 #{parentId},
+			</if>
+			<if test="questionId!=null">
+				 #{questionId},
+			</if>
+             <if test="factionId!=null">
+                 #{factionId},
+             </if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+             <if test="ip!=null">
+                 #{ip},
+             </if>
+			<if test="answerUserId!=null">
+				 #{answerUserId},
+			</if>
+			<if test="answer!=null">
+				 #{answer},
+			</if>
+             <if test="shortAnswer!=null">
+                 #{shortAnswer},
+             </if>
+             <if test="answerImage!=null">
+                 #{answerImage},
+             </if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+			<if test="isAccept!=null">
+				 #{isAccept},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionAnswer">
+		 UPDATE bb_question_answer
+ 		 <set> 
+			<if test="parentId != null">
+				 parentId = #{parentId},
+			</if>
+			<if test="questionId != null">
+				 questionId = #{questionId},
+			</if>
+             <if test="factionId != null">
+                 factionId = #{factionId},
+             </if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+             <if test="ip != null">
+                 ip = #{ip},
+             </if>
+			<if test="answerUserId != null">
+				 answerUserId = #{answerUserId},
+			</if>
+			<if test="answer != null">
+				 answer = #{answer},
+			</if>
+             <if test="shortAnswer != null">
+                 shortAnswer = #{shortAnswer},
+             </if>
+             <if test="answerImage != null">
+                 answerImage = #{answerImage},
+             </if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+             <if test="commentNum != null">
+                 commentNum = #{commentNum},
+             </if>
+             <if test="likeNum != null">
+                 likeNum = #{likeNum},
+             </if>
+             <if test="trampleNum != null">
+                 trampleNum = #{trampleNum},
+             </if>
+             <if test="reportNum != null">
+                 reportNum = #{reportNum},
+             </if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+			<if test="isAccept != null">
+				 isAccept = #{isAccept},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionAnswer">
+		 UPDATE bb_question_answer
+		 SET 
+			 parentId = #{parentId},
+			 questionId = #{questionId},
+			 factionId = #{factionId},
+			 userId = #{userId},
+			 ip = #{ip},
+			 answerUserId = #{answerUserId},
+			 answer = #{answer},
+			 shortAnswer = #{shortAnswer},
+			 answerImage = #{answerImage},
+			 status = #{status},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate},
+			 isAccept = #{isAccept}
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改 举报数-->
+	<update id="updateReportNum" parameterType="java.lang.String">
+		UPDATE bb_question_answer SET reportNum = reportNum + 1, status ='3' WHERE id = #{id}
+	</update>
+
+    <!-- 修 改 为已读-->
+    <update id="updateIsRead" parameterType="java.lang.String">
+        UPDATE bb_question_answer SET isRead = 1 WHERE questionId = #{id}
+    </update>
+
+    <!-- 设置采纳-->
+    <update id="updateIsAccept" parameterType="java.lang.String">
+        UPDATE bb_question_answer SET isAccept = 1 WHERE id = #{id}
+    </update>
+
+</mapper>

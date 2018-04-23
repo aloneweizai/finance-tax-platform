@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.ExperienceMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.bo.ExpCodex">
+        insert into uc_uexp_codex (id,uexpruleId,clientType,uexp,period,degree,remark)
+        values(#{id},#{uexpruleId},#{clientType},#{uexp},#{period},#{degree},#{remark})
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_uexp_codex where id=#{id}
+    </delete>
+
+    <delete id="deleteByRuleId" parameterType="java.lang.String">
+        delete from uc_uexp_codex where uexpruleId=#{uexpruleId}
+    </delete>
+
+    <insert id="insertComputeLog" parameterType="com.abc12366.uc.model.bo.ExpComputeLog">
+        insert into uc_uexp_compute_log (id,userId,uexpCodexId,timeType,createTime,ruleId)
+        values(#{id},#{userId},#{uexpCodexId},#{timeType},#{createTime},#{ruleId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.PrizeSetRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        questionId, endTime, awardUser, contactWay, awardWay, prizeRate
+    </sql>
+    <resultMap id="prizeSetBOResultMap" type="com.abc12366.cms.model.questionnaire.bo.PrizeSetBO">
+        <id column="questionId" property="questionId" jdbcType="VARCHAR"/>
+        <result column="questionId" property="questionId" jdbcType="VARCHAR"/>
+        <result column="endTime" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="awardUser" property="awardUser" jdbcType="VARCHAR"/>
+        <result column="contactWay" property="contactWay" jdbcType="VARCHAR"/>
+        <result column="awardWay" property="awardWay" jdbcType="VARCHAR"/>
+        <result column="prizeRate" property="prizeRate" jdbcType="DOUBLE"/>
+        <collection property="prizeList" ofType="com.abc12366.cms.model.questionnaire.Prize" column="questionId"
+                    select="getPrize"></collection>
+    </resultMap>
+
+    <resultMap type="com.abc12366.cms.model.questionnaire.Prize" id="onePrize">
+        <id property="id" column="id"/>
+        <result property="questionId" column="questionId"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+    </resultMap>
+
+    <select id="getPrize" parameterType="java.lang.String" resultMap="onePrize">
+        SELECT
+        id, questionId, name, number, price
+        FROM cms_paper_prize
+        WHERE questionId = #{questionId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.questionnaire.PrizeSet"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_prize_set
+        WHERE questionId = #{questionId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOne" resultMap="prizeSetBOResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_prize_set
+        WHERE questionId = #{questionId}
+    </select>
+
+</mapper>

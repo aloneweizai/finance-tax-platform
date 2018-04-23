@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.PrivilegeItemRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 levelId, zxhyxz, hyjfjc, hyjyzjc, yhsjjl, csjyzmyz_times, csjyzmyz_baoyou, yhzhhbtq,
+		 zxkcpx, xxkcpx, xxhyhd, xshyr, grzhbdqys, ywtx_zn, ywtx_wx, ywtx_dx,fbqzxx,srlb, yhjfzr_cs,
+		  yhjfzr_sx, spfpmyq, zskfjl, csqk
+	</sql>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.PrivilegeItem" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_uvip_privilege_item
+        WHERE levelId = #{levelId}
+    </select>
+    <select id="selecOneByUser" resultType="com.abc12366.uc.model.PrivilegeItem" parameterType="java.lang.String">
+        select uupi.levelId, uupi.zxhyxz, uupi.hyjfjc, uupi.hyjyzjc, uupi.yhsjjl, uupi.csjyzmyz_times,
+                uupi.csjyzmyz_baoyou, uupi.yhzhhbtq,uupi.zxkcpx, uupi.xxkcpx, uupi.xxhyhd, uupi.xshyr,
+                uupi.grzhbdqys, uupi.ywtx_zn, uupi.ywtx_wx, uupi.ywtx_dx, uupi.fbqzxx,uupi.srlb,
+                uupi.yhjfzr_cs,uupi.yhjfzr_sx, uupi.spfpmyq, uupi.zskfjl, uupi.csqk
+        from uc_uvip_privilege_item uupi inner join
+              (select uul.* from uc_uvip_level uul inner join uc_user uu
+                             on uu.vipLevel=uul.levelCode
+                             where uu.id=#{userId} limit 1) a
+        on a.id = uupi.levelId limit 1
+    </select>
+
+    <select id="selectOneByLevelCode" parameterType="java.lang.String" resultType="com.abc12366.uc.model.PrivilegeItem">
+        select uupi.levelId, uupi.zxhyxz, uupi.hyjfjc, uupi.hyjyzjc, uupi.yhsjjl, uupi.csjyzmyz_times,
+                uupi.csjyzmyz_baoyou, uupi.yhzhhbtq,uupi.zxkcpx, uupi.xxkcpx, uupi.xxhyhd, uupi.xshyr,
+                uupi.grzhbdqys, uupi.ywtx_zn, uupi.ywtx_wx, uupi.ywtx_dx, uupi.fbqzxx,uupi.srlb,
+                uupi.yhjfzr_cs,uupi.yhjfzr_sx, uupi.spfpmyq, uupi.zskfjl, uupi.csqk
+        from uc_uvip_privilege_item uupi join uc_uvip_level uul on uupi.levelId = uul.id
+        and uul.levelCode = #{levelCode}
+    </select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.TeamRoMapper">
+    <select id="selectList" resultType="com.abc12366.bangbang.model.bo.TeamBO">
+        select
+        id,teamName,introduction,status,members,createTime,lastUpdate,teamPicturePath,maxPicturePath,midPicturePath,minPicturePath
+        from bb_team
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.TeamBO" parameterType="java.lang.String">
+        select
+        id,teamName,introduction,status,members,createTime,lastUpdate,teamPicturePath,maxPicturePath,midPicturePath,minPicturePath
+        from bb_team
+        where id=#{id}
+    </select>
+    <select id="selectListByUserId" resultType="com.abc12366.bangbang.model.bo.TeamBO" parameterType="java.lang.String">
+        select bt.id,bt.teamName,bt.introduction,bt.status,bt.members,bt.createTime,bt.lastUpdate,bt.teamPicturePath,
+        bt.maxPicturePath,bt.midPicturePath,bt.minPicturePath,
+        (select count(1) from bb_answer ba where ba.isAccept='1' and ba.userId in (select a.userId from bb_team_member a
+        where a.teamId=bt.id)) acceptedCount
+        from bb_team bt, bb_team_member btm
+        where bt.id=btm.teamId
+        and btm.userId=#{userId}
+        ORDER BY bt.lastUpdate DESC
+    </select>
+
+</mapper>

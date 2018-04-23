@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionTagMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_tag
+		 WHERE factionId = #{factionId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionTag">
+		 INSERT INTO bb_question_faction_tag
+ 		(id,factionId,tagId) 
+		 VALUES 
+ 		(#{id},#{factionId},#{tagId}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionTag">
+		 INSERT INTO bb_question_faction_tag
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="tagId != null">
+				 tagId,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="tagId!=null">
+				 #{tagId},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionTag">
+		 UPDATE bb_question_faction_tag
+ 		 <set> 
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="tagId != null">
+				 tagId = #{tagId},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFactionTag">
+		 UPDATE bb_question_faction_tag
+		 SET 
+			 factionId = #{factionId},
+			 tagId = #{tagId}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

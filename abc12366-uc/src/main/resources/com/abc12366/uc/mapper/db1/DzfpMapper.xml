@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.DzfpMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.dzfp.Einvocie">
+        insert into uc_einvocie
+        (FPQQLSH,FP_DM,FP_HM,JYM,KPRQ,PDF_URL,SP_URL,TBSTATUS,sendStr,returnCode,returnMessage,KPLX)
+        values
+        (#{FPQQLSH},#{FP_DM},#{FP_HM},#{JYM},#{KPRQ},#{PDF_URL},#{SP_URL},#{TBSTATUS},#{sendStr},#{returnCode},#{returnMessage},#{KPLX})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.dzfp.Einvocie">
+        update uc_einvocie
+        <set>
+            <if test="TBSTATUS != null">TBSTATUS = #{TBSTATUS}</if>
+        </set>
+        where FPQQLSH=#{FPQQLSH}
+    </update>
+
+</mapper>

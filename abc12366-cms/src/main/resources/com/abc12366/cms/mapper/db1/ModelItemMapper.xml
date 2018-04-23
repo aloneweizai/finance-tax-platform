@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ModelItemMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_model_item
+        WHERE modelitemId = #{modelitemId}
+    </delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteBymodelId" parameterType="java.lang.String">
+        DELETE FROM cms_model_item
+        WHERE modelId = #{modelId}
+    </delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteList">
+        DELETE FROM cms_model_item
+        WHERE modelitemId in
+        <foreach item="item" index="index" collection="modelitemIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteListBymodelIds">
+        DELETE FROM cms_model_item
+        WHERE modelId in
+        <foreach item="item" index="index" collection="modelIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ModelItem">
+        INSERT INTO cms_model_item
+        (modelitemId,modelId,field,itemLabel,priority,defValue,optValue,textSize,areaRows,areaCols,help,helpPosition,dataType,isSingle,isChannel,isCustom,isDisplay,isRequired,imageWidth,imageHeight,checkRule)
+        VALUES
+        (#{modelitemId},#{modelId},#{field},#{itemLabel},#{priority},#{defValue},#{optValue},#{textSize},#{areaRows},#{areaCols},#{help},#{helpPosition},#{dataType},#{isSingle},#{isChannel},#{isCustom},#{isDisplay},#{isRequired},#{imageWidth},#{imageHeight},#{checkRule})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ModelItem">
+        INSERT INTO cms_model_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelitemId != null">
+                modelitemId,
+            </if>
+            <if test="modelId != null">
+                modelId,
+            </if>
+            <if test="field != null">
+                field,
+            </if>
+            <if test="itemLabel != null">
+                itemLabel,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="defValue != null">
+                defValue,
+            </if>
+            <if test="optValue != null">
+                optValue,
+            </if>
+            <if test="textSize != null">
+                textSize,
+            </if>
+            <if test="areaRows != null">
+                areaRows,
+            </if>
+            <if test="areaCols != null">
+                areaCols,
+            </if>
+            <if test="help != null">
+                help,
+            </if>
+            <if test="helpPosition != null">
+                helpPosition,
+            </if>
+            <if test="dataType != null">
+                dataType,
+            </if>
+            <if test="isSingle != null">
+                isSingle,
+            </if>
+            <if test="isChannel != null">
+                isChannel,
+            </if>
+            <if test="isCustom != null">
+                isCustom,
+            </if>
+            <if test="isDisplay != null">
+                isDisplay,
+            </if>
+            <if test="isRequired != null">
+                isRequired,
+            </if>
+            <if test="imageWidth != null">
+                imageWidth,
+            </if>
+            <if test="imageHeight != null">
+                imageHeight,
+            </if>
+            <if test="checkRule != null">
+                checkRule,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelitemId!=null">
+                #{modelitemId},
+            </if>
+            <if test="modelId!=null">
+                #{modelId},
+            </if>
+            <if test="field!=null">
+                #{field},
+            </if>
+            <if test="itemLabel!=null">
+                #{itemLabel},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="defValue!=null">
+                #{defValue},
+            </if>
+            <if test="optValue!=null">
+                #{optValue},
+            </if>
+            <if test="textSize!=null">
+                #{textSize},
+            </if>
+            <if test="areaRows!=null">
+                #{areaRows},
+            </if>
+            <if test="areaCols!=null">
+                #{areaCols},
+            </if>
+            <if test="help!=null">
+                #{help},
+            </if>
+            <if test="helpPosition!=null">
+                #{helpPosition},
+            </if>
+            <if test="dataType!=null">
+                #{dataType},
+            </if>
+            <if test="isSingle!=null">
+                #{isSingle},
+            </if>
+            <if test="isChannel!=null">
+                #{isChannel},
+            </if>
+            <if test="isCustom!=null">
+                #{isCustom},
+            </if>
+            <if test="isDisplay!=null">
+                #{isDisplay},
+            </if>
+            <if test="isRequired!=null">
+                #{isRequired},
+            </if>
+            <if test="imageWidth!=null">
+                #{imageWidth},
+            </if>
+            <if test="imageHeight!=null">
+                #{imageHeight},
+            </if>
+            <if test="checkRule!=null">
+                #{checkRule},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ModelItem">
+        UPDATE cms_model_item
+        <set>
+            <if test="modelId != null">
+                modelId = #{modelId},
+            </if>
+            <if test="field != null">
+                field = #{field},
+            </if>
+            <if test="itemLabel != null">
+                itemLabel = #{itemLabel},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="defValue != null">
+                defValue = #{defValue},
+            </if>
+            <if test="optValue != null">
+                optValue = #{optValue},
+            </if>
+            <if test="textSize != null">
+                textSize = #{textSize},
+            </if>
+            <if test="areaRows != null">
+                areaRows = #{areaRows},
+            </if>
+            <if test="areaCols != null">
+                areaCols = #{areaCols},
+            </if>
+            <if test="help != null">
+                help = #{help},
+            </if>
+            <if test="helpPosition != null">
+                helpPosition = #{helpPosition},
+            </if>
+            <if test="dataType != null">
+                dataType = #{dataType},
+            </if>
+            <if test="isSingle != null">
+                isSingle = #{isSingle},
+            </if>
+            <if test="isChannel != null">
+                isChannel = #{isChannel},
+            </if>
+            <if test="isCustom != null">
+                isCustom = #{isCustom},
+            </if>
+            <if test="isDisplay != null">
+                isDisplay = #{isDisplay},
+            </if>
+            <if test="isRequired != null">
+                isRequired = #{isRequired},
+            </if>
+            <if test="imageWidth != null">
+                imageWidth = #{imageWidth},
+            </if>
+            <if test="imageHeight != null">
+                imageHeight = #{imageHeight},
+            </if>
+            <if test="checkRule != null">
+                checkRule = #{checkRule},
+            </if>
+
+        </set>
+        WHERE modelitemId = #{modelitemId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ModelItem">
+        UPDATE cms_model_item
+        SET
+        modelId = #{modelId},
+        field = #{field},
+        itemLabel = #{itemLabel},
+        priority = #{priority},
+        defValue = #{defValue},
+        optValue = #{optValue},
+        textSize = #{textSize},
+        areaRows = #{areaRows},
+        areaCols = #{areaCols},
+        help = #{help},
+        helpPosition = #{helpPosition},
+        dataType = #{dataType},
+        isSingle = #{isSingle},
+        isChannel = #{isChannel},
+        isCustom = #{isCustom},
+        isDisplay = #{isDisplay},
+        isRequired = #{isRequired},
+        imageWidth = #{imageWidth},
+        imageHeight = #{imageHeight},
+        checkRule = #{checkRule}
+        WHERE modelitemId = #{modelitemId}
+    </update>
+
+</mapper>

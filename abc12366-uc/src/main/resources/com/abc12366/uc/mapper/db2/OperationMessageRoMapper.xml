@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OperateMessageRoMapper">
+    <sql id="Base_Column_List">
+        id,taskname,web,wechat,message,content,url,target,sendTime,startTime,endTime,status,createTime ,
+        lastUpdate ,areaOper,areaIds,tagOper,tagIds,regTimeOper,regStartTime,regEndTime ,userIds,rate
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.admin.bo.OperateMessageBO">
+        select <include refid="Base_Column_List"/> from uc_operate_message
+        <where>
+            1=1
+            <if test="status != null and status != ''">and status=#{status}</if>
+            <if test="name != null and name != ''">and taskname like CONCAT('%',#{name},'%')</if>
+            <if test="start != null">and createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+            <if test="now != null">and endTime &gt;= #{now}</if>
+        </where>
+        order by createTime desc
+    </select>
+
+    <select id="selectFinishedList" resultType="com.abc12366.uc.model.admin.bo.OperateMessageBO">
+        select id,taskname,web,wechat,message,content,url,target,sendTime,startTime,endTime,'2' status,createTime ,
+        lastUpdate ,areaOper,areaIds,tagOper,tagIds,regTimeOper,regStartTime,regEndTime ,userIds,rate
+        from uc_operate_message
+        <where>
+            and status='1'
+            <if test="name != null and name != ''">and taskname like CONCAT('%',#{name},'%')</if>
+            <if test="start != null">and createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+            <if test="now != null">and endTime &lt; #{now}</if>
+        </where>
+        order by createTime desc
+    </select>
+
+    <select id="selectValidList" resultType="com.abc12366.uc.model.admin.bo.OperateMessageBO" parameterType="java.util.Date">
+        select <include refid="Base_Column_List"/>
+        from uc_operate_message
+        where status='1'
+        and startTime &lt;=#{date}
+        and endTime &gt;=#{date}
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.String" resultType="com.abc12366.uc.model.admin.bo.OperateMessageBO">
+        select <include refid="Base_Column_List"/>
+        from uc_operate_message
+        where id=#{id}
+    </select>
+
+    <select id="selectTagIdList" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT DISTINCT tagId FROM uc_subject_tag WHERE subjectId=#{userId}
+    </select>
+
+    <select id="selectWebLogList" parameterType="java.lang.String" resultType="com.abc12366.uc.model.admin.bo.YyxxLogBO">
+        select id,userId,messageId,type,createTime
+        from uc_send_yyxx_log
+        <where>
+            userId=#{userId}
+            and messageId = #{messageId}
+            and type=#{type}
+            <if test="start != null">and  createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+        </where>
+    </select>
+
+    <select id="operateMessageLog" parameterType="java.lang.String" resultType="com.abc12366.uc.model.admin.bo.YyxxLogListBO">
+        SELECT a.id,a.messageId,a.type,a.createTime,a.userId,b.nickname
+        FROM uc_send_yyxx_log a
+        JOIN uc_user b ON a.userId=b.id
+        <where>
+            1=1
+            <if test="userId != null and userId != ''">and a.userId = #{userId}</if>
+            <if test="nickName != null and nickName != ''">and b.nickname LIKE CONCAT('%',#{nickName},'%')</if>
+            <if test="messageId != null and messageId != ''">and a.messageId=#{messageId}</if>
+        </where>
+        ORDER BY a.createTime DESC
+    </select>
+</mapper>

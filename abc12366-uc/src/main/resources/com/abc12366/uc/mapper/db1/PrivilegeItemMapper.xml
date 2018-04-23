@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.PrivilegeItemMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		  levelId, zxhyxz, hyjfjc, hyjyzjc, yhsjjl, csjyzmyz_times, csjyzmyz_baoyou, yhzhhbtq,
+		 zxkcpx, xxkcpx, xxhyhd, xshyr, grzhbdqys, ywtx_zn, ywtx_wx, fbqzxx,srlb, yhjfzr_cs,
+		  yhjfzr_sx, spfpmyq, zskfjl, csqk
+	</sql>
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.PrivilegeItem">
+        insert into uc_uvip_privilege_item(<include refid="Base_Column_List"/>)
+        values (#{levelId},#{zxhyxz},#{hyjfjc},#{hyjyzjc},#{yhsjjl},#{csjyzmyz_times},
+        #{csjyzmyz_baoyou}, #{yhzhhbtq},#{zxkcpx},#{xxkcpx},#{xxhyhd},#{xshyr},#{grzhbdqys},
+        #{ywtx_zn},#{ywtx_wx},#{fbqzxx}, #{srlb},#{yhjfzr_cs},#{yhjfzr_sx},#{spfpmyq},
+        #{zskfjl},#{csqk})
+    </insert>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_uvip_privilege_item where levelId = #{levelId}
+    </delete>
+    <update id="update" parameterType="com.abc12366.uc.model.PrivilegeItem">
+        update uc_uvip_privilege_item
+        <set>
+            <if test="zxhyxz!=null">zxhyxz=#{zxhyxz},</if>
+            <if test="hyjfjc!=null">hyjfjc=#{hyjfjc},</if>
+            <if test="hyjyzjc!=null">hyjyzjc=#{hyjyzjc},</if>
+            <if test="yhsjjl!=null">yhsjjl=#{yhsjjl},</if>
+            <if test="csjyzmyz_times!=null">csjyzmyz_times=#{csjyzmyz_times},</if>
+            <if test="csjyzmyz_baoyou!=null">csjyzmyz_baoyou=#{csjyzmyz_baoyou},</if>
+            <if test="yhzhhbtq!=null">yhzhhbtq=#{yhzhhbtq},</if>
+            <if test="zxkcpx!=null">zxkcpx=#{zxkcpx},</if>
+            <if test="xxkcpx!=null">xxkcpx=#{xxkcpx},</if>
+            <if test="xxhyhd!=null">xxhyhd=#{xxhyhd},</if>
+            <if test="xshyr!=null">xshyr=#{xshyr},</if>
+            <if test="grzhbdqys!=null">grzhbdqys=#{grzhbdqys},</if>
+            <if test="ywtx_zn!=null">ywtx_zn=#{ywtx_zn},</if>
+            <if test="ywtx_wx!=null">ywtx_wx=#{ywtx_wx},</if>
+            <if test="fbqzxx!=null">fbqzxx=#{fbqzxx},</if>
+            <if test="srlb!=null">srlb=#{srlb},</if>
+            <if test="yhjfzr_cs!=null">yhjfzr_cs=#{yhjfzr_cs},</if>
+            <if test="yhjfzr_sx!=null">yhjfzr_sx=#{yhjfzr_sx},</if>
+            <if test="spfpmyq!=null">spfpmyq=#{spfpmyq},</if>
+            <if test="zskfjl!=null">zskfjl=#{zskfjl},</if>
+            <if test="csqk!=null">csqk=#{csqk}</if>
+        </set>
+        where levelId = #{levelId}
+    </update>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.ExperienceLogRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.ExperienceLogQueryBO" parameterType="java.util.Map">
+        SELECT uul.id,uul.userId,uul.ruleId,uur.name,uur.code,uur.type,uul.income,uul.outgo,uul.usableExp,uul.createTime
+        from uc_uexp_log uul
+        LEFT JOIN uc_uexp_rule uur
+        ON (uul.ruleId = uur.id OR uul.ruleId = uur.code)
+        <where>
+            <if test="name!=null">
+                and name=#{name}
+            </if>
+            <if test="code!=null">
+                and code=#{code}
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+            <if test="userId!=null">
+                and userId=#{userId}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.ExperienceLogQueryBO" parameterType="java.lang.String">
+        SELECT id,userId,ruleId,name,code,type,income,outgo,usableExp,createTime
+        from uc_uexp_log uul, uc_uexp_rule uur
+        where uul.ruleId = uur.id
+        ORDER BY createTime DESC
+    </select>
+    <select id="selectListByUser" resultType="com.abc12366.uc.model.bo.ExpLogUcBO" parameterType="java.util.Map">
+        SELECT uul.id id,
+        (SELECT uur.name FROM uc_uexp_rule uur WHERE uur.id = uul.ruleId or uur.code = uul.ruleId limit 1) channel,
+        (uul.income-uul.outgo) EXP,
+        uul.usableExp sums,
+        uul.createTime createTime,
+        (SELECT uur.description FROM uc_uexp_rule uur WHERE uur.id = uul.ruleId or uur.code = uul.ruleId limit 1) remark
+        FROM uc_uexp_log uul
+        <where>
+            uul.userId=#{userId}
+            <if test="start!=null">and uul.createTime &gt;= #{start}</if>
+            <if test="end!=null">and uul.createTime &lt; #{end}</if>
+        </where>
+        ORDER BY uul.createTime DESC
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Float" parameterType="java.util.Map">
+        SELECT COUNT(1) FROM (
+        SELECT u.userId,MAX(u.createTime) createTime,u.usableExp
+        FROM uc_uexp_log u
+        <where>
+            1=1
+            <if test="start != null"> and u.createtime &gt;=#{start} </if>
+            <if test="end != null"> and u.createTime &lt; #{end} </if>
+            <if test="min != null"> AND u.usableExp &gt;= #{min} </if>
+            <if test="end != null"> AND u.usableExp &lt;= #{max} </if>
+        </where>
+        GROUP BY userId ORDER BY null
+        ) a
+    </select>
+</mapper>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_event
+        WHERE eventId = #{eventId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Event">
+        INSERT INTO cms_event
+        (eventId,category,shape,title,province,city,address,picture,createtime,updatetime,begintime,endtime,tag,summary,description,peoppleNum,isCheck,isUserGrade,userGrade,sponsorId,bmendtime,status)
+        VALUES
+        (#{eventId},#{category},#{shape},#{title},#{province},#{city},#{address},#{picture},#{createtime},#{updatetime},#{begintime},#{endtime},#{tag},#{summary},#{description},#{peoppleNum},#{isCheck},#{isUserGrade},#{userGrade},#{sponsorId},#{bmendtime},#{status})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Event">
+        INSERT INTO cms_event
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eventId != null">
+                eventId,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="shape != null">
+                shape,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="picture != null">
+                picture,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+            <if test="begintime != null">
+                begintime,
+            </if>
+            <if test="endtime != null">
+                endtime,
+            </if>
+            <if test="tag != null">
+                tag,
+            </if>
+            <if test="summary != null">
+                summary,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="peoppleNum != null">
+                peoppleNum,
+            </if>
+            <if test="isCheck != null">
+                isCheck,
+            </if>
+            <if test="isUserGrade != null">
+                isUserGrade,
+            </if>
+            <if test="userGrade != null">
+                userGrade,
+            </if>
+            <if test="sponsorId != null">
+                sponsorId,
+            </if>
+            <if test="bmendtime != null">
+                bmendtime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eventId!=null">
+                #{eventId},
+            </if>
+            <if test="category!=null">
+                #{category},
+            </if>
+            <if test="shape!=null">
+                #{shape},
+            </if>
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="province!=null">
+                #{province},
+            </if>
+            <if test="city!=null">
+                #{city},
+            </if>
+            <if test="address!=null">
+                #{address},
+            </if>
+            <if test="picture!=null">
+                #{picture},
+            </if>
+            <if test="createtime!=null">
+                #{createtime},
+            </if>
+            <if test="updatetime!=null">
+                #{updatetime},
+            </if>
+            <if test="begintime!=null">
+                #{begintime},
+            </if>
+            <if test="endtime!=null">
+                #{endtime},
+            </if>
+            <if test="tag!=null">
+                #{tag},
+            </if>
+            <if test="summary!=null">
+                #{summary},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="peoppleNum!=null">
+                #{peoppleNum},
+            </if>
+            <if test="isCheck!=null">
+                #{isCheck},
+            </if>
+            <if test="isUserGrade!=null">
+                #{isUserGrade},
+            </if>
+            <if test="userGrade!=null">
+                #{userGrade},
+            </if>
+            <if test="sponsorId!=null">
+                #{sponsorId},
+            </if>
+            <if test="bmendtime!=null">
+                #{bmendtime},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Event">
+        UPDATE cms_event
+        <set>
+            <if test="category != null">
+                category = #{category},
+            </if>
+            <if test="shape != null">
+                shape = #{shape},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="picture != null">
+                picture = #{picture},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+            <if test="begintime != null">
+                begintime = #{begintime},
+            </if>
+            <if test="endtime != null">
+                endtime = #{endtime},
+            </if>
+            <if test="tag != null">
+                tag = #{tag},
+            </if>
+            <if test="summary != null">
+                summary = #{summary},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="peoppleNum != null">
+                peoppleNum = #{peoppleNum},
+            </if>
+            <if test="isCheck != null">
+                isCheck = #{isCheck},
+            </if>
+            <if test="isUserGrade != null">
+                isUserGrade = #{isUserGrade},
+            </if>
+            <if test="userGrade != null">
+                userGrade = #{userGrade},
+            </if>
+            <if test="sponsorId != null">
+                sponsorId = #{sponsorId},
+            </if>
+            <if test="bmendtime != null">
+                bmendtime = #{bmendtime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+
+        </set>
+        WHERE eventId = #{eventId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Event">
+        UPDATE cms_event
+        SET
+        category = #{category},
+        shape = #{shape},
+        title = #{title},
+        province = #{province},
+        city = #{city},
+        address = #{address},
+        picture = #{picture},
+        createtime = #{createtime},
+        updatetime = #{updatetime},
+        begintime = #{begintime},
+        endtime = #{endtime},
+        tag = #{tag},
+        summary = #{summary},
+        description = #{description},
+        peoppleNum = #{peoppleNum},
+        isCheck = #{isCheck},
+        isUserGrade = #{isUserGrade},
+        userGrade = #{userGrade},
+        sponsorId = #{sponsorId},
+        bmendtime = #{bmendtime},
+        status = #{status}
+        WHERE eventId = #{eventId}
+    </update>
+
+    <!-- 修 改状态-->
+    <update id="updateStatus">
+        update cms_event set status = 3 where <![CDATA[ endtime < now()]]> and status = 2
+    </update>
+
+</mapper>

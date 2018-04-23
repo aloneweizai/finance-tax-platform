@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.KnowledgeBaseRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id, categoryCode, type, recommend, subject, content, status, activeTime, source, isOpen, pv, usefulVotes,
+		uselessVotes, shareNum, createTime, updateTime, createUser, updateUser
+	</sql>
+
+	<!-- 详情页查询感兴趣的知识 -->
+	<select id="interestedList" resultType="com.abc12366.bangbang.model.KnowledgeBase">
+		SELECT id,type,subject,createTime, updateTime,pv  FROM bb_knowledge_base WHERE
+		id IN(
+			SELECT DISTINCT knowledgeId FROM bb_knowledge_tag_rel
+			WHERE tagId
+			IN(
+				SELECT tagId FROM bb_knowledge_tag_rel
+				WHERE knowledgeId = #{id}
+			)
+			AND  knowledgeId !=  #{id}
+		)
+		AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+		limit #{num}
+	</select>
+	<!-- 详情页查询关联问题的知识 -->
+	<select id="relatedList" resultType="com.abc12366.bangbang.model.KnowledgeBase">
+		SELECT t_base.* FROM bb_knowledge_rel t_rel
+		LEFT JOIN bb_knowledge_base t_base ON t_rel.relKnowledgeId = t_base.id
+		WHERE
+		t_base.status = 1 AND t_base.isOpen = 1 AND (t_base.activeTime IS NULL OR t_base.activeTime > NOW())
+		AND t_rel.knowledgeId = #{id}
+		<if test="num != 0">
+			limit #{num}
+		</if>
+	</select>
+
+	<!-- 帮助中心首页热点问题查询 -->
+	<select id="hotList" resultType="com.abc12366.bangbang.model.KnowledgeBase" parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseHotParamBO">
+		SELECT t.*,t1.name AS categoryName FROM
+		(
+			SELECT * FROM bb_knowledge_base a
+			WHERE
+			TYPE = #{KnowledgeType} AND recommend = #{KnowledgeRecommend}
+			AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+			AND a.categoryCode
+			IN
+			(
+				SELECT t.categoryCode FROM (
+					SELECT categoryCode FROM bb_knowledge_base
+					WHERE
+					TYPE = #{KnowledgeType} AND recommend = #{KnowledgeRecommend}
+					AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+					GROUP BY categoryCode ORDER BY COUNT(1) DESC LIMIT #{categoryNum}
+				)AS t
+			)
+			AND
+			#{KnowledgePageSize} > (SELECT COUNT(*) FROM bb_knowledge_base WHERE categoryCode = a.categoryCode AND pv > a.pv)
+		) AS t JOIN bb_knowledge_category t1
+		WHERE t.categoryCode = t1.code;
+	</select>
+
+	<!-- 财税网首页最近问题查询 -->
+	<select id="nearestList" resultType="com.abc12366.bangbang.model.KnowledgeBase" parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseHotParamBO">
+		SELECT a.id, a.subject,a.createTime,a.updateTime,a.pv, a.type FROM bb_knowledge_base a
+		WHERE TYPE = #{KnowledgeType}
+		AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+		ORDER BY a.updateTime DESC LIMIT #{KnowledgePageSize}
+	</select>
+
+	<!-- 财税网首页热点问题查询 -->
+	<select id="hotUnClassifyList" resultType="com.abc12366.bangbang.model.KnowledgeBase" parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseHotParamBO">
+
+		SELECT a.id, a.subject,a.createTime,a.updateTime,a.pv, a.type FROM bb_knowledge_base a
+		WHERE
+		TYPE = #{KnowledgeType} AND recommend = #{KnowledgeRecommend}
+		AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+		ORDER BY a.pv DESC LIMIT #{KnowledgePageSize}
+
+	</select>
+
+	<!-- 财税网首页热点问题查询 -->
+	<select id="wxhotUnClassifyMap" resultType="com.abc12366.bangbang.model.KnowledgeBase" parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseHotParamBO">
+
+		SELECT a.* FROM bb_knowledge_base a
+		WHERE
+		TYPE = #{KnowledgeType} AND recommend = #{KnowledgeRecommend}
+		AND STATUS = 1 AND isOpen = 1 AND (activeTime IS NULL OR activeTime > NOW())
+		ORDER BY a.pv DESC
+
+	</select>
+
+
+	<!-- UC列表查询 -->
+	<select id="selectUCList" resultType="com.abc12366.bangbang.model.KnowledgeBase"
+			parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseParamBO">
+		SELECT t_base.id, t_base.subject, t_base.createTime,t_base.updateTime,t_base.pv, t_base.type
+		FROM bb_knowledge_base t_base JOIN bb_knowledge_category t_category
+		WHERE t_base.categoryCode = t_category.code
+		<if test="categoryCode != null and categoryCode !=''">
+			AND t_base.categoryCode LIKE CONCAT(#{categoryCode},'%')
+		</if>
+		<if test="type != null and type !=''">
+			AND t_base.type = #{type}
+		</if>
+		AND t_base.isOpen = TRUE AND t_base.status = TRUE AND (t_base.activeTime IS NULL OR t_base.activeTime > NOW())
+		<if test="keywords != null and keywords !=''">
+			AND (
+			UPPER(t_base.subject) LIKE CONCAT('%',#{keywords},'%')
+			OR MATCH(t_base.content) AGAINST(#{keywords})
+			OR
+			t_base.id IN(
+			SELECT DISTINCT t1.knowledgeId
+			FROM
+			bb_knowledge_tag_rel t1
+			LEFT JOIN bb_knowledge_tag t2 ON t1.tagId = t2.id
+			WHERE t2.status = TRUE AND t2.name LIKE CONCAT('%',#{keywords},'%')
+			)
+			)
+		</if>
+	</select>
+
+	<!-- 根据标签查询热点知识、问题 -->
+	<select id="selectUCListBytag" resultType="com.abc12366.bangbang.model.KnowledgeBase"
+			parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseParamBO">
+		SELECT t_base.id, t_base.subject ,t_base.content, t_base.createTime,t_base.updateTime,t_base.pv, t_base.type
+		FROM bb_knowledge_base t_base JOIN bb_knowledge_category t_category
+		WHERE t_base.categoryCode = t_category.code
+
+		<if test="type != null and type !=''">
+			AND t_base.type = #{type}
+		</if>
+		AND t_base.isOpen = TRUE AND t_base.status = TRUE AND (t_base.activeTime IS NULL OR t_base.activeTime > NOW())
+		<if test="keywords != null and keywords !=''">
+			AND (
+				t_base.id IN(
+					SELECT DISTINCT t1.knowledgeId
+					FROM
+					bb_knowledge_tag_rel t1
+					LEFT JOIN bb_knowledge_tag t2 ON t1.tagId = t2.id
+					WHERE t2.name = #{keywords}
+				)
+			)
+		</if>
+		ORDER BY t_base.updateTime desc
+	</select>
+
+	<!-- 列表查询 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.bo.KnowledgeBaseListBO"
+			parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseParamBO">
+		SELECT
+		t_base.id, t_base.categoryCode, t_base.type, t_base.recommend, t_base.subject, t_base.status, t_base.activeTime,
+		t_base.source, t_base.isOpen,t_base.pv, t_base.usefulVotes,
+		t_base.uselessVotes, t_base.shareNum, t_base.createTime, t_base.updateTime, t_base.createUser, t_base.updateUser,a.nickname as updateUserName,
+		t_category.name AS categoryName
+		FROM bb_knowledge_base t_base JOIN bb_knowledge_category t_category
+		LEFT JOIN abc12366_uc.uc_admin a on a.id = t_base.updateUser
+		WHERE t_base.categoryCode = t_category.code
+		<if test="categoryCode != null and categoryCode !=''">
+			AND t_base.categoryCode LIKE CONCAT(#{categoryCode},'%')
+		</if>
+		<if test="type != null and type !=''">
+			AND t_base.type = #{type}
+		</if>
+		<if test="recommend != null and recommend !=''">
+			AND t_base.recommend = #{recommend}
+		</if>
+		<if test="isOpen != null">
+			AND t_base.isOpen = #{isOpen}
+		</if>
+		<if test="status != null">
+			AND t_base.status = #{status}
+		</if>
+		<if test="keywords != null and keywords !=''">
+			AND (
+			UPPER(t_base.subject) LIKE CONCAT('%',#{keywords},'%')
+			OR MATCH(t_base.content) AGAINST(#{keywords})
+			OR
+			t_base.id IN(
+			SELECT DISTINCT t1.knowledgeId
+			FROM
+			bb_knowledge_tag_rel t1
+			LEFT JOIN bb_knowledge_tag t2 ON t1.tagId = t2.id
+			WHERE t2.name LIKE CONCAT('%',#{keywords},'%')
+			)
+			)
+		</if>
+		<choose>
+			<when test="order!=null and order!=''">
+				<if test="order=='lll'">
+					ORDER BY t_base.pv desc
+				</if>
+				<if test="order=='gxsj'">
+					ORDER BY t_base.updateTime desc
+				</if>
+			</when>
+			<otherwise>
+				ORDER BY t_base.updateTime desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.KnowledgeBase" parameterType="java.lang.String">
+		SELECT
+		t_base.*,t_category.name AS categoryName
+		FROM bb_knowledge_base t_base JOIN bb_knowledge_category t_category
+		WHERE t_base.categoryCode = t_category.code
+		AND t_base.id = #{id}
+	</select>
+
+	<select id="selectCntByCategoryId" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT COUNT(1) FROM bb_knowledge_base WHERE categorycode LIKE CONCAT((SELECT code  FROM  bb_knowledge_category WHERE id = #{ID}),'%')
+	</select>
+
+	<!--采集来源列表-->
+	<select id="selectSourceList" resultType="java.lang.String">
+		SELECT DISTINCT source FROM bb_knowledge_base WHERE source IS NOT NULL AND source !=''
+	</select>
+
+
+	<select id="selectCntBySubject" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM bb_knowledge_base WHERE  subject = #{subject}
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+	</select>
+
+	<select id="selectBySubject" resultType="com.abc12366.bangbang.model.KnowledgeBase">
+		SELECT id, subject FROM bb_knowledge_base WHERE UPPER(subject) LIKE CONCAT('%',#{subject},'%')
+	</select>
+</mapper>

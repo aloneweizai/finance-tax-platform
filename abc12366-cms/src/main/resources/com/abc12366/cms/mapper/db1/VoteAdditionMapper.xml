@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.VoteAdditionMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, voteId, dictId, required, content
+    </sql>
+
+
+    <insert id="insert" parameterType="com.abc12366.cms.model.Vote">
+        INSERT INTO cms_vote_addition (<include refid="Base_Column_List"/>)
+        VALUES (#{id}, #{voteId}, #{dictId}, #{required}, #{content})
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM cms_vote_addition WHERE voteId = #{voteId}
+    </delete>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.LetterMapper">
+
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.Letter">
+        insert into bb_letter(id,fromId,toId,content,status,createTime,lastUpdate)
+        values (#{id}, #{fromId}, #{toId},#{content},#{status}, #{createTime}, #{lastUpdate})
+    </insert>
+
+    <update id="read" parameterType="java.lang.String">
+        update bb_letter
+        set status='2'
+        where id=#{id}
+    </update>
+    <update id="delete" parameterType="java.lang.String">
+        update bb_letter
+        set status='0'
+        where id=#{id}
+    </update>
+</mapper>

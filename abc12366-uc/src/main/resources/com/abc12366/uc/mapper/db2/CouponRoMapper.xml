@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.CouponRoMapper">
+
+    <select id="selectList" parameterType="com.abc12366.uc.model.order.Coupon"
+            resultType="com.abc12366.uc.model.order.bo.CouponListBO">
+        SELECT id, couponName, couponMode, couponType, amountType,
+        validType, validStartTime, validEndTime, validDays, status,
+        createTime, lastUpdate
+        FROM uc_coupon
+        <where>
+            <if test="couponMode != null and couponMode != ''">couponMode = #{couponMode}</if>
+            <if test="couponType != null and couponType != ''">AND couponType = #{couponType}</if>
+            <choose>
+                <when test="status != null and status != ''">AND status = #{status}</when>
+                <when test="status == null or status == ''">AND status != '0'</when>
+            </choose>
+        </where>
+        order by lastUpdate DESC
+    </select>
+
+    <select id="selectCoupon" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.bo.CouponBO">
+        SELECT
+        c.id, c.couponName, c.couponMode, c.couponType, c.param1,
+        c.param2,c.param3, c.amountType, c.validType, c.validStartTime, c.validEndTime,
+        c.validDays, c.description, c.status, c.createTime, c.lastUpdate,
+        c.categoryIds,ca.imageUrl,
+        (select count(n.id) from uc_coupon_activity n JOIN uc_coupon_user m on n.id = m.activityId
+        where n.id = #{id} ) as collectNum
+        FROM uc_coupon_activity ca LEFT JOIN uc_coupon c
+        ON ca.couponId = c.id
+        where ca.id = #{id}
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.Coupon">
+        SELECT id, couponName, couponMode, couponType, param1,
+        param2,param3, amountType, validType, validStartTime, validEndTime,
+        validDays, description, status, createTime, lastUpdate,
+        categoryIds
+        FROM uc_coupon
+        where id = #{id}
+    </select>
+
+    <select id="selectActivityList" parameterType="com.abc12366.uc.model.order.CouponActivity"
+            resultType="com.abc12366.uc.model.order.bo.CouponActivityListBO">
+        select t.id, t.activityName, t.couponId, t.couponName, t.couponNum,
+        t.activityStartTime, t.activityEndTime, t.status, t.createTime, t.lastUpdate,t.imageUrl,t.target
+        from (
+        SELECT ca.id, ca.activityName, ca.couponId, c.couponName, ca.couponNum,
+        ca.activityStartTime, ca.activityEndTime, ca.status, ca.createTime, ca.lastUpdate,ca.imageUrl,ca.target
+        FROM uc_coupon_activity ca LEFT JOIN uc_coupon c
+        ON ca.couponId = c.id
+        <where>
+            ca.target != 3
+            <![CDATA[
+                  and date_format(ca.activityEndTime, '%Y-%m-%d') >= date_format(NOW(), '%Y-%m-%d')
+            ]]>
+            <if test="status != null and status != ''">
+                and ca.status = #{status}
+            </if>
+            <if test="activityName != null and activityName != ''">
+                and ca.activityName LIKE CONCAT('%',#{activityName},'%')
+            </if>
+            <if test="couponId != null and couponId != ''">AND ca.couponId = #{couponId}</if>
+        </where>
+        UNION ALL
+        SELECT ca.id, ca.activityName, ca.couponId, c.couponName, ca.couponNum,
+        ca.activityStartTime, ca.activityEndTime, ca.status, ca.createTime, ca.lastUpdate,ca.imageUrl,ca.target
+        FROM uc_coupon_activity ca LEFT JOIN uc_coupon c
+        ON ca.couponId = c.id
+        <where>
+            ca.target = 3
+            <![CDATA[
+                  and date_format(ca.activityEndTime, '%Y-%m-%d') >= date_format(NOW(), '%Y-%m-%d')
+            ]]>
+            <if test="status != null and status != ''">
+                and ca.status = #{status}
+            </if>
+            <if test="userIds != null and userIds != ''">
+                and ca.userIds LIKE CONCAT('%',#{userIds},'%')
+            </if>
+            <if test="activityName != null and activityName != ''">
+                and ca.activityName LIKE CONCAT('%',#{activityName},'%')
+            </if>
+            <if test="couponId != null and couponId != ''">AND ca.couponId = #{couponId}</if>
+        </where>
+        ) t
+       order by t.activityEndTime DESC,t.createTime desc
+    </select>
+
+    <!--活动列表对象-->
+    <resultMap id="activityListMap" type="com.abc12366.uc.model.order.bo.CouponActivityListBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="activityName" property="activityName" jdbcType="VARCHAR"/>
+        <result column="couponId" property="couponId" jdbcType="VARCHAR"/>
+        <result column="couponName" property="couponName" jdbcType="VARCHAR"/>
+        <result column="couponNum" property="couponNum" jdbcType="INTEGER"/>
+        <result column="activityStartTime" property="activityStartTime" jdbcType="TIMESTAMP"/>
+        <result column="activityEndTime" property="activityEndTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <association property="collectNum" column="id" jdbcType="INTEGER" select="getCollectNum"/>
+        <association property="usedNum" column="id" jdbcType="INTEGER" select="getUsedNum"/>
+        <association property="usedAmount" column="id" jdbcType="DOUBLE" select="getUsedAmount"/>
+    </resultMap>
+
+    <select id="getCollectNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(n.id) from uc_coupon_activity n JOIN uc_coupon_user m on n.id = m.activityId
+        where n.id = #{id}
+    </select>
+    <select id="getUsedNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(n.id) from uc_coupon_activity n JOIN uc_coupon_user m on n.id = m.activityId
+        where m.status = '2' and n.id = #{id}
+    </select>
+    <select id="getUsedAmount" parameterType="java.lang.String" resultType="java.lang.Double">
+        select sum(m.amountAfter) from uc_coupon_activity n JOIN uc_coupon_user m on n.id = m.activityId
+        where m.status = '2' and n.id = #{id}
+    </select>
+
+    <select id="selectAdminActivityList" parameterType="com.abc12366.uc.model.order.CouponActivity"
+            resultMap="activityListMap">
+        SELECT ca.id, ca.activityName, ca.couponId, c.couponName, ca.couponNum,
+        ca.activityStartTime, ca.activityEndTime, ca.status, ca.createTime, ca.lastUpdate,ca.imageUrl
+        FROM uc_coupon_activity ca LEFT JOIN uc_coupon c
+        ON ca.couponId = c.id
+        <where>
+            <if test="activityName != null and activityName != ''">ca.activityName LIKE
+                CONCAT('%',#{activityName},'%')
+            </if>
+            <if test="isOverdue != null and isOverdue != ''">
+                <![CDATA[
+                  and date_format(ca.activityEndTime, '%Y-%m-%d') >= date_format(NOW(), '%Y-%m-%d')
+            ]]>
+            </if>
+            <if test="couponId != null and couponId != ''">AND ca.couponId = #{couponId}</if>
+            <choose>
+                <when test="status != null and status != ''">AND ca.status = #{status}</when>
+                <when test="status == null or status == ''">AND ca.status != '0'</when>
+            </choose>
+        </where>
+        order by ca.lastUpdate DESC
+    </select>
+
+    <!--活动列表对象-->
+    <resultMap id="activityMap" type="com.abc12366.uc.model.order.bo.CouponActivityBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="activityName" property="activityName" jdbcType="VARCHAR"/>
+        <result column="activityLink" property="activityLink" jdbcType="VARCHAR"/>
+        <result column="couponId" property="couponId" jdbcType="VARCHAR"/>
+        <result column="couponName" property="couponName" jdbcType="VARCHAR"/>
+        <result column="couponNum" property="couponNum" jdbcType="INTEGER"/>
+        <result column="activityStartTime" property="activityStartTime" jdbcType="TIMESTAMP"/>
+        <result column="activityEndTime" property="activityEndTime" jdbcType="TIMESTAMP"/>
+        <result column="limit" property="limit" jdbcType="BOOLEAN"/>
+        <result column="limitNum" property="limitNum" jdbcType="INTEGER"/>
+        <result column="getType" property="getType" jdbcType="VARCHAR"/>
+        <result column="validApi" property="validApi" jdbcType="VARCHAR"/>
+        <result column="valid" property="valid" jdbcType="BOOLEAN"/>
+        <result column="target" property="target" jdbcType="VARCHAR"/>
+        <result column="areaOper" property="areaOper" jdbcType="VARCHAR"/>
+        <result column="areaIds" property="areaIds" jdbcType="VARCHAR"/>
+        <result column="tagOper" property="tagOper" jdbcType="VARCHAR"/>
+        <result column="tagIds" property="tagIds" jdbcType="VARCHAR"/>
+        <result column="regTimeOper" property="regTimeOper" jdbcType="VARCHAR"/>
+        <result column="regStartTime" property="regStartTime" jdbcType="TIMESTAMP"/>
+        <result column="regEndTime" property="regEndTime" jdbcType="TIMESTAMP"/>
+        <result column="vips" property="vips" jdbcType="VARCHAR"/>
+        <result column="userIds" property="userIds" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <association property="collectNum" column="id" jdbcType="INTEGER" select="getCollectNum"/>
+    </resultMap>
+
+    <select id="selectActivity" parameterType="java.lang.String"
+            resultMap="activityMap">
+        SELECT
+        ca.id,	ca.activityName,	ca.activityLink,	ca.couponId,	c.couponName,ca.activityStartTime,
+        ca.activityEndTime,	ca.couponNum, ca.limit,	ca.limitNum,	ca.getType,	ca.validApi,
+        ca.valid,	ca.target,	ca.areaOper,	ca.areaIds,	ca.tagOper,	ca.tagIds,  ca.regTimeOper,
+        ca.regStartTime,	ca.regEndTime,	ca.vips,	ca.userIds,	ca.description,	ca.imageUrl,
+        ca.status,	ca.createTime,	ca.lastUpdate
+        FROM uc_coupon_activity ca LEFT JOIN uc_coupon c
+        ON ca.couponId = c.id
+        WHERE ca.id = #{id}
+    </select>
+
+    <select id="selectOneActivity" parameterType="java.lang.String"
+            resultType="com.abc12366.uc.model.order.CouponActivity">
+          SELECT id, activityName, activityLink, couponId, activityStartTime,
+              activityEndTime, couponNum, `limit`, limitNum, getType,
+              valid, validApi, target, areaOper, areaIds,
+              tagOper, tagIds, regTimeOper, regStartTime, regEndTime,
+              vips, userIds, description, imageUrl, status,
+              createTime, lastUpdate
+          FROM uc_coupon_activity
+          WHERE id = #{id}
+    </select>
+
+    <sql id="Activity_Column_List">
+        id,	activityName,	activityLink,	couponId,	activityStartTime,	activityEndTime,	couponNum,	`limit`,	limitNum,	getType,	validApi,	valid,	target,	areaOper,	areaIds,	tagOper,	tagIds,	regTimeOper,	regStartTime,	regEndTime,	vips,	userIds,	description,	imageUrl,	status,	createTime,	lastUpdate
+    </sql>
+    <select id="selectCouponActivityList" parameterType="java.util.Map"
+            resultType="com.abc12366.uc.model.order.bo.CouponActivityBO">
+        SELECT
+        <include refid="Activity_Column_List"/>
+        FROM uc_coupon_activity
+        <where>
+            <if test="activityId != null and activityId != ''">AND activityId = #{activityId}</if>
+            <if test="status != null and status != ''">AND status = #{status}</if>
+        </where>
+        order by lastUpdate DESC
+    </select>
+
+    <select id="selectUserCoupon" parameterType="java.lang.String"
+            resultType="com.abc12366.uc.model.order.CouponUser">
+        SELECT id, userId, activityId, couponId, couponName,
+        couponMode, couponType, param1, param2, amountType,
+        validStartTime, validEndTime, description, status, createTime,
+        lastUpdate, orderNo, categoryIds
+        FROM uc_coupon_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectUserCouponByIds" parameterType="java.util.Map"
+            resultType="com.abc12366.uc.model.order.CouponUser">
+        SELECT id, userId, activityId, couponId, couponName,
+        couponMode, couponType, param1, param2, amountType,
+        validStartTime, validEndTime, description, status, createTime,
+        lastUpdate, orderNo, categoryIds
+        FROM uc_coupon_user
+        <where>
+            status = '1' and validEndTime <![CDATA[>]]> now()
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="userId != null and userId != ''">and userId = #{userId}</if>
+            <if test="couponId != null and couponId != ''">AND couponId = #{couponId}</if>
+        </where>
+        ORDER BY couponType DESC
+    </select>
+
+    <select id="selectUserCouponById" parameterType="java.util.Map"
+            resultType="com.abc12366.uc.model.order.CouponUser">
+        SELECT id, userId, activityId, couponId, couponName,
+        couponMode, couponType, param1, param2, amountType,
+        validStartTime, validEndTime, description, status, createTime,
+        lastUpdate, orderNo, categoryIds
+        FROM uc_coupon_user
+        where id = #{id}
+    </select>
+
+    <select id="selectUserList" parameterType="com.abc12366.uc.model.order.CouponUser"
+            resultType="com.abc12366.uc.model.order.bo.CouponUserListBO">
+        SELECT cu.id,cu.couponId,cu.couponName, cu.userId, u.username, cu.couponMode, cu.couponType,
+        cu.param1, cu.param2, cu.amountType, cu.status, cu.createTime,
+        cu.lastUpdate, cu.orderNo, cu.validStartTime, cu.validEndTime,cu.categoryIds,cu.amountAfter
+        FROM uc_coupon_user cu LEFT JOIN uc_user u
+        on cu.userId = u.id
+        <where>
+            <if test="userId != null and userId != ''">cu.userId = #{userId}</if>
+            <if test="activityId != null and activityId != ''">AND cu.activityId = #{activityId}</if>
+            <if test="couponId != null and couponId != ''">AND cu.couponId = #{couponId}</if>
+            <if test="isDate != null and isDate == '2'.toString()">
+                <if test="validEndTime != null">
+                    <![CDATA[
+                      and date_format(cu.validEndTime, '%Y-%m-%d') >= date_format(#{validEndTime}, '%Y-%m-%d')
+                    ]]>
+                </if>
+            </if>
+            <if test="isDate != null and isDate == '1'.toString()">
+                <![CDATA[
+                  and date_format(cu.validEndTime, '%Y-%m-%d') <= date_format(NOW(), '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="orderNo != null and orderNo != ''">AND cu.orderNo = #{orderNo}</if>
+            <if test="categoryIds != null  and categoryIds!='' ">
+                AND (cu.categoryIds LIKE CONCAT('%',#{categoryIds},'%') or cu.categoryIds = 'ALL')
+            </if>
+            <choose>
+                <when test="status != null and status != ''">
+                    AND cu.status = #{status}
+                </when>
+                <when test="status == null or status == ''">
+                    AND cu.status != '4'
+                </when>
+            </choose>
+        </where>
+        order by cu.lastUpdate DESC
+    </select>
+
+    <select id="selectAdminList" parameterType="com.abc12366.uc.model.order.CouponUser"
+            resultType="com.abc12366.uc.model.order.bo.CouponUserListBO">
+        SELECT cu.id,cu.couponId,cu.couponName, cu.userId, u.username, cu.couponMode, cu.couponType,
+        cu.param1, cu.param2, cu.amountType, cu.status, cu.createTime,
+        cu.lastUpdate, cu.orderNo, cu.validStartTime, cu.validEndTime,cu.categoryIds,cu.amountAfter
+        FROM uc_coupon_user cu LEFT JOIN uc_user u
+        on cu.userId = u.id
+        <where>
+            <if test="userId != null and userId != ''">cu.userId = #{userId}</if>
+            <if test="activityId != null and activityId != ''">AND cu.activityId = #{activityId}</if>
+            <if test="couponId != null and couponId != ''">AND cu.couponId = #{couponId}</if>
+            <if test="orderNo != null and orderNo != ''">AND cu.orderNo = #{orderNo}</if>
+            <if test="categoryIds != null  and categoryIds!='' ">
+                AND (cu.categoryIds LIKE CONCAT('%',#{categoryIds},'%') or cu.categoryIds = 'ALL')
+            </if>
+            <choose>
+                <when test="status != null and status != ''">
+                    AND cu.status = #{status}
+                </when>
+            </choose>
+        </where>
+        order by cu.lastUpdate DESC
+    </select>
+
+    <select id="selectUserListByOrderNo" parameterType="java.util.Map"
+            resultType="com.abc12366.uc.model.order.bo.CouponUserListBO">
+        SELECT cu.id,cu.couponId,cu.couponName, cu.userId, u.username, cu.couponMode, cu.couponType,
+        cu.param1, cu.param2, cu.amountType, cu.status, cu.createTime,
+        cu.lastUpdate, cu.orderNo, cu.validStartTime, cu.validEndTime,cu.categoryIds,cu.amountAfter
+        FROM uc_coupon_user cu LEFT JOIN uc_user u
+        on cu.userId = u.id
+        <where>
+            <if test="orderNo != null and orderNo != ''">AND cu.orderNo = #{orderNo}</if>
+        </where>
+        order by cu.lastUpdate DESC
+    </select>
+
+    <select id="selectUserCouponCount" parameterType="com.abc12366.uc.model.order.CouponUser"
+            resultType="java.lang.Integer">
+        SELECT count(userId) FROM uc_coupon_user
+        <where>
+            <if test="userId != null and userId != ''">userId = #{userId}</if>
+            <if test="activityId != null and activityId != ''">AND activityId = #{activityId}</if>
+            <if test="status != null and status != ''">AND status = #{status}</if>
+        </where>
+    </select>
+
+    <!-- CouponUser通用查询结果列-->
+    <sql id="CouponUser_Column_List">
+        id,	userId,	activityId,	couponId,	couponName,	couponMode,	couponType,	param1,	param2,	amountType,	validStartTime,	validEndTime,	description,	status,	createTime,	lastUpdate,	orderNo,	categoryIds,	amountAfter
+    </sql>
+
+    <select id="selectCouponUser" parameterType="java.util.Map"
+            resultType="com.abc12366.uc.model.order.CouponUser">
+        SELECT
+        <include refid="CouponUser_Column_List"/>
+        FROM uc_coupon_user
+        <where>
+            <if test="userId != null and userId != ''">userId = #{userId}</if>
+            <if test="orderNo != null and orderNo != ''">AND orderNo = #{orderNo}</if>
+        </where>
+    </select>
+</mapper>

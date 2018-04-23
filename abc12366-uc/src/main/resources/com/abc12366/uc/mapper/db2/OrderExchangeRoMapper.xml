@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrderExchangeRoMapper">
+
+    <sql id="Base_Column_List">
+        id, userId, orderNo, reason, adminRemark, userRemark, expressNo, expressComp, status, createTime, lastUpdate,
+        toExpressNo, type,adminConfirmRemark,consignee,	contactNumber,	shippingAddress,refundRemark
+    </sql>
+
+    <select id="selectList" parameterType="com.abc12366.uc.model.order.OrderExchange"
+            resultType="com.abc12366.uc.model.order.OrderExchange">
+        select e.id, e.userId, e.orderNo, e.name, e.imageUrl, e.goodsType, e.username, e.num, e.orderTime, e.type, e.reason, e.userRemark,
+        e.expressNo, e.expressComp, e.toExpressNo, e.adminRemark, e.status, e.createTime, e.lastUpdate,e.adminConfirmRemark,e.consignee,	e.contactNumber,	e.shippingAddress,e.refundRemark
+        from (select c.*, d.productId, d.num, d.name, d.imageUrl, d.goodsType from (select b.username, b.createTime as orderTime, a.* from
+        uc_order_exchange a left join uc_order b on a.orderNo = b.orderNo where a.userId = b.userId) c
+        left join uc_order_product d on c.orderNo = d.orderNo) e
+        <where>
+            <if test="type != null and type !=''">type = #{type}</if>
+            <if test="username != null and username !=''">and username = #{username}</if>
+            <if test="status != null and status !=''">and status = #{status}</if>
+            <if test="lastUpdate != null">and lastUpdate >= #{lastUpdate}</if>
+            <if test="userId != null and userId !=''">and userId = #{userId}</if>
+            <if test="orderNo != null and orderNo !=''">and orderNo = #{orderNo}</if>
+        </where>
+        ORDER BY e.createTime DESC
+    </select>
+
+    <select id="selectListForFinance" parameterType="com.abc12366.uc.model.order.OrderExchange"
+            resultType="com.abc12366.uc.model.order.OrderExchange">
+        select e.id, e.userId, e.orderNo, e.name, e.imageUrl, e.goodsType, e.username, e.num, e.orderTime, e.type, e.reason, e.userRemark,
+        e.expressNo, e.expressComp, e.toExpressNo, e.adminRemark, e.status, e.createTime, e.lastUpdate,e.adminConfirmRemark,e.consignee,	e.contactNumber,	e.shippingAddress,e.refundRemark
+        from (select c.*, d.productId, d.num, d.name, d.imageUrl, d.goodsType from (select b.username, b.createTime as orderTime, a.* from
+        uc_order_exchange a left join uc_order b on a.orderNo = b.orderNo where a.userId = b.userId) c
+        left join uc_order_product d on c.orderNo = d.orderNo) e
+        <where>
+            (status = '4' or status = '7' or status = '8')
+            <if test="type != null and type !=''">and type = #{type}</if>
+            <if test="status != null and status !=''">and status = #{status}</if>
+            <if test="username != null and username !=''">and username = #{username}</if>
+            <if test="lastUpdate != null">and lastUpdate >= #{lastUpdate}</if>
+            <if test="userId != null and userId !=''">and userId = #{userId}</if>
+            <if test="orderNo != null and orderNo !=''">and orderNo = #{orderNo}</if>
+        </where>
+        ORDER BY e.createTime DESC
+    </select>
+
+    <!-- 未完成换货申请，4-已完成 5-已拒绝 -->
+    <select id="selectUndoneList" parameterType="java.lang.String"
+            resultType="com.abc12366.uc.model.order.OrderExchange">
+        SELECT <include refid="Base_Column_List"/>
+        FROM uc_order_exchange
+        WHERE orderNo = #{orderNo}
+        AND status != '4'
+        AND status != '5'
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.OrderExchange">
+       select e.id, e.userId, e.orderNo, e.name, e.imageUrl, e.goodsType, e.username, e.num, e.orderTime, e.type, e.reason, e.userRemark,
+        e.expressNo, e.expressComp,e.toExpressNo,e.toExpressComp, m.compName as toExpressCompName, e.adminRemark, e.status, e.createTime, e.lastUpdate,e.adminConfirmRemark,e.consignee,	e.contactNumber,	e.shippingAddress,e.refundRemark
+        from (select c.*, d.productId, d.num, d.name, d.imageUrl, d.goodsType from (select b.username, b.createTime as orderTime, a.* from
+        uc_order_exchange a left join uc_order b on a.orderNo = b.orderNo where a.userId = b.userId) c
+        left join uc_order_product d on c.orderNo = d.orderNo) e
+		LEFT JOIN uc_express_comp m on m.id = e.toExpressComp
+        WHERE e.id = #{id}
+    </select>
+
+    <select id="selectById" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.OrderExchange">
+        SELECT <include refid="Base_Column_List"/>
+        FROM uc_order_exchange
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByOrderNo" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.OrderExchange">
+        SELECT <include refid="Base_Column_List"/>
+        FROM uc_order_exchange
+        WHERE status <![CDATA[!=]]> '5' and  orderNo = #{orderNo}
+    </select>
+
+    <select id="selectByOrderNoAndStatus" parameterType="java.lang.String" resultType="com.abc12366.uc.model.order.OrderExchange">
+        SELECT <include refid="Base_Column_List"/>
+        FROM uc_order_exchange
+        WHERE status = '6' and  orderNo = #{orderNo}
+    </select>
+
+    <select id="export" parameterType="com.abc12366.uc.model.order.bo.OrderExchangeExportBO"
+            resultType="com.abc12366.uc.model.bo.SfExportBO">
+        select h.orderNo, h.company, h.name, h.phone, h.address, j.name as content, 1 as num from (SELECT
+        c.orderNo, c.consigneeTemp as name,c.consigneeTemp as company, c.contactNumberTemp as phone, c.shippingAddressTemp as address
+        FROM
+        (SELECT
+        b.*,a.consignee as consigneeTemp,a.contactNumber as contactNumberTemp,a.shippingAddress as shippingAddressTemp
+        FROM
+        uc_order_exchange a
+        LEFT JOIN uc_order b ON a.orderNo = b.orderNo
+        WHERE a.status = '6'
+        and a.type = '1'
+        and a.createTime <![CDATA[>=]]> DATE_FORMAT(#{startTime}, '%Y-%m-%d %H-%i-%s')
+        and a.createTime <![CDATA[<=]]> DATE_FORMAT(#{endTime}, '%Y-%m-%d %H-%i-%s')) c
+        ) h left join (select x.orderNo, x.name, y.specId from uc_order_product x left join uc_order_product_spec y on x.productId = y.productId) j on h.orderNo = j.orderNo
+    </select>
+
+    <select id="selectCompletedOrder" resultType="com.abc12366.uc.model.order.bo.ExchangeCompletedOrderBO"
+            parameterType="java.lang.String">
+        select orderNo, giftPoints, createTime, lastUpdate, userId, points, e.productId, goodsType,isReturn,isExchange,name from
+        (select c.*, d.points from
+        (select a.orderNo, a.userId, a.giftPoints, a.createTime, a.lastUpdate,b.goodsType,b.isExchange,b.isReturn, b.productId,b.name from uc_order a left join uc_order_product b on a.orderNo = b.orderNo) c
+        left join uc_user d on c.userId = d.id) e
+        where orderNo = #{orderNo}
+    </select>
+
+    <!-- 3-已拒绝 5-已退票 6-已收货-->
+    <select id="selectOrderInvoice" parameterType="com.abc12366.uc.model.order.bo.ExchangeOrderInvoiceBO"
+            resultType="com.abc12366.uc.model.order.bo.ExchangeOrderInvoiceBO">
+        select c.invoiceNo, c.invoiceCode, c.name, c.content, c.amount, c.type, c.property, c.status,
+        c.nsrsbh, c.nsrmc, c.address, c.phone, c.bank, d.isInvoice, d.orderNo from
+        (select a.*, b.orderNo from uc_invoice a left join uc_order_invoice b on a.id = b.invoiceId and b.status = true ) c
+        left join uc_order d on c.orderNo = d.orderNo
+        WHERE c.status <![CDATA[!=]]> '3' and c.status <![CDATA[!=]]> '5' and c.status <![CDATA[!=]]> '6'
+        and c.orderNo = #{orderNo}
+    </select>
+
+    <select id="selectInvoice" parameterType="com.abc12366.uc.model.order.bo.ExchangeOrderInvoiceBO"
+            resultType="com.abc12366.uc.model.order.bo.ExchangeOrderInvoiceBO">
+        select c.invoiceNo, c.invoiceCode, c.name, c.content, c.amount, c.type, c.property, c.status,
+        c.nsrsbh, c.nsrmc, c.address, c.phone, c.bank, d.isInvoice, d.orderNo from
+        (select a.*, b.orderNo from uc_invoice a left join uc_order_invoice b on a.id = b.invoiceId and b.status = true ) c
+        left join uc_order d on c.orderNo = d.orderNo
+        where c.status = '6'
+        and c.orderNo = #{orderNo}
+    </select>
+
+    <select id="selectTodoListCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(*) FROM uc_order_exchange
+        WHERE status = #{status}
+    </select>
+</mapper>

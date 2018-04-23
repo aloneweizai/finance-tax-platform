@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.AnswerMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_paper_answer
+        WHERE answerLogId = #{answerLogId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.Answer">
+        INSERT INTO cms_paper_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="answerLogId != null">
+                answerLogId,
+            </if>
+            <if test="subjectsId != null">
+                subjectsId,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="answerLogId!=null">
+                #{answerLogId},
+            </if>
+            <if test="subjectsId!=null">
+                #{subjectsId},
+            </if>
+            <if test="content!=null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.Answer">
+        UPDATE cms_paper_answer
+        <set>
+            <if test="subjectsId != null">
+                subjectsId = #{subjectsId},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+
+        </set>
+        WHERE answerLogId = #{answerLogId} and subjectsId = #{subjectsId}
+    </update>
+
+</mapper>

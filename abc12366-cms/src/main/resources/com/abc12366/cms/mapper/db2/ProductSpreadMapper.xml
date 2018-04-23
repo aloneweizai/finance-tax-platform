@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.ProductSpreadRoMapper">
+     
+     <resultMap id="ProductSpread" type="com.abc12366.cms.model.ProductSpread">
+        <id property="id" column="id" />
+        <result property="name" column="name"/>
+        <result property="createTime" column="createTime"/>
+        <result property="lastUpdate" column="lastUpdate"/>
+        <result property="updateUserId" column="updateUserId"/>
+        <result property="updateName" column="updateName"/>
+        <collection  property="productImgs" ofType="com.abc12366.cms.model.ProductImg" column="id" select="getImgs">
+        </collection>
+    </resultMap>
+    
+    
+    <select id="getImgs" parameterType="java.lang.String" resultType="com.abc12366.cms.model.ProductImg">
+        SELECT id, productId, imageUrl, description FROM cms_product_image where productId = #{productId}
+    </select>
+    
+    <select id="list" resultMap="ProductSpread" parameterType="java.util.Map">
+        SELECT p.id, p.name, p.createTime, p.lastUpdate,p.updateUserId,u.nickname as updateName   
+        FROM cms_product_page p, abc12366_uc.uc_admin u
+        <where>
+            u.id = p.updateUserId 
+            <if test=" productname != null and productname != '' ">
+                AND p.name = #{productname}
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectone" resultMap="ProductSpread" parameterType="java.lang.String">
+        SELECT p.id, p.name, p.createTime, p.lastUpdate,p.updateUserId,u.nickname as updateName   
+        FROM cms_product_page p, abc12366_uc.uc_admin u
+        WHERE u.id = p.updateUserId  AND p.id = #{id}
+    </select>
+    
+	
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumLecturerGxMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_lecturer_gx
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx">
+		 INSERT INTO bb_curriculum_lecturer_gx
+ 		(curriculumId,lecturerId)
+		 VALUES 
+ 		(#{curriculumId},#{lecturerId})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx">
+		 INSERT INTO bb_curriculum_lecturer_gx
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+                curriculumId,
+			</if>
+             <if test="lecturerId != null">
+                 lecturerId,
+             </if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+             <if test="lecturerId!=null">
+                 #{lecturerId},
+             </if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx">
+		 UPDATE bb_curriculum_lecturer_gx
+ 		 <set>
+             <if test="curriculumId != null">
+                 curriculumId = #{curriculumId},
+             </if>
+ 		 </set>
+		 WHERE lecturerId = #{lecturerId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx">
+		 UPDATE bb_curriculum_lecturer_gx
+		 SET
+			 curriculumId = #{curriculumId}
+		 WHERE lecturerId = #{lecturerId}
+	</update>
+
+</mapper>

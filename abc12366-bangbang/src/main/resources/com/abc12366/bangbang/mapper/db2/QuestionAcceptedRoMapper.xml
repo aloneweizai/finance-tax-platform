@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionAcceptedRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,	nsrsbh,	nsrmc,	productName,	type,	name,	phone,	visitDate
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionAccepted" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bb_question_accepted
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectUCUser" resultType="com.abc12366.bangbang.model.bo.UCUserBO" parameterType="java.lang.String">
+		SELECT
+		id,phone,username
+		FROM bb_user
+		WHERE id = #{id}
+	</select>
+
+	<!-- 列表查询 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.question.QuestionAccepted" parameterType="com.abc12366.bangbang.model.question.bo.QuestionAcceptedBO">
+		SELECT
+		a.id,	a.nsrsbh,	a.nsrmc,	a.productName,	a.type,	a.name,	a.phone,	date_format(a.visitDate, '%Y-%m-%d') as visitDate
+		FROM bb_question_accepted a
+		<where>
+            1=1
+            <if test="phone != null and phone!=''">AND a.phone = #{phone}</if>
+            <if test="name != null and name!=''">AND a.name = #{name}</if>
+            <if test="nsrsbh != null and nsrsbh!=''">AND a.nsrsbh = #{nsrsbh}</if>
+            <if test="date != null and date!=''">
+                <![CDATA[
+                and date_format(a.visitDate, '%Y') = #{date}
+                ]]>
+            </if>
+        </where>
+		order by a.visitDate desc
+	</select>
+
+	<!-- 统计列表查询 -->
+	<select id="selectStatisList" resultType="com.abc12366.bangbang.model.question.bo.QuestionAcceptedBO" parameterType="com.abc12366.bangbang.model.question.bo.QuestionAcceptedBO">
+		select count(a.id) as total,
+        (select count(b.id) from bb_question_accepted b where b.phone = #{phone} ) as allCount,
+        date_format(a.visitDate, '%Y') as date from bb_question_accepted a
+        <where>
+            1=1
+            <if test="phone != null and phone!=''">AND a.phone = #{phone}</if>
+            <if test="date != null and date!=''">
+                <![CDATA[
+                and date_format(a.visitDate, '%Y') = #{date}
+                ]]>
+            </if>
+        </where>
+        group by date_format(a.visitDate, '%Y')
+	</select>
+
+
+</mapper>

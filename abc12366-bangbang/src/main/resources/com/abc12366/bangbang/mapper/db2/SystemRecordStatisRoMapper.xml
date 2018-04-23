@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.SystemRecordStatisRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 id,	amount,	menu,	createTime
+	</sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.SystemRecordStatis"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_system_record_statis
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据时间） -->
+    <select id="selectByDateCount" resultType="java.lang.Integer" parameterType="java.util.Date">
+		SELECT
+		count(id)
+		FROM bb_system_record_statis
+		WHERE date_format(createTime, '%Y-%m-%d') = date_format(#{createTime}, '%Y-%m-%d')
+	</select>
+
+    <select id="statisRecordUserList" resultType="com.abc12366.bangbang.model.User" parameterType="java.util.Map">
+        select u.id, u.username, u.phone, u.regMail, u.regIP, u.salt, u.nickname, u.status,
+        u.createTime, u.lastUpdate,u.userPicturePath, u.maxUserPicturePath, u.midUserPicturePath,
+        u.minUserPicturePath, u.points, u.exp,u.vipLevel from
+        (
+        <foreach collection="list" index="key" item="yyyyMMdd" separator="union">
+            select r.userId from bb_system_record_${yyyyMMdd} r where 1 = 1
+            <if test="menua != null and menua != ''">
+                and r.menua = #{menua}
+            </if>
+            <if test="menub != null and menub != ''">
+                and r.menub = #{menub}
+            </if>
+            <if test="menuc != null and menuc != ''">
+                and r.menuc = #{menuc}
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(r.createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(r.createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            GROUP BY r.userId
+        </foreach>
+        ) a
+        LEFT JOIN bb_user u on a.userId = u.id
+    </select>
+
+    <select id="selectRecordStatisList" resultType="com.abc12366.bangbang.model.SystemRecordStatis"
+            parameterType="java.util.Map">
+		SELECT id,menua as menu,COUNT(menua) as amount,createTime FROM bb_system_record_${yyyyMMdd} where menua is not null and menua !=''  group by menua
+		union all
+		SELECT id,menub as menu,COUNT(menub) as amount,createTime FROM bb_system_record_${yyyyMMdd} where menub is not null and menub !='' group by menub
+		union all
+		SELECT id,menuc as menu,COUNT(menuc) as amount,createTime FROM bb_system_record_${yyyyMMdd} where menuc is not null and menuc !='' group by menuc
+	</select>
+
+    <select id="statisList" resultType="com.abc12366.bangbang.model.SystemRecordStatis" parameterType="java.util.Map">
+
+        <foreach collection="list" index="key" item="name" separator="union all">
+            SELECT id,menu,sum(amount) as amount,createTime FROM bb_system_record_statis
+            where menu = #{name}
+            <if test="startTime != null">
+                <![CDATA[
+                    and date_format(createTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                    and date_format(createTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            group by menu
+        </foreach>
+    </select>
+
+</mapper>

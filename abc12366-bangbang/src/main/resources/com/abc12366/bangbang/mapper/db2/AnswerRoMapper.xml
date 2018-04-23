@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.AnswerRoMapper">
+    <select id="selectListForAdmin" parameterType="com.abc12366.bangbang.model.bo.AnswersQueryParamBO"
+            resultType="com.abc12366.bangbang.model.bo.AnswerBO">
+        select id,askId,userId,answer,status,createTime,lastUpdate,isAccept,imageUrl,type
+        from bb_answer
+        <where>
+            <if test="userId!=null">userId=#{userId}</if>
+            <if test="askId!=null">and askId=#{askId}</if>
+            <if test="type!=null">and type=#{type}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectListForUser" parameterType="com.abc12366.bangbang.model.bo.AnswerQueryParamBO"
+            resultType="com.abc12366.bangbang.model.bo.AnswerBO">
+        select id,askId,userId,answer,status,createTime,lastUpdate,isAccept,imageUrl,type
+        from bb_answer
+        <where>
+            <if test="userId!=null">userId=#{userId}</if>
+            <if test="askId!=null">and askId=#{askId}</if>
+            <if test="type!=null">and type=#{type}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.bo.AnswerBO" parameterType="java.lang.String">
+        select id,askId,userId,answer,status,createTime,lastUpdate,isAccept,imageUrl,type
+        from bb_answer
+        where id=#{id}
+    </select>
+</mapper>

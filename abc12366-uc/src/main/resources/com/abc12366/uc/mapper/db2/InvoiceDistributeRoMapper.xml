@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.InvoiceDistributeRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		id,	invoiceRepoId,	invoiceCode,	invoiceNoStart,	invoiceNoEnd,	status,	share,	book,	remark,	useId,	invoiceTypeCode,	distributeUser,	distributeTime,	signUser,	signTime
+	</sql>
+
+    <!-- 发票分发信息对象-->
+    <resultMap id="invoiceDistributeBOMap" type="com.abc12366.uc.model.invoice.bo.InvoiceDistributeBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="invoiceRepoId" property="invoiceRepoId" jdbcType="VARCHAR"/>
+        <result column="invoiceCode" property="invoiceCode" jdbcType="VARCHAR"/>
+        <result column="invoiceNoStart" property="invoiceNoStart" jdbcType="VARCHAR"/>
+        <result column="invoiceNoEnd" property="invoiceNoEnd" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="book" property="book" jdbcType="INTEGER"/>
+        <result column="useId" property="useId" jdbcType="VARCHAR"/>
+        <result column="invoiceTypeCode" property="invoiceTypeCode" jdbcType="VARCHAR"/>
+        <result column="distributeUser" property="distributeUser" jdbcType="VARCHAR"/>
+        <result column="distributeTime" property="distributeTime" jdbcType="TIMESTAMP"/>
+        <result column="signUser" property="signUser" jdbcType="VARCHAR"/>
+        <result column="signTime" property="signTime" jdbcType="TIMESTAMP"/>
+        <result column="fieldKey" property="fieldKey" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.invoice.InvoiceDistribute"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_distribute
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectInvoiceDistributeListByUseId" resultType="com.abc12366.uc.model.invoice.InvoiceDistribute"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_distribute
+        WHERE useId = #{useId}
+    </select>
+
+    <select id="selectList" resultMap="invoiceDistributeBOMap"
+            parameterType="com.abc12366.uc.model.invoice.bo.InvoiceDistributeBO">
+        SELECT
+        te.id,	te.invoiceRepoId,	te.invoiceCode,	te.invoiceNoStart,	te.invoiceNoEnd,	te.status,	te.share,	te.book,
+        te.remark,	te.useId,	te.invoiceTypeCode,	te.distributeUser,	te.distributeTime,	te.signUser,	te.signTime,dt.fieldKey as fieldKey
+        FROM uc_invoice_distribute te
+        LEFT JOIN uc_dict dt on dt.id = te.invoiceTypeCode
+        WHERE te.useId = #{useId}
+        order by te.createTime desc
+    </select>
+    <!--获取该管理员领用表中的一张发票-->
+</mapper>

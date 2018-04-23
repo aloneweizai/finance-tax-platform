@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.PlugMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, path, description, author, uploadTime, installTime, uninstallTime, fileConflict, isUsed, plugPerms,
+        plugRepair
+    </sql>
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_plug
+        WHERE plugId = #{plugId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Plug">
+        INSERT INTO cms_plug
+        (plugId,name,path,description,author,uploadTime,installTime,uninstallTime,fileConflict,isUsed,plugPerms,plugRepair)
+        VALUES
+        (#{plugId},#{name},#{path},#{description},#{author},#{uploadTime},#{installTime},#{uninstallTime},#{fileConflict},#{isUsed},#{plugPerms},#{plugRepair})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Plug">
+        INSERT INTO cms_plug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="plugId != null">
+                plugId,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="path != null">
+                path,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="author != null">
+                author,
+            </if>
+            <if test="uploadTime != null">
+                uploadTime,
+            </if>
+            <if test="installTime != null">
+                installTime,
+            </if>
+            <if test="uninstallTime != null">
+                uninstallTime,
+            </if>
+            <if test="fileConflict != null">
+                fileConflict,
+            </if>
+            <if test="isUsed != null">
+                isUsed,
+            </if>
+            <if test="plugPerms != null">
+                plugPerms,
+            </if>
+            <if test="plugRepair != null">
+                plugRepair,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="plugId!=null">
+                #{plugId},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="path!=null">
+                #{path},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="author!=null">
+                #{author},
+            </if>
+            <if test="uploadTime!=null">
+                #{uploadTime},
+            </if>
+            <if test="installTime!=null">
+                #{installTime},
+            </if>
+            <if test="uninstallTime!=null">
+                #{uninstallTime},
+            </if>
+            <if test="fileConflict!=null">
+                #{fileConflict},
+            </if>
+            <if test="isUsed!=null">
+                #{isUsed},
+            </if>
+            <if test="plugPerms!=null">
+                #{plugPerms},
+            </if>
+            <if test="plugRepair!=null">
+                #{plugRepair},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Plug">
+        UPDATE cms_plug
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="path != null">
+                path = #{path},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+            <if test="uploadTime != null">
+                uploadTime = #{uploadTime},
+            </if>
+            <if test="installTime != null">
+                installTime = #{installTime},
+            </if>
+            <if test="uninstallTime != null">
+                uninstallTime = #{uninstallTime},
+            </if>
+            <if test="fileConflict != null">
+                fileConflict = #{fileConflict},
+            </if>
+            <if test="isUsed != null">
+                isUsed = #{isUsed},
+            </if>
+            <if test="plugPerms != null">
+                plugPerms = #{plugPerms},
+            </if>
+            <if test="plugRepair != null">
+                plugRepair = #{plugRepair},
+            </if>
+
+        </set>
+        WHERE plugId = #{plugId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Plug">
+        UPDATE cms_plug
+        SET
+        name = #{name},
+        path = #{path},
+        description = #{description},
+        author = #{author},
+        uploadTime = #{uploadTime},
+        installTime = #{installTime},
+        uninstallTime = #{uninstallTime},
+        fileConflict = #{fileConflict},
+        isUsed = #{isUsed},
+        plugPerms = #{plugPerms},
+        plugRepair = #{plugRepair}
+        WHERE plugId = #{plugId}
+    </update>
+
+</mapper>

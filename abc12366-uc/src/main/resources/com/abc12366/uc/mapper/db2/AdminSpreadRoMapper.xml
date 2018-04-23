@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.AdminSpreadRoMapper">
+
+   <select id="myConstomers" parameterType="java.util.Map" resultType="java.util.Map">
+      <![CDATA[
+         SELECT o.userid,u.username,u.nickname,u.points,u.exp,u.amount,u.status,e.realName,u.phone,
+         (SELECT uul.level FROM uc_uvip_level uul WHERE uul.levelCode = u.vipLevel limit 1) vipLevelName,
+		 IFNULL(
+			   (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND u.exp >= uul.minValue AND u.exp <= uul.maxValue LIMIT 1),
+			   (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue >=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue <=u.exp)
+		 ) levelName,u.createTime 
+		 FROM uc_user u,uc_user_extend e, (SELECT  DISTINCT userid FROM uc_order WHERE ]]>
+	   		(recommendUser = #{recommend}
+			 <if test="recommendPhone != null and recommendPhone != ''">
+			 or recommendUser = #{recommendPhone}
+			 </if> )
+			 <![CDATA[
+		 and orderstatus = '6' ) o
+		 WHERE u.id=o.userId AND u.id = e.userId 
+	  ]]>
+		 <if test="username != null and username != ''">
+		 AND u.username = #{username} 
+		 </if>
+		 <if test="nickname != null and nickname != ''">
+		 AND u.nickname = #{nickname} 
+		 </if>
+		 <if test="phone != null and phone != ''">
+		 AND u.phone = #{phone} 
+		 </if>
+		 <if test="realname != null and realname != ''">
+		 AND e.realName =  #{realname} 
+		 </if>
+		 <if test="createTimeB != null and createTimeB != ''">
+		 AND DATE_FORMAT(u.createTime,'%Y%m%d') >= #{createTimeB} 
+		 </if>  
+		 <if test="createTimeE != null and createTimeE != ''">
+		 <![CDATA[ AND DATE_FORMAT(u.createTime,'%Y%m%d') <= #{createTimeE} ]]>
+		 </if>     
+         ORDER BY u.createTime DESC
+   </select>
+
+</mapper>

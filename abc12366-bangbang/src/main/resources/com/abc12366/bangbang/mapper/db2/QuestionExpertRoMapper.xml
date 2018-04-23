@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionExpertRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,	userId,	type, yearWork, goodField, intro,	createTime,	updateTime, createAdmin, updateAdmin, status
+	</sql>
+
+	<!-- 查询列表 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionExpertBO"
+			parameterType="com.abc12366.bangbang.model.question.bo.QuestionExpertParamBo">
+		SELECT t.id, t.status, t.type, t1.nickname, t1.phone, t2.realName, t1.username
+		FROM bb_question_expert t
+		JOIN abc12366_uc.uc_user t1 ON t1.id = t.userId
+		LEFT JOIN abc12366_uc.uc_user_extend t2 ON t2.userId = t.userId
+		WHERE  1=1
+		<if test="username != null and username !=''">
+			AND t1.username = #{username}
+		</if>
+		<if test="realName != null and realName !=''">
+			AND t2.realName = #{realName}
+		</if>
+		<if test="phone != null  and phone !=''">
+			AND t1.phone = #{phone}
+		</if>
+		<if test="type != null  and type !=''">
+			AND t.type = #{type}
+		</if>
+		<if test="status != null  and status !=''">
+			AND t.status = #{status}
+		</if>
+	</select>
+
+    <!-- 查询大侠 -->
+    <select id="selectListDX" resultType="com.abc12366.bangbang.model.question.bo.QuestionExpertBO"
+            parameterType="java.util.Map">
+        SELECT t.id,t.userId, t.status, t.type,t.yearWork,t.goodField, t1.nickname, t1.phone, t2.realName, t1.username,
+        t1.userPicturePath userImage,
+        (select count(*) from bb_question_answer where userId = t.userId) answerNum,
+        (select count(*) from bb_question_answer where userId = t.userId and isAccept = '1') acccptNum
+        FROM bb_question_expert t
+        JOIN abc12366_uc.uc_user t1 ON t1.id = t.userId
+		LEFT JOIN abc12366_uc.uc_user_extend t2 ON t2.userId = t.userId
+        WHERE t.status = '1'
+        <if test="type != null  and type !=''">
+            AND t.type = #{type}
+        </if>
+        order by acccptNum desc
+    </select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.bo.QuestionExpertBO" parameterType="java.lang.String">
+		SELECT t.*,t1.username, t1.userPicturePath AS userImage, t1.nickname, t1.phone, t2.realName
+		FROM bb_question_expert t
+		JOIN abc12366_uc.uc_user t1 ON t1.id = t.userId
+		LEFT JOIN abc12366_uc.uc_user_extend t2 ON t2.userId = t.userId
+		WHERE t.id = #{id}
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectListByUserId" resultType="com.abc12366.bangbang.model.question.bo.QuestionExpertBO" parameterType="java.lang.String">
+		SELECT goodField FROM bb_question_expert WHERE userId = #{userId} and status = '1'
+	</select>
+
+</mapper>

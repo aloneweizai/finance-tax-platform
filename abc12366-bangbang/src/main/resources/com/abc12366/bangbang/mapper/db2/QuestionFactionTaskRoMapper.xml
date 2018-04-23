@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionTaskRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,factionId,taskTime,taskNum,taskFinishNum,taskType,createTime,updateTime,finishTime,isFinish
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionTask" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_honor
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询邦派任务动态 -->
+    <select id="selectListdt" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionTaskBo" parameterType="java.lang.String">
+        SELECT t.factionId,f.factionName,f.factionImg,taskTime,taskNum,taskFinishNum,taskType,t.createTime,t.updateTime,finishTime,isFinish FROM
+            bb_question_faction_task t left join bb_question_faction f on t.factionId = f.factionId
+            where t.isFinish = 1 order by t.finishTime desc
+    </select>
+
+    <!-- 查询邦派任务情况 -->
+    <select id="selectTaskList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionTaskBo" parameterType="java.lang.String">
+        SELECT t.factionId,f.factionName,f.factionImg,taskTime,taskNum,taskFinishNum,taskType,t.createTime,t.updateTime,finishTime,isFinish FROM
+        bb_question_faction_task t left join bb_question_faction f on t.factionId = f.factionId
+        where 1=1
+        <if test="factionId != null and factionId != ''">
+            and factionId = #{factionId}
+        </if>
+        <if test="taskTime != null and taskTime != ''">
+            and taskTime = #{taskTime}
+        </if>
+         order by t.taskType desc
+    </select>
+
+
+</mapper>

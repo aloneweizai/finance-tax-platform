@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.LotteryActivityprizeRoMapper">
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.LotteryActivityprizeBO" parameterType="java.util.Map">
+        SELECT id,activityId,lotteryId,val1,description,status,createTime,startTime,endTime,luck,balance,amount,timeStock,timeCount,timeDay,sort,
+        (select a.name from uc_lottery_activity a where a.id=z.activityId) as activityName,
+        (select b.name from uc_lottery b where b.id=z.lotteryId) as lotteryName,
+        (select c.image from uc_lottery c where c.id=z.lotteryId) as lotteryImage,
+        (select d.noluck from uc_lottery d where d.id=z.lotteryId) as noluck,
+        (select e.send from uc_lottery e where e.id=z.lotteryId) as lotterySend,
+        lastTime
+        from uc_lottery_activityprize z
+        <where>
+            <if test="activityId!=null">
+                activityId=#{activityId}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+            <if test="lotteryId!=null">
+                and lotteryId=#{lotteryId}
+            </if>
+        </where>
+        ORDER BY sort
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.LotteryActivityprizeBO"
+            parameterType="java.lang.String">
+  SELECT id,activityId,lotteryId,val1,description,status,createTime,startTime,endTime,luck,balance,amount,timeStock,timeCount,timeDay,sort,
+        (select a.name from uc_lottery_activity a where a.id=z.activityId) as activityName,
+        (select b.name from uc_lottery b where b.id=z.lotteryId) as lotteryName,
+        (select c.image from uc_lottery c where c.id=z.lotteryId) as lotteryImage,
+        (select d.noluck from uc_lottery d where d.id=z.lotteryId) as noluck,
+        lastTime
+        from uc_lottery_activityprize z
+where id=#{id}
+</select>
+</mapper>

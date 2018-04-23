@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.GoodsLogRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		id,	goodsId,	action,	createTime,	createUser,	remark
+	</sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.GoodsLog" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_goods_log
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectGoodsLogList" resultType="com.abc12366.uc.model.order.bo.GoodsLogBO" parameterType="java.lang.String">
+		SELECT
+		l.id,	l.goodsId,	l.action,	l.createTime,	l.createUser,	l.remark,u.nickname as createUserName
+		FROM uc_goods_log l
+		LEFT JOIN uc_user_admin u ON u.id = l.createUser
+		WHERE l.goodsId = #{goodsId}
+	</select>
+</mapper>

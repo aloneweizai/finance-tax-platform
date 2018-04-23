@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.VoteMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, startTime, endTime, login, channel, status, createTime, lastUpdate,
+        quickVote,
+        privacyVote,
+        privacyPassword,
+        dayVote,
+        showResult,
+        startIntro,
+        endIntro,
+        access,
+        header,
+        footer,
+        url,
+        validateCode,
+        hiddenResult
+    </sql>
+
+    <sql id="Result_Column_List">
+        id, voteId, subjectId, itemId, userId, openId, ip, userAgent, createTime
+    </sql>
+
+    <sql id="History_Column_List">
+        id, voteId, ip, userAgent, createTime
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.cms.model.Vote">
+        INSERT INTO cms_vote (<include refid="Base_Column_List"/>)
+        VALUES (#{id}, #{name}, #{startTime}, #{endTime}, #{login}, #{channel}, #{status}, #{createTime}, #{lastUpdate},
+        #{quickVote},
+        #{privacyVote},
+        #{privacyPassword},
+        #{dayVote},
+        #{showResult},
+        #{startIntro},
+        #{endIntro},
+        #{access},
+        #{header},
+        #{footer},
+        #{url},
+        #{validateCode},
+        #{hiddenResult})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.cms.model.Vote">
+        UPDATE cms_vote
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="startTime != null">startTime = #{startTime},</if>
+            <if test="endTime != null">endTime = #{endTime},</if>
+            <if test="login != null">login = #{login},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="channel != null">channel = #{channel},</if>
+            <if test="quickVote != null">quickVote = #{quickVote},</if>
+            <if test="privacyVote != null">privacyVote = #{privacyVote},</if>
+            <if test="privacyPassword != null">privacyPassword = #{privacyPassword},</if>
+            <if test="dayVote != null">dayVote = #{dayVote},</if>
+            <if test="showResult != null">showResult = #{showResult},</if>
+            <if test="startIntro != null">startIntro = #{startIntro},</if>
+            <if test="endIntro != null">endIntro = #{endIntro},</if>
+            <if test="access != null">access = #{access},</if>
+            <if test="header != null">header = #{header},</if>
+            <if test="footer != null">footer = #{footer},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="validateCode != null">validateCode = #{validateCode},</if>
+            <if test="hiddenResult != null">hiddenResult = #{hiddenResult},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM cms_vote WHERE id = #{id}
+    </delete>
+
+    <!--删除投票记录-->
+    <delete id="deleteLog" parameterType="java.lang.String">
+        DELETE FROM cms_vote_result WHERE voteId = #{id}
+    </delete>
+
+    <insert id="insertResult" parameterType="com.abc12366.cms.model.VoteResult">
+        INSERT INTO cms_vote_result (<include refid="Result_Column_List"/>)
+        VALUES (#{id}, #{voteId}, #{subjectId}, #{itemId}, #{userId}, #{openId}, #{ip}, #{userAgent}, #{createTime})
+    </insert>
+
+    <insert id="insertHistory" parameterType="com.abc12366.cms.model.VoteHistory">
+        INSERT INTO cms_vote_history (<include refid="History_Column_List"/>)
+        VALUES (#{id}, #{voteId}, #{ip}, #{userAgent}, #{createTime})
+    </insert>
+
+    <!-- 修 改状态-->
+    <update id="updateStatus">
+        update cms_vote set status = 4 where <![CDATA[ endtime < now()]]> and status = 1
+    </update>
+
+</mapper>

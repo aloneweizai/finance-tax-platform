@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumUvipPriceMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_uvip_price
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumUvipPrice">
+		 INSERT INTO bb_curriculum_uvip_price
+ 		(id,curriculumId,vipGrade,vipPrice,vipIntegral,giveIntegral,createTime,lastUpdate) 
+		 VALUES 
+ 		(#{id},#{curriculumId},#{vipGrade},#{vipPrice},#{vipIntegral},#{giveIntegral},#{createTime},#{lastUpdate}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumUvipPrice">
+		 INSERT INTO bb_curriculum_uvip_price
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="vipGrade != null">
+				 vipGrade,
+			</if>
+			<if test="vipPrice != null">
+				 vipPrice,
+			</if>
+			<if test="vipIntegral != null">
+				 vipIntegral,
+			</if>
+			<if test="giveIntegral != null">
+				 giveIntegral,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="vipGrade!=null">
+				 #{vipGrade},
+			</if>
+			<if test="vipPrice!=null">
+				 #{vipPrice},
+			</if>
+			<if test="vipIntegral!=null">
+				 #{vipIntegral},
+			</if>
+			<if test="giveIntegral!=null">
+				 #{giveIntegral},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumUvipPrice">
+		 UPDATE bb_curriculum_uvip_price
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+			<if test="vipGrade != null">
+				 vipGrade = #{vipGrade},
+			</if>
+			<if test="vipPrice != null">
+				 vipPrice = #{vipPrice},
+			</if>
+			<if test="vipIntegral != null">
+				 vipIntegral = #{vipIntegral},
+			</if>
+			<if test="giveIntegral != null">
+				 giveIntegral = #{giveIntegral},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumUvipPrice">
+		 UPDATE bb_curriculum_uvip_price
+		 SET 
+			 curriculumId = #{curriculumId},
+			 vipGrade = #{vipGrade},
+			 vipPrice = #{vipPrice},
+			 vipIntegral = #{vipIntegral},
+			 giveIntegral = #{giveIntegral},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

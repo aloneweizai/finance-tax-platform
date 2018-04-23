@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.InvoiceUseDetailMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM uc_invoice_use_detail
+		WHERE id = #{id}
+	</delete>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByUseId" parameterType="java.lang.String">
+		DELETE FROM uc_invoice_use_detail
+		WHERE useId = #{useId}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.uc.model.invoice.InvoiceUseDetail">
+		INSERT INTO uc_invoice_use_detail
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				id,
+			</if>
+			<if test="useId != null">
+				useId,
+			</if>
+			<if test="invoiceTypeCode != null">
+				invoiceTypeCode,
+			</if>
+			<if test="repoNum != null">
+				repoNum,
+			</if>
+			<if test="applyNum != null">
+				applyNum,
+			</if>
+			<if test="realNum != null">
+				realNum,
+			</if>
+			<if test="checkBook != null">
+				checkBook,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="useId!=null">
+				#{useId},
+			</if>
+			<if test="invoiceTypeCode!=null">
+				#{invoiceTypeCode},
+			</if>
+			<if test="repoNum!=null">
+				#{repoNum},
+			</if>
+			<if test="applyNum!=null">
+				#{applyNum},
+			</if>
+			<if test="realNum!=null">
+				#{realNum},
+			</if>
+			<if test="checkBook!=null">
+				#{checkBook},
+			</if>
+			<if test="remark!=null">
+				#{remark},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.uc.model.invoice.InvoiceUseDetail">
+		UPDATE uc_invoice_use_detail
+		<set>
+			<if test="useId != null">
+				useId = #{useId},
+			</if>
+			<if test="invoiceTypeCode != null">
+				invoiceTypeCode = #{invoiceTypeCode},
+			</if>
+			<if test="repoNum != null">
+				repoNum = #{repoNum},
+			</if>
+			<if test="applyNum != null">
+				applyNum = #{applyNum},
+			</if>
+			<if test="realNum != null">
+				realNum = #{realNum},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="checkBook != null">
+				checkBook = #{checkBook},
+			</if>
+
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

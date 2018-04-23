@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.TaskMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_task
+        WHERE taskId = #{taskId}
+    </delete>
+
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteList">
+        DELETE FROM cms_task
+        WHERE taskId in
+        <foreach item="item" index="index" collection="taskIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Task">
+        INSERT INTO cms_task
+        (taskId,taskCode,taskType,taskName,jobClass,execycle,dayOfMonth,dayOfWeek,hour,minute,intervalHour,intervalMinute,taskIntervalUnit,cronExpression,isEnable,taskRemark,siteId,userId,createTime)
+        VALUES
+        (#{taskId},#{taskCode},#{taskType},#{taskName},#{jobClass},#{execycle},#{dayOfMonth},#{dayOfWeek},#{hour},#{minute},#{intervalHour},#{intervalMinute},#{taskIntervalUnit},#{cronExpression},#{isEnable},#{taskRemark},#{siteId},#{userId},#{createTime})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Task">
+        INSERT INTO cms_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">
+                taskId,
+            </if>
+            <if test="taskCode != null">
+                taskCode,
+            </if>
+            <if test="taskType != null">
+                taskType,
+            </if>
+            <if test="taskName != null">
+                taskName,
+            </if>
+            <if test="jobClass != null">
+                jobClass,
+            </if>
+            <if test="execycle != null">
+                execycle,
+            </if>
+            <if test="dayOfMonth != null">
+                dayOfMonth,
+            </if>
+            <if test="dayOfWeek != null">
+                dayOfWeek,
+            </if>
+            <if test="hour != null">
+                hour,
+            </if>
+            <if test="minute != null">
+                minute,
+            </if>
+            <if test="intervalHour != null">
+                intervalHour,
+            </if>
+            <if test="intervalMinute != null">
+                intervalMinute,
+            </if>
+            <if test="taskIntervalUnit != null">
+                taskIntervalUnit,
+            </if>
+            <if test="cronExpression != null">
+                cronExpression,
+            </if>
+            <if test="isEnable != null">
+                isEnable,
+            </if>
+            <if test="taskRemark != null">
+                taskRemark,
+            </if>
+            <if test="siteId != null">
+                siteId,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId!=null">
+                #{taskId},
+            </if>
+            <if test="taskCode!=null">
+                #{taskCode},
+            </if>
+            <if test="taskType!=null">
+                #{taskType},
+            </if>
+            <if test="taskName!=null">
+                #{taskName},
+            </if>
+            <if test="jobClass!=null">
+                #{jobClass},
+            </if>
+            <if test="execycle!=null">
+                #{execycle},
+            </if>
+            <if test="dayOfMonth!=null">
+                #{dayOfMonth},
+            </if>
+            <if test="dayOfWeek!=null">
+                #{dayOfWeek},
+            </if>
+            <if test="hour!=null">
+                #{hour},
+            </if>
+            <if test="minute!=null">
+                #{minute},
+            </if>
+            <if test="intervalHour!=null">
+                #{intervalHour},
+            </if>
+            <if test="intervalMinute!=null">
+                #{intervalMinute},
+            </if>
+            <if test="taskIntervalUnit!=null">
+                #{taskIntervalUnit},
+            </if>
+            <if test="cronExpression!=null">
+                #{cronExpression},
+            </if>
+            <if test="isEnable!=null">
+                #{isEnable},
+            </if>
+            <if test="taskRemark!=null">
+                #{taskRemark},
+            </if>
+            <if test="siteId!=null">
+                #{siteId},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Task">
+        UPDATE cms_task
+        <set>
+            <if test="taskCode != null">
+                taskCode = #{taskCode},
+            </if>
+            <if test="taskType != null">
+                taskType = #{taskType},
+            </if>
+            <if test="taskName != null">
+                taskName = #{taskName},
+            </if>
+            <if test="jobClass != null">
+                jobClass = #{jobClass},
+            </if>
+            <if test="execycle != null">
+                execycle = #{execycle},
+            </if>
+            <if test="dayOfMonth != null">
+                dayOfMonth = #{dayOfMonth},
+            </if>
+            <if test="dayOfWeek != null">
+                dayOfWeek = #{dayOfWeek},
+            </if>
+            <if test="hour != null">
+                hour = #{hour},
+            </if>
+            <if test="minute != null">
+                minute = #{minute},
+            </if>
+            <if test="intervalHour != null">
+                intervalHour = #{intervalHour},
+            </if>
+            <if test="intervalMinute != null">
+                intervalMinute = #{intervalMinute},
+            </if>
+            <if test="taskIntervalUnit != null">
+                taskIntervalUnit = #{taskIntervalUnit},
+            </if>
+            <if test="cronExpression != null">
+                cronExpression = #{cronExpression},
+            </if>
+            <if test="isEnable != null">
+                isEnable = #{isEnable},
+            </if>
+            <if test="taskRemark != null">
+                taskRemark = #{taskRemark},
+            </if>
+            <if test="siteId != null">
+                siteId = #{siteId},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+
+        </set>
+        WHERE taskId = #{taskId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Task">
+        UPDATE cms_task
+        SET
+        taskCode = #{taskCode},
+        taskType = #{taskType},
+        taskName = #{taskName},
+        jobClass = #{jobClass},
+        execycle = #{execycle},
+        dayOfMonth = #{dayOfMonth},
+        dayOfWeek = #{dayOfWeek},
+        hour = #{hour},
+        minute = #{minute},
+        intervalHour = #{intervalHour},
+        intervalMinute = #{intervalMinute},
+        taskIntervalUnit = #{taskIntervalUnit},
+        cronExpression = #{cronExpression},
+        isEnable = #{isEnable},
+        taskRemark = #{taskRemark},
+        siteId = #{siteId},
+        userId = #{userId},
+        createTime = #{createTime}
+        WHERE taskId = #{taskId}
+    </update>
+
+</mapper>

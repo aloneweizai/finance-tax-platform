@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="AcceptService" targetNamespace="http://www.chabc.net/tdps/ws"
+             xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.chabc.net/tdps/ws"
+             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.chabc.net/tdps/ws" xmlns:tns="http://www.chabc.net/tdps/ws">
+            <xsd:element name="acceptRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="tiripPkgStr" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="acceptResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="tiripPkgStr" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+  </types>
+  <message name="acceptResponse">
+    <part name="acceptResponse" element="tns:acceptResponse">
+    </part>
+  </message>
+  <message name="acceptRequest">
+    <part name="acceptRequest" element="tns:acceptRequest">
+    </part>
+  </message>
+  <portType name="AcceptService">
+    <operation name="accept">
+      <input message="tns:acceptRequest">
+    </input>
+      <output message="tns:acceptResponse">
+    </output>
+    </operation>
+    <operation name="status">
+      <input message="tns:acceptRequest">
+    </input>
+      <output message="tns:acceptResponse">
+    </output>
+    </operation>
+  </portType>
+  <binding name="AcceptServiceSoap" type="tns:AcceptService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="accept">
+      <soap:operation soapAction="http://www.chabc.net/tdps/ws/accept"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="status">
+      <soap:operation soapAction="http://www.chabc.net/tdps/ws/status"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="AcceptService">
+    <port name="accept" binding="tns:AcceptServiceSoap">
+      <soap:address location="http://testhn.abc12366.cn:5100/tdps-accept/services/AcceptService/"/>
+    </port>
+  </service>
+</definitions>

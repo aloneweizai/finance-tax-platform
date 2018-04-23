@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TagStatisticsRoMapper">
+
+    <select id="selectStatistics" resultType="com.abc12366.uc.model.bo.TagStatisticsBO"
+            parameterType="java.lang.String">
+        SELECT ut.tagName,ut.description,ut.status,(SELECT COUNT(1) FROM uc_subject_tag us WHERE us.tagId=ut.id)
+        userCount,ut.lastUpdate
+        FROM uc_tag ut
+        where ut.tagName=#{tagName}
+    </select>
+
+</mapper>

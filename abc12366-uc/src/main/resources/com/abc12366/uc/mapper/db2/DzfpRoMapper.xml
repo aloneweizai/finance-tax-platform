@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.DzfpRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.dzfp.Einvocie" parameterType="com.abc12366.uc.model.dzfp.Einvocie">
+        select FPQQLSH,FP_DM,FP_HM,JYM,KPRQ,PDF_URL,SP_URL,TBSTATUS,sendStr,returnCode,returnMessage,KPLX  
+        from uc_einvocie 
+        <where>
+            1=1
+            <if test="FPQQLSH != null and FPQQLSH!=''"> and FPQQLSH = #{FPQQLSH} </if>
+            <if test="FP_HM != null and FP_HM!=''"> and FP_HM = #{FP_HM} </if>
+            <if test="TBSTATUS != null and TBSTATUS!=''"> and TBSTATUS = #{TBSTATUS} </if>
+        </where>
+        ORDER BY KPRQ DESC
+    </select>
+    
+    <select id="selectOne" resultType="com.abc12366.uc.model.dzfp.Einvocie" parameterType="java.lang.String">
+        select * 
+        from uc_einvocie 
+        where FPQQLSH=#{FPQQLSH}
+    </select>
+
+    <select id="selectEinvoice" resultType="com.abc12366.uc.model.dzfp.Einvocie" parameterType="com.abc12366.uc.model.dzfp.Einvocie">
+        select FPQQLSH,FP_DM,FP_HM,JYM,KPRQ,PDF_URL,SP_URL,TBSTATUS,sendStr,returnCode,returnMessage,KPLX
+        from uc_einvocie
+        <where>
+            1=1
+            <if test="FP_DM != null and FP_DM!=''"> and FP_DM = #{FP_DM} </if>
+            <if test="FP_HM != null and FP_HM!=''"> and FP_HM = #{FP_HM} </if>
+            <if test="TBSTATUS != null and TBSTATUS!=''"> and TBSTATUS = #{TBSTATUS} </if>
+        </where>
+
+    </select>
+
+</mapper>

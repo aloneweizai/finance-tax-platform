@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.AreaRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        areaId, area, cityId
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectAreaList" resultType="com.abc12366.uc.model.Area" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_area
+        <where>
+            1=1
+            <if test="areaId != null and areaId!=''">AND areaId = #{areaId}</if>
+        </where>
+    </select>
+
+    <!-- 查询（根据市ID查询） -->
+    <select id="selectAreaByCityId" resultType="com.abc12366.uc.model.Area" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_area
+        <where>
+            1=1
+            <if test="cityId != null and cityId!=''">AND cityId = #{cityId}</if>
+        </where>
+    </select>
+
+</mapper>

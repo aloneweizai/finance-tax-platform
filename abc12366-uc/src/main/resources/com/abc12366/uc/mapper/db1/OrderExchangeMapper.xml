@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.OrderExchangeMapper">
+
+    <sql id="Base_Column_List">
+        id, userId, orderNo, reason, adminRemark, userRemark, expressNo, expressComp, status, createTime, lastUpdate,
+        toExpressNo,toExpressComp, type,adminConfirmRemark,consignee,	contactNumber,	shippingAddress,refundRemark
+    </sql>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM uc_order_exchange
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert">
+        INSERT INTO uc_order_exchange
+        (<include refid="Base_Column_List"/>)
+        VALUES
+        (#{id}, #{userId}, #{orderNo}, #{reason}, #{adminRemark}, #{userRemark}, #{expressNo}, #{expressComp},
+         #{status},#{createTime},#{lastUpdate}, #{toExpressNo}, #{toExpressComp}, #{type},#{adminConfirmRemark},#{consignee},#{contactNumber},#{shippingAddress},#{refundRemark})
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update">
+        UPDATE uc_order_exchange
+        <set>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="adminRemark != null">
+                adminRemark = #{adminRemark},
+            </if>
+            <if test="userRemark != null">
+                userRemark = #{userRemark},
+            </if>
+            <if test="expressNo != null">
+                expressNo = #{expressNo},
+            </if>
+            <if test="expressComp != null">
+                expressComp = #{expressComp},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="toExpressNo != null">
+                toExpressNo = #{toExpressNo},
+            </if>
+            <if test="toExpressComp != null">
+                toExpressComp = #{toExpressComp},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="adminConfirmRemark != null">
+                adminConfirmRemark = #{adminConfirmRemark},
+            </if>
+            <if test="consignee != null">
+                consignee = #{consignee},
+            </if>
+            <if test="contactNumber != null">
+                contactNumber = #{contactNumber},
+            </if>
+            <if test="shippingAddress != null">
+                shippingAddress = #{shippingAddress},
+            </if>
+            <if test="refundRemark != null">
+                refundRemark = #{refundRemark},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="orderNo != null">and orderNo = #{orderNo}</if>
+        </where>
+    </update>
+
+</mapper>

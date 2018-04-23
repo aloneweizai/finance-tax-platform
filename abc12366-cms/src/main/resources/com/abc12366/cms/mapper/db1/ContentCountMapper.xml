@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentCountMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_count
+        WHERE contentId = #{contentId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentCount">
+        INSERT INTO cms_content_count
+        (contentId,views,viewsMonth,viewsWeek,viewsDay,comments,commentsMonth,commentsWeek,commentsDay,downloads,downloadsMonth,downloadsWeek,downloadsDay,ups,upsMonth,upsWeek,upsDay,downs)
+        VALUES
+        (#{contentId},#{views},#{viewsMonth},#{viewsWeek},#{viewsDay},#{comments},#{commentsMonth},#{commentsWeek},#{commentsDay},#{downloads},#{downloadsMonth},#{downloadsWeek},#{downloadsDay},#{ups},#{upsMonth},#{upsWeek},#{upsDay},#{downs})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentCount">
+        INSERT INTO cms_content_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="views != null">
+                views,
+            </if>
+            <if test="viewsMonth != null">
+                viewsMonth,
+            </if>
+            <if test="viewsWeek != null">
+                viewsWeek,
+            </if>
+            <if test="viewsDay != null">
+                viewsDay,
+            </if>
+            <if test="comments != null">
+                comments,
+            </if>
+            <if test="commentsMonth != null">
+                commentsMonth,
+            </if>
+            <if test="commentsWeek != null">
+                commentsWeek,
+            </if>
+            <if test="commentsDay != null">
+                commentsDay,
+            </if>
+            <if test="downloads != null">
+                downloads,
+            </if>
+            <if test="downloadsMonth != null">
+                downloadsMonth,
+            </if>
+            <if test="downloadsWeek != null">
+                downloadsWeek,
+            </if>
+            <if test="downloadsDay != null">
+                downloadsDay,
+            </if>
+            <if test="ups != null">
+                ups,
+            </if>
+            <if test="upsMonth != null">
+                upsMonth,
+            </if>
+            <if test="upsWeek != null">
+                upsWeek,
+            </if>
+            <if test="upsDay != null">
+                upsDay,
+            </if>
+            <if test="downs != null">
+                downs,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="views!=null">
+                #{views},
+            </if>
+            <if test="viewsMonth!=null">
+                #{viewsMonth},
+            </if>
+            <if test="viewsWeek!=null">
+                #{viewsWeek},
+            </if>
+            <if test="viewsDay!=null">
+                #{viewsDay},
+            </if>
+            <if test="comments!=null">
+                #{comments},
+            </if>
+            <if test="commentsMonth!=null">
+                #{commentsMonth},
+            </if>
+            <if test="commentsWeek!=null">
+                #{commentsWeek},
+            </if>
+            <if test="commentsDay!=null">
+                #{commentsDay},
+            </if>
+            <if test="downloads!=null">
+                #{downloads},
+            </if>
+            <if test="downloadsMonth!=null">
+                #{downloadsMonth},
+            </if>
+            <if test="downloadsWeek!=null">
+                #{downloadsWeek},
+            </if>
+            <if test="downloadsDay!=null">
+                #{downloadsDay},
+            </if>
+            <if test="ups!=null">
+                #{ups},
+            </if>
+            <if test="upsMonth!=null">
+                #{upsMonth},
+            </if>
+            <if test="upsWeek!=null">
+                #{upsWeek},
+            </if>
+            <if test="upsDay!=null">
+                #{upsDay},
+            </if>
+            <if test="downs!=null">
+                #{downs},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentCount">
+        UPDATE cms_content_count
+        <set>
+            <if test="views != null">
+                views = #{views},
+            </if>
+            <if test="viewsMonth != null">
+                viewsMonth = #{viewsMonth},
+            </if>
+            <if test="viewsWeek != null">
+                viewsWeek = #{viewsWeek},
+            </if>
+            <if test="viewsDay != null">
+                viewsDay = #{viewsDay},
+            </if>
+            <if test="comments != null">
+                comments = #{comments},
+            </if>
+            <if test="commentsMonth != null">
+                commentsMonth = #{commentsMonth},
+            </if>
+            <if test="commentsWeek != null">
+                commentsWeek = #{commentsWeek},
+            </if>
+            <if test="commentsDay != null">
+                commentsDay = #{commentsDay},
+            </if>
+            <if test="downloads != null">
+                downloads = #{downloads},
+            </if>
+            <if test="downloadsMonth != null">
+                downloadsMonth = #{downloadsMonth},
+            </if>
+            <if test="downloadsWeek != null">
+                downloadsWeek = #{downloadsWeek},
+            </if>
+            <if test="downloadsDay != null">
+                downloadsDay = #{downloadsDay},
+            </if>
+            <if test="ups != null">
+                ups = #{ups},
+            </if>
+            <if test="upsMonth != null">
+                upsMonth = #{upsMonth},
+            </if>
+            <if test="upsWeek != null">
+                upsWeek = #{upsWeek},
+            </if>
+            <if test="upsDay != null">
+                upsDay = #{upsDay},
+            </if>
+            <if test="downs != null">
+                downs = #{downs},
+            </if>
+
+        </set>
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentCount">
+        UPDATE cms_content_count
+        SET
+        views = #{views},
+        viewsMonth = #{viewsMonth},
+        viewsWeek = #{viewsWeek},
+        viewsDay = #{viewsDay},
+        comments = #{comments},
+        commentsMonth = #{commentsMonth},
+        commentsWeek = #{commentsWeek},
+        commentsDay = #{commentsDay},
+        downloads = #{downloads},
+        downloadsMonth = #{downloadsMonth},
+        downloadsWeek = #{downloadsWeek},
+        downloadsDay = #{downloadsDay},
+        ups = #{ups},
+        upsMonth = #{upsMonth},
+        upsWeek = #{upsWeek},
+        upsDay = #{upsDay},
+        downs = #{downs}
+        WHERE contentId = #{contentId}
+    </update>
+
+</mapper>

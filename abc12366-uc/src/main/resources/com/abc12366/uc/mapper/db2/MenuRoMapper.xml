@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.MenuRoMapper">
+
+    <sql id="Base_Column_List">
+        menuId, menuName, menuUrl, parentId, perms, type, icon, sort, status, remark
+    </sql>
+    <resultMap id="menuBoResultMap" type="com.abc12366.uc.model.admin.bo.MenuBO">
+        <id column="menuId" property="menuId" jdbcType="VARCHAR"/>
+        <result column="menuName" property="menuName" jdbcType="VARCHAR"/>
+        <result column="menuUrl" property="menuUrl" jdbcType="VARCHAR"/>
+        <result column="parentId" property="parentId" jdbcType="VARCHAR"/>
+        <result column="parentName" property="parentName" jdbcType="VARCHAR"/>
+        <result column="perms" property="perms" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="menuBoResultMap" parameterType="com.abc12366.uc.model.admin.Menu">
+        select
+        m.menuId,
+        m.menuName,
+        m.menuUrl,
+        m.parentId,
+        p.menuName as parentName,
+        m.perms,
+        m.type,
+        m.icon,
+        m.sort,
+        m.status,
+        m.remark
+        from uc_menu m
+        left join uc_menu p on p.menuId = m.parentId
+        <where>
+            1=1
+            <if test="menuName != null  and menuName!=''">AND m.menuName LIKE CONCAT('%',#{menuName},'%')</if>
+            <if test="parentId != null">AND m.parentId = #{parentId}</if>
+            <if test="type != null and type!=''">AND m.type = #{type}</if>
+        </where>
+        ORDER BY m.sort ASC
+    </select>
+
+    <select id="selectByParentId" resultMap="menuBoResultMap" parameterType="java.lang.String">
+        select
+        m.menuId,
+        m.menuName,
+        m.menuUrl,
+        m.parentId,
+        p.menuName as parentName,
+        m.perms,
+        m.type,
+        m.icon,
+        m.sort,
+        m.status,
+        m.remark
+        from uc_menu m
+        left join uc_menu p on p.menuId = m.parentId
+        where m.parentId = #{parentId}
+    </select>
+
+    <select id="selectFirstLevel" resultType="com.abc12366.uc.model.admin.Menu">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_menu
+        where parentId IS NULL
+    </select>
+
+    <select id="selectByMenuId" resultMap="menuBoResultMap" parameterType="java.lang.String">
+        select
+        m.menuId,
+        m.menuName,
+        m.menuUrl,
+        m.parentId,
+        p.menuName as parentName,
+        m.perms,
+        m.type,
+        m.icon,
+        m.sort,
+        m.status,
+        m.remark
+        from uc_menu m
+        left join uc_menu p on p.menuId = m.parentId
+        where m.menuId = #{menuId}
+    </select>
+
+    <select id="selectByMenuName" resultType="com.abc12366.uc.model.admin.Menu">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_menu
+        where menuName = #{menuName}
+    </select>
+
+    <select id="selectMenuByRoleId" resultType="com.abc12366.uc.model.admin.Menu">
+        SELECT
+        m.menuId,
+        m.menuName,
+        m.menuUrl,
+        m.parentId,
+        m.perms,
+        m.type,
+        m.icon,
+        m.sort,
+        m.STATUS,
+        m.remark
+        FROM
+        uc_menu m
+        LEFT JOIN uc_role_menu r ON m.menuId = r.menuId
+        <where>
+            r.roleId = #{roleId}
+        </where>
+    </select>
+
+</mapper>

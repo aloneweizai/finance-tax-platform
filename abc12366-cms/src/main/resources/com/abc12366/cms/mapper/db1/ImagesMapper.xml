@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ImagesMapper">
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM cms_paper_images
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.Images">
+        INSERT INTO cms_paper_images
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="imgName != null">
+                imgName,
+            </if>
+            <if test="imgUrl != null">
+                imgUrl,
+            </if>
+            <if test="imgRealUrl != null">
+                imgRealUrl,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="imgName!=null">
+                #{imgName},
+            </if>
+            <if test="imgUrl!=null">
+                #{imgUrl},
+            </if>
+            <if test="imgRealUrl!=null">
+                #{imgRealUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.Images">
+        UPDATE cms_paper_images
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="imgName != null">
+                imgName = #{imgName},
+            </if>
+            <if test="imgUrl != null">
+                imgUrl = #{imgUrl},
+            </if>
+            <if test="imgRealUrl != null">
+                imgRealUrl = #{imgRealUrl},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

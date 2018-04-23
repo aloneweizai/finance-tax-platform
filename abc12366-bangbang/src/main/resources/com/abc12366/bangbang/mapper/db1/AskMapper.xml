@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.AskMapper">
+
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.Ask">
+        insert into bb_ask(id,userId,ask,detail,status,createTime,lastUpdate,points,isSolve,askedUserId,type)
+        values (#{id}, #{userId}, #{ask}, #{detail}, #{status}, #{createTime}, #{lastUpdate}, #{points},
+        #{isSolve},#{askedUserId},#{type})
+    </insert>
+    <update id="update" parameterType="com.abc12366.bangbang.model.Ask">
+        update bb_ask
+        <set>
+            <if test="userId!=null">userId=#{userId},</if>
+            <if test="ask!=null">ask=#{ask},</if>
+            <if test="detail!=null">detail=#{detail},</if>
+            <if test="status!=null">status=#{status} ,</if>
+            <if test="lastUpdate!=null">lastUpdate=#{lastUpdate} ,</if>
+            <if test="points!=null">points=#{points} ,</if>
+            <if test="isSolve!=null">isSolve=#{isSolve} ,</if>
+            <if test="askedUserId!=null">askedUserId=#{askedUserId},</if>
+            <if test="type!=null">type=#{type}</if>
+        </set>
+        where
+        id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from bb_ask where id = #{id}
+    </delete>
+</mapper>

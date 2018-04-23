@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionMemberMapper">
+
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_member
+		 WHERE memberId = #{memberId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionMember">
+		 INSERT INTO bb_question_faction_member
+ 		(memberId,factionId,userId,username,nickname,status,duty,memberGrade,createTime,lastUpdate)
+		 VALUES 
+ 		(#{memberId},#{factionId},#{userId},#{username},#{nickname},#{status},#{duty},#{memberGrade},#{createTime},#{lastUpdate})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionMember">
+		 INSERT INTO bb_question_faction_member
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="memberId != null">
+				 memberId,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+             <if test="duty != null">
+                 duty,
+             </if>
+             <if test="memberGrade != null">
+                 memberGrade,
+             </if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="memberId!=null">
+				 #{memberId},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+             <if test="duty!=null">
+                 #{duty},
+             </if>
+             <if test="memberGrade!=null">
+                 #{memberGrade},
+             </if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionMember">
+		 UPDATE bb_question_faction_member
+ 		 <set> 
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+             <if test="duty != null">
+                 duty = #{duty},
+             </if>
+             <if test="memberGrade != null">
+                 memberGrade = #{memberGrade},
+             </if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+
+ 		 </set>
+		 WHERE memberId = #{memberId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFactionMember">
+		 UPDATE bb_question_faction_member
+		 SET 
+			 factionId = #{factionId},
+			 userId = #{userId},
+			 username = #{username},
+			 nickname = #{nickname},
+			 status = #{status},
+			 duty = #{duty},
+			 memberGrade = #{memberGrade},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate}
+		 WHERE memberId = #{memberId}
+	</update>
+
+    <update id="updateDuty" parameterType="java.util.Map">
+        UPDATE bb_question_faction_member SET duty = #{duty}
+        where  memberId = #{memberId}
+    </update>
+
+</mapper>

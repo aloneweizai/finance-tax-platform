@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.AdminLogRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.gateway.model.AdminLog"
+            parameterType="com.abc12366.gateway.model.AdminLog">
+        select a.id, a.userId, a.businessUri, a.businessName, a.businessData, a.method, a.remark, a.createTime,
+        b.username, b.nickname
+        from abc12366_gateway.gw_admin_log_${yyyyMM} a, abc12366_uc.uc_admin b
+        WHERE a.userId = b.id
+        <if test="startDate != null">
+            <![CDATA[
+        and date_format(a.createTime, '%Y%m%d') >= date_format(#{startDate}, '%Y%m%d')
+        ]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[
+        and date_format(a.createTime, '%Y%m%d') <= date_format(#{endDate}, '%Y%m%d')
+          ]]>
+        </if>
+        <if test="username != null and username != ''">
+            and b.username = #{username}
+        </if>
+        <if test="nickname != null and nickname != ''">
+            and b.nickname = #{nickname}
+        </if>
+        <if test="businessData != null">
+            and a.businessData LIKE CONCAT('%', #{businessData},'%')
+        </if>
+        <if test="businessName != null">
+            and a.businessName LIKE CONCAT('%', #{businessName},'%')
+        </if>
+        order by a.createTime DESC
+    </select>
+
+</mapper>

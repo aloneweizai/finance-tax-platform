@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.ReturnVisitRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,	nsrsbh,	nsrmc,	productName,	name,	phone,	visitDate
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.ReturnVisit" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bb_return_visit
+		WHERE id = #{id}
+	</select>
+
+	<!-- 列表查询 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.ReturnVisit" parameterType="com.abc12366.bangbang.model.bo.ReturnVisitBO">
+		SELECT
+		v.id,	v.nsrsbh,	v.nsrmc,	v.productName,	v.name,	v.phone,v.visitDate
+		FROM bb_return_visit v
+		<where>
+			1=1
+			<if test="phone != null and phone!=''">AND v.phone = #{phone}</if>
+			<if test="date != null and date!=''">
+				<![CDATA[
+                and date_format(v.visitDate, '%Y') = #{date}
+                ]]>
+			</if>
+		</where>
+		order by v.visitDate desc
+	</select>
+
+	<!-- 统计列表查询 -->
+	<select id="selectStatisList" resultType="com.abc12366.bangbang.model.bo.ReturnVisitBO" parameterType="com.abc12366.bangbang.model.bo.ReturnVisitBO">
+		select count(v.id) as total,date_format(v.visitDate, '%Y') as date from bb_return_visit v
+		<where>
+			1=1
+			<if test="phone != null and phone!=''">AND v.phone = #{phone}</if>
+			<if test="date != null and date!=''">
+				<![CDATA[
+                and date_format(v.visitDate, '%Y') = #{date}
+                ]]>
+			</if>
+		</where>
+		group by date_format(v.visitDate, '%Y')
+	</select>
+
+</mapper>

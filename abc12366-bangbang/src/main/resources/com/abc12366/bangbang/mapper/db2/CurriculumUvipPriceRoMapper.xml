@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumUvipPriceRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	curriculumId,	vipGrade,	vipPrice,	vipIntegral,	giveIntegral,	createTime,	lastUpdate
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumUvipPrice" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_uvip_price
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <!--<select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumUvipPriceBo" parameterType="java.lang.String">
+        SELECT
+            p.id,	p.curriculumId,	p.vipGrade,l.level levelName,	p.vipPrice,	p.vipIntegral,	p.giveIntegral,	p.createTime,	p.lastUpdate
+        FROM bb_curriculum_uvip_price p left join abc12366_uc.uc_uvip_level l on p.vipGrade = l.levelCode
+        WHERE p.curriculumId = #{curriculumId}
+        ORDER BY vipGrade ASC
+    </select>-->
+
+	<resultMap id="curriculumUvipPriceBoMap" type="com.abc12366.bangbang.model.curriculum.bo.CurriculumUvipPriceBo">
+		<result column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="curriculumId" property="curriculumId" jdbcType="VARCHAR"/>
+		<result column="vipGrade" property="vipGrade" jdbcType="VARCHAR"/>
+		<result column="levelName" property="levelName" jdbcType="VARCHAR"/>
+		<result column="vipPrice" property="vipPrice" jdbcType="DOUBLE"/>
+		<result column="vipIntegral" property="vipIntegral" jdbcType="DOUBLE"/>
+		<result column="giveIntegral" property="giveIntegral" jdbcType="INTEGER"/>
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+
+		<collection property="curriculumGiftBoList" ofType="com.abc12366.bangbang.model.curriculum.bo.CurriculumGiftBo" column="id"
+					select="getCurriculumGiftBoList"></collection>
+	</resultMap>
+	<!-- 我的销售订单（根据条件查询） -->
+	<select id="selectList" resultMap="curriculumUvipPriceBoMap" parameterType="java.lang.String">
+		SELECT
+		p.id,	p.curriculumId,	p.vipGrade,l.level levelName,	p.vipPrice,	p.vipIntegral,	p.giveIntegral,	p.createTime,	p.lastUpdate
+		FROM bb_curriculum_uvip_price p left join abc12366_uc.uc_uvip_level l on p.vipGrade = l.levelCode
+		WHERE p.curriculumId = #{curriculumId}
+		ORDER BY vipGrade ASC
+	</select>
+
+	<!--获取产品和订单对应关系信息-->
+	<select id="getCurriculumGiftBoList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumGiftBo" parameterType="java.lang.String">
+		SELECT
+		id,	giftId,	operSymbol,	operType,	operValue
+		FROM bb_curriculum_gift
+		where giftId = #{id}
+	</select>
+</mapper>

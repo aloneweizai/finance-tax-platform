@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.InvoiceRepoMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM uc_invoice_repo
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.invoice.InvoiceRepo">
+        INSERT INTO uc_invoice_repo
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null">
+                id,
+            </if>
+            <if test="invoiceTypeCode != null">
+                invoiceTypeCode,
+            </if>
+            <if test="invoiceCode != null">
+                invoiceCode,
+            </if>
+            <if test="invoiceNoStart != null">
+                invoiceNoStart,
+            </if>
+            <if test="invoiceNoEnd != null">
+                invoiceNoEnd,
+            </if>
+            <if test="property != null">
+                property,
+            </if>
+            <if test="share != null">
+                share,
+            </if>
+            <if test="book != null">
+                book,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="updateUser != null">
+                updateUser,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="invoiceTypeCode!=null">
+                #{invoiceTypeCode},
+            </if>
+            <if test="invoiceCode!=null">
+                #{invoiceCode},
+            </if>
+            <if test="invoiceNoStart!=null">
+                #{invoiceNoStart},
+            </if>
+            <if test="invoiceNoEnd!=null">
+                #{invoiceNoEnd},
+            </if>
+            <if test="property!=null">
+                #{property},
+            </if>
+            <if test="share!=null">
+                #{share},
+            </if>
+            <if test="book!=null">
+                #{book},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="updateUser!=null">
+                #{updateUser},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.invoice.InvoiceRepo">
+        UPDATE uc_invoice_repo
+        <set>
+            <if test="invoiceTypeCode != null">
+                invoiceTypeCode = #{invoiceTypeCode},
+            </if>
+            <if test="invoiceCode != null">
+                invoiceCode = #{invoiceCode},
+            </if>
+            <if test="invoiceNoStart != null">
+                invoiceNoStart = #{invoiceNoStart},
+            </if>
+            <if test="invoiceNoEnd != null">
+                invoiceNoEnd = #{invoiceNoEnd},
+            </if>
+            <if test="property != null">
+                property = #{property},
+            </if>
+            <if test="share != null">
+                share = #{share},
+            </if>
+            <if test="book != null">
+                book = #{book},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ProductSpreadMapper">
+    
+    <insert id="saveProductSpread" parameterType="com.abc12366.cms.model.ProductSpread">
+        INSERT INTO cms_product_page 
+        (id, name, createTime, lastUpdate, updateUserId)
+        VALUES
+        (#{id}, #{name}, #{createTime}, #{lastUpdate}, #{updateUserId})
+    </insert>
+    
+    <insert id="saveImg" parameterType="com.abc12366.cms.model.ProductImg">
+        INSERT INTO cms_product_image 
+        (id, productId, imageUrl, description)
+        VALUES
+        (#{id}, #{productId}, #{imageUrl}, #{description})
+    </insert>
+	
+	<update id="putProductSpread" parameterType="com.abc12366.cms.model.ProductSpread">
+	    UPDATE cms_product_page SET name = #{name},lastUpdate = #{lastUpdate},updateUserId = #{updateUserId}
+	    WHERE id = #{id}
+	</update>
+	
+	<delete id="delImg" parameterType="java.lang.String">
+	   DELETE from cms_product_image WHERE productId = #{id}
+	</delete>
+	
+	<delete id="delProductSpread" parameterType="java.lang.String">
+	   DELETE from cms_product_page WHERE id = #{id}
+	</delete>
+</mapper>

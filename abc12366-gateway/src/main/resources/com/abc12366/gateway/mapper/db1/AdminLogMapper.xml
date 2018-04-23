@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.AdminLogMapper">
+
+    <select id="create" parameterType="com.abc12366.gateway.model.AdminLog">
+        CREATE TABLE IF NOT EXISTS gw_admin_log_${yyyyMM} like gw_admin_log
+    </select>
+
+    <insert id="insert" parameterType="com.abc12366.gateway.model.AdminLog">
+        INSERT INTO gw_admin_log_${yyyyMM}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="businessUri != null">
+                businessUri,
+            </if>
+            <if test="businessName != null">
+                businessName,
+            </if>
+            <if test="businessData != null">
+                businessData,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="businessUri!=null">
+                #{businessUri},
+            </if>
+            <if test="businessName!=null">
+                #{businessName},
+            </if>
+            <if test="businessData!=null">
+                #{businessData},
+            </if>
+            <if test="method!=null">
+                #{method},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+        </trim>
+    </insert>
+</mapper>

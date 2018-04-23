@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.RoleMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, roleName, remark, createTime, updateTime, status
+    </sql>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteRoleById" parameterType="java.lang.String">
+        DELETE FROM uc_role
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.Role">
+        INSERT INTO uc_role
+        (id,roleName,remark,createTime,updateTime,status)
+        VALUES
+        (#{id},#{roleName},#{remark},#{createTime},#{updateTime},#{status})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.uc.model.admin.Role">
+        INSERT INTO uc_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="roleName != null">
+                roleName,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="roleName!=null">
+                #{roleName},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateRole" parameterType="com.abc12366.uc.model.admin.Role">
+        UPDATE uc_role
+        <set>
+            <if test="roleName != null">
+                roleName = #{roleName},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.uc.model.admin.Role">
+        UPDATE uc_role
+        SET
+        roleName = #{roleName},
+        remark = #{remark},
+        createTime = #{createTime},
+        updateTime = #{updateTime},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

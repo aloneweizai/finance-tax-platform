@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db2.UserMsgRoMapper">
+
+    <sql id="Base_Column">
+        id, fromUserId, toUserId, content, status, type, createTime, lastUpdate
+    </sql>
+
+    <select id="selectOne" resultType="com.abc12366.message.model.UserMessage">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM msg_user_message
+        WHERE id=#{id}
+    </select>
+
+    <!-- 只查询半年内的记录 -->
+    <select id="selectList" parameterType="com.abc12366.message.model.UserMessage"
+            resultType="com.abc12366.message.model.UserMessage">
+        SELECT
+        <include refid="Base_Column"/>,
+        (select muu.nickname from msg_uc_user muu where muu.id=mu.fromUserId) fromNickname,
+        (select muu.nickname from msg_uc_user muu where muu.id=mu.toUserId) toNickname
+        FROM msg_user_message mu
+        <where>
+            <if test="toNickname != null and toNickname != ''">
+                toUserId in (select id from msg_uc_user where nickname = #{toNickname})
+            </if>
+            <if test="fromNickname != null and fromNickname != ''">
+                and fromUserId in (select id from msg_uc_user where nickname = #{fromNickname})
+            </if>
+            <if test="fromUserId != null and fromUserId != ''">AND fromUserId = #{fromUserId}</if>
+            <if test="toUserId != null and toUserId != ''">AND toUserId = #{toUserId}</if>
+            <if test="status != null and status != ''">AND status = #{status}</if>
+            <if test="type != null and type != ''">AND type = #{type}</if>
+            <if test="createTime != null">
+                AND createTime > date_sub(now(), interval '181 0:0:0' day_second)
+            </if>
+            <if test="startDate != null">
+                AND createTime >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                <![CDATA[ AND createTime <= #{endDate} ]]>
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <!-- 只查询半年内的记录 -->
+    <select id="UserMessageForBangbang" parameterType="java.lang.String"
+            resultType="com.abc12366.message.model.bo.UserMessageForBangbang">
+    SELECT
+    mu.id, mu.fromUserId, mu.toUserId, mu.content, mu.status, mu.type, mu.createTime, mu.lastUpdate,
+    muu.nickname,muu.userPicturePath
+    FROM msg_user_message mu join msg_uc_user muu on mu.fromUserId=muu.id
+    WHERE mu.toUserId = #{userId}
+    AND mu.status != '0'
+    AND mu.createTime > date_sub(now(), interval '181 0:0:0' day_second)
+    ORDER BY mu.createTime DESC
+    </select>
+
+    <select id="selectConversationList" parameterType="java.util.Map"
+            resultType="com.abc12366.message.model.bo.UserMessageAdmin">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM msg_user_message
+        WHERE
+        <if test="fromUserId != null and fromUserId != '' and toUserId != null and toUserId != ''">
+            (fromUserId = #{fromUserId} and toUserId = #{toUserId})
+            or (fromUserId = #{toUserId} and toUserId = #{fromUserId})
+        </if>
+        <if test="type != null and type != ''">AND type = #{type}</if>
+        AND createTime > date_sub(now(), interval '181 0:0:0' day_second)
+        ORDER BY createTime DESC
+    </select>
+
+    <!-- 未读列表：只查询30天内的记录 -->
+    <select id="selectUnreadList" parameterType="com.abc12366.message.model.UserMessage"
+            resultType="com.abc12366.message.model.UserMessage">
+        SELECT
+        <include refid="Base_Column"/>,
+        (select muu.nickname from msg_uc_user muu where muu.id=mu.fromUserId) nickname
+        FROM msg_user_message mu
+        WHERE toUserId = #{toUserId}
+        <if test="status != null and status != ''">AND status = #{status}</if>
+        <if test="type != null and type != ''">AND type = #{type}</if>
+        AND createTime > date_sub(now(), interval '30 0:0:0' day_second)
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectUserById" parameterType="java.lang.String" resultType="com.abc12366.message.model.bo.UserSimple">
+        SELECT id,nickname as username,userPicturePath FROM msg_uc_user WHERE id=#{id}
+    </select>
+</mapper>

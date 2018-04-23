@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.OrderMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM uc_order
+        WHERE orderNo = #{orderNo}
+    </delete>
+
+    <!--删除：根据主键ID和UserID删除-->
+    <delete id="deleteByIdAndUserId" parameterType="com.abc12366.uc.model.order.Order">
+        DELETE FROM uc_order
+        WHERE orderNo = #{orderNo} and userId=#{userId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.order.Order">
+        INSERT INTO uc_order
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderNo != null">
+                orderNo,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="orderStatus != null">
+                orderStatus,
+            </if>
+            <if test="deliveryMethod != null">
+                deliveryMethod,
+            </if>
+            <if test="payMethod != null">
+                payMethod,
+            </if>
+            <if test="nowVipLevel != null">
+                nowVipLevel,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="deliveryFee != null">
+                deliveryFee,
+            </if>
+            <if test="totalPrice != null">
+                totalPrice,
+            </if>
+            <if test="expressNo != null">
+                expressNo,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="giftPoints != null">
+                giftPoints,
+            </if>
+            <if test="tradeMethod != null">
+                tradeMethod,
+            </if>
+            <if test="isInvoice != null">
+                isInvoice,
+            </if>
+            <if test="cancelId != null">
+                cancelId,
+            </if>
+            <if test="recommendUser != null">
+                recommendUser,
+            </if>
+            <if test="expressCompId != null">
+                expressCompId,
+            </if>
+            <if test="consignee != null">
+                consignee,
+            </if>
+            <if test="contactNumber != null">
+                contactNumber,
+            </if>
+            <if test="shippingAddress != null">
+                shippingAddress,
+            </if>
+            <if test="isShipping != null">
+                isShipping,
+            </if>
+            <if test="isFreeShipping != null">
+                isFreeShipping,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="orderNo!=null">
+                #{orderNo},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="orderStatus!=null">
+                #{orderStatus},
+            </if>
+            <if test="deliveryMethod!=null">
+                #{deliveryMethod},
+            </if>
+            <if test="payMethod!=null">
+                #{payMethod},
+            </if>
+            <if test="nowVipLevel!=null">
+                #{nowVipLevel},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="deliveryFee!=null">
+                #{deliveryFee},
+            </if>
+            <if test="totalPrice!=null">
+                #{totalPrice},
+            </if>
+            <if test="expressNo!=null">
+                #{expressNo},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+            <if test="giftPoints!=null">
+                #{giftPoints},
+            </if>
+            <if test="tradeMethod!=null">
+                #{tradeMethod},
+            </if>
+            <if test="isInvoice!=null">
+                #{isInvoice},
+            </if>
+            <if test="cancelId!=null">
+                #{cancelId},
+            </if>
+            <if test="recommendUser!=null">
+                #{recommendUser},
+            </if>
+            <if test="expressCompId!=null">
+                #{expressCompId},
+            </if>
+            <if test="consignee!=null">
+                #{consignee},
+            </if>
+            <if test="contactNumber!=null">
+                #{contactNumber},
+            </if>
+            <if test="shippingAddress!=null">
+                #{shippingAddress},
+            </if>
+            <if test="isShipping!=null">
+                #{isShipping},
+            </if>
+            <if test="isFreeShipping!=null">
+                #{isFreeShipping},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.order.Order">
+        UPDATE uc_order
+        <set>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="orderStatus != null">
+                orderStatus = #{orderStatus},
+            </if>
+            <if test="deliveryMethod != null">
+                deliveryMethod = #{deliveryMethod},
+            </if>
+            <if test="payMethod != null">
+                payMethod = #{payMethod},
+            </if>
+            <if test="nowVipLevel != null">
+                nowVipLevel = #{nowVipLevel},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="deliveryFee != null">
+                deliveryFee = #{deliveryFee},
+            </if>
+            <if test="totalPrice != null">
+                totalPrice = #{totalPrice},
+            </if>
+            <if test="expressNo != null">
+                expressNo = #{expressNo},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="giftPoints != null">
+                giftPoints = #{giftPoints},
+            </if>
+            <if test="tradeMethod != null">
+                tradeMethod = #{tradeMethod},
+            </if>
+            <if test="isInvoice != null">
+                isInvoice = #{isInvoice},
+            </if>
+            <if test="cancelId != null">
+                cancelId = #{cancelId},
+            </if>
+            <if test="recommendUser != null">
+                recommendUser = #{recommendUser},
+            </if>
+            <if test="expressCompId != null">
+                expressCompId = #{expressCompId},
+            </if>
+            <if test="consignee != null">
+                consignee = #{consignee},
+            </if>
+            <if test="contactNumber != null">
+                contactNumber = #{contactNumber},
+            </if>
+            <if test="shippingAddress != null">
+                shippingAddress = #{shippingAddress},
+            </if>
+            <if test="isShipping != null">
+                isShipping = #{isShipping},
+            </if>
+            <if test="isFreeShipping != null">
+                isFreeShipping = #{isFreeShipping},
+            </if>
+
+        </set>
+        WHERE orderNo = #{orderNo}
+    </update>
+
+</mapper>

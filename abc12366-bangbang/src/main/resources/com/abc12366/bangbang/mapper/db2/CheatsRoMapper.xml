@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CheatsRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	userId,	title,	describ,	detail,	status,cheatsImage,	createTime,	lastUpdate,	classifyCode,	browseNum,likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.Cheats" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_cheats
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCheats" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.lang.String">
+        SELECT
+            c.id,	c.userId,	title,	c.describ,	detail,	c.status,c.cheatsImage,	c.createTime,	c.lastUpdate,	classifyCode,
+            browseNum,likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum,
+            u.nickname,u.userPicturePath
+        FROM bb_cheats c left join bb_user u on c.userId = u.id
+        WHERE c.id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.util.Map">
+        SELECT
+        c.id,	c.userId,	title,	c.describ,	detail,	c.status,c.cheatsImage,	c.createTime,	c.lastUpdate,	classifyCode,
+        browseNum,likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum,
+        u.nickname,u.userPicturePath
+        FROM bb_cheats c left join bb_user u on c.userId = u.id
+        WHERE c.status = '0'
+        <if test="title != null and title != ''">
+            AND c.title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND c.tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND c.classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY  c.createTime DESC
+    </select>
+
+    <!-- 查询（热门问题） -->
+    <select id="selectListByBrowseNum" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.util.Map">
+        SELECT
+        c.id,	c.userId,	title,	c.describ,	detail,	c.status,c.cheatsImage,	c.createTime,	c.lastUpdate,	classifyCode,	browseNum,
+        likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum,
+        u.nickname,u.userPicturePath
+        FROM bb_cheats c left join bb_user u on c.userId = u.id
+        WHERE c.status = '0'
+        <if test="title != null and title != ''">
+            AND c.title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND c.tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND c.classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY  browseNum DESC
+    </select>
+
+    <!-- 查询（推荐问题） -->
+    <select id="selectListRecommend" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.util.Map">
+        SELECT
+        c.id,	c.userId,	title,	c.describ,	detail,	c.status,c.cheatsImage,	c.createTime,	c.lastUpdate,	classifyCode,	browseNum,
+        likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum,
+        u.nickname,u.userPicturePath
+        FROM bb_cheats c left join bb_user u on c.userId = u.id
+        WHERE c.status = '0' and isRecommend = '1'
+        <if test="title != null and title != ''">
+            AND c.title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND c.tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND c.classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY
+        <if test="isImage == true">
+            c.cheatsImage desc,
+        </if>
+        c.recommendTime DESC,
+        c.createTime DESC
+    </select>
+
+    <!-- 查询（推荐阅读） -->
+    <select id="selectListRecommendTitle" resultType="com.abc12366.bangbang.model.question.bo.CheatstjydBo" parameterType="java.util.Map">
+        SELECT
+        c.id,title
+        FROM bb_cheats c
+        WHERE c.status = '0' and isRecommend = '1'
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND tag like CONCAT('%',#{tag},'%')
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY c.recommendTime DESC,c.createTime DESC
+    </select>
+
+    <!-- 我的文章 -->
+    <select id="selectMyCheatsList" resultType="com.abc12366.bangbang.model.question.bo.CheatsBo" parameterType="java.util.Map">
+        SELECT
+        c.id,	c.userId,	title,	c.describ,	detail,	c.status,c.cheatsImage,	c.createTime,	c.lastUpdate,	classifyCode,	browseNum,
+        likeNum,trampleNum,	isRecommend,	recommendTime,	tag,	ip,	factionId,	commentNum,	collectNum,	reportNum,
+        u.nickname,u.userPicturePath,
+        (SELECT count(id) FROM abc12366_bangbang.bb_question_tip_off where sourceId = c.id and sourceType = 'cheats' and createUser = c.userId) isTip
+        FROM bb_cheats c left join bb_user u on c.userId = u.id
+        WHERE 1=1
+        <if test="isTip != null and isTip != ''">
+            AND (SELECT count(id) FROM abc12366_bangbang.bb_question_tip_off where sourceId = c.id and sourceType = 'cheats' and createUser = c.userId) > 0
+        </if>
+        <if test="userId != null and userId != ''">
+            AND c.userId = #{userId}
+        </if>
+        ORDER BY c.createTime DESC
+    </select>
+
+    <!-- 查询（你可能感兴趣的文章） -->
+    <select id="selectListByTag" resultType="com.abc12366.bangbang.model.question.bo.CheatstjydBo" parameterType="java.util.Map">
+        SELECT
+        c.id,c.title
+        FROM bb_cheats c
+        <if test="tag != null and tag != ''">
+            left join bb_cheats_tag t on c.id = t.cheatsId
+        </if>
+        WHERE c.status = '0'
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND t.tagId = #{tag}
+        </if>
+        <if test="classifyCode != null and classifyCode != ''">
+            AND classifyCode like CONCAT(#{classifyCode},'%')
+        </if>
+        ORDER BY c.createTime DESC
+    </select>
+
+    <!-- 查找分类代码 -->
+    <select id="selectclassifyCode" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT classifyCode FROM bb_cheats where id = #{cheatsId}
+    </select>
+
+    <!-- 查找邦派ID -->
+    <select id="selectfactionId" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT factionId FROM bb_question_faction_classify where factionId in(SELECT factionId FROM bb_question_faction_member where userId = #{userId})
+        and classifyId = #{classifyCode} limit 1
+    </select>
+
+    <select id="selectCheatsAndQuestionCount" resultType="java.lang.Integer">
+        select sum(a) from
+        (
+        select COUNT(1) as a from bb_question
+        union all
+        select COUNT(1) as a from bb_cheats
+        ) qc
+    </select>
+
+
+
+
+</mapper>

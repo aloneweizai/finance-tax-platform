@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TemplateRoMapper">
+
+    <sql id="Base_Column_List">
+        template_id,title,primary_industry,deputy_industry,content,example,lastupdate
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.weixin.bo.template.Template"
+            parameterType="com.abc12366.uc.model.weixin.bo.template.Template">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxtemplate
+        <where>
+            1 = 1
+            <if test="title != null and title != ''">and title like CONCAT('%',#{title},'%')</if>
+            <if test="primary_industry != null and primary_industry != ''">and primary_industry = #{primary_industry}</if>
+            <if test="deputy_industry != null and deputy_industry != ''">and deputy_industry = #{deputy_industry}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.weixin.bo.template.Template"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxtemplate
+        WHERE template_id = #{id}
+    </select>
+    
+    
+    <select id="selectLog" resultType="com.abc12366.uc.model.weixin.bo.template.QTemplateSendLog"
+            parameterType="java.util.Map">
+        SELECT 
+            l.id, l.createdate, l.returncode, l.returnmsg, l.templateval, u.username, u.nickname  
+        FROM  
+            uc_wxtemplate_log l, uc_user u 
+        WHERE 
+            l.userId=u.id
+        <if test="nickname != null and nickname != ''"> and u.nickname like CONCAT('%',#{nickname},'%') </if>
+        <if test="username != null and username != ''"> and u.username =#{username} </if>
+        <if test="beginTime != null"> 
+          <![CDATA[
+              and date_format(l.createdate, '%Y-%m-%d') >= date_format(#{beginTime}, '%Y-%m-%d')
+          ]]>
+        </if>
+        <if test="endTime != null"> 
+          <![CDATA[
+              and date_format(l.createdate, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+          ]]>
+        </if>
+        ORDER BY l.createdate DESC
+    </select>
+</mapper>

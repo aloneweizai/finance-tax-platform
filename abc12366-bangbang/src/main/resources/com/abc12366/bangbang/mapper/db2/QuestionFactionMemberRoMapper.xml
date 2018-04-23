@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionMemberRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 memberId,	factionId,	userId,	username,	nickname,	status,duty,memberGrade,	createTime,	lastUpdate
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionMember" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_member
+		 WHERE memberId = #{memberId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectMemberCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM bb_question_faction_member
+        WHERE status in('1','2') and factionId = #{factionId} and userId = #{userId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectPassMemberCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(*)
+        FROM bb_question_faction_member
+        WHERE status = '2' and factionId = #{factionId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionMemberBo" parameterType="java.util.Map">
+        SELECT
+        memberId,	factionId,	userId,	u.username,	u.nickname,	u.userPicturePath,u.status,duty,memberGrade,	m.createTime,	m.lastUpdate,
+        (SELECT count(*) FROM bb_question_attention where attentionUserId = m.userId and userId = #{userId})  isAttention,
+        (SELECT count(id) FROM bb_question_answer where status = '0' and userId = m.userId and  userId in(SELECT userId FROM abc12366_bangbang.bb_question_faction_member where factionId = m.factionId) and factionId = m.factionId) answerNum,
+
+        (SELECT count(id) FROM bb_question_comment where status = '0' and userId = m.userId and userId in(SELECT userId FROM abc12366_bangbang.bb_question_faction_member where factionId = m.factionId) and factionId = m.factionId) discussNum,
+
+        (SELECT count(id) FROM bb_question_answer where status = '0' and userId = m.userId and isAccept = '1' and userId in(SELECT userId FROM abc12366_bangbang.bb_question_faction_member where factionId = m.factionId) and factionId = m.factionId) adoptNum
+
+        FROM bb_question_faction_member m LEFT JOIN bb_user u on m.userId = u.id
+        WHERE 1=1
+        <if test="factionId != null and factionId != ''">
+            AND factionId = #{factionId}
+        </if>
+        <if test="status != null and status != ''">
+            AND m.status = #{status}
+        </if>
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectListTj" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionMemberBo" parameterType="java.util.Map">
+        SELECT
+        memberId,	factionId,	userId,	u.username,	u.nickname,	u.userPicturePath,u.status,duty,memberGrade,	m.createTime,	m.lastUpdate,
+        (SELECT count(*) FROM bb_question_attention where attentionUserId = m.userId and userId = #{userId})  isAttention,
+        (SELECT count(id) FROM bb_question_answer where userId = m.userId and  factionId = m.factionId) answerNum,
+        (SELECT count(id) FROM bb_question_comment where userId = m.userId and factionId = m.factionId) discussNum,
+        (SELECT count(id) FROM bb_question_answer where userId = m.userId and isAccept = '1' and factionId = m.factionId) adoptNum
+        FROM bb_question_faction_member m LEFT JOIN bb_user u on m.userId = u.id
+        WHERE 1=1 and m.status = '2'
+        <if test="factionId != null and factionId != ''">
+            AND factionId = #{factionId}
+        </if>
+        order by discussNum+2*answerNum+7*adoptNum desc
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectMemberHonorList" resultType="com.abc12366.bangbang.model.question.QuestionMemberHonor" parameterType="java.lang.String">
+        SELECT
+            memberId,	userId,factionId,
+            (SELECT count(id) FROM bb_question_answer where userId = m.userId and DATE_FORMAT(createTime, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and factionId = m.factionId) answerNum,
+            (SELECT count(id) FROM bb_question_comment where userId = m.userId and DATE_FORMAT(createTime, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and factionId = m.factionId) discussNum,
+            (SELECT count(id) FROM bb_question_answer where userId = m.userId and DATE_FORMAT(createTime, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and isAccept = '1' and factionId = m.factionId) adoptNum
+        FROM bb_question_faction_member m
+            WHERE and m.status = '2' and factionId = #{factionId}
+    </select>
+
+    <!-- 查询邦派精彩回答数 -->
+    <select id="selectSplendidNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*) from (SELECT
+            id,(SELECT count(id) FROM bb_question_answer where parentId != '' and parentId = a.id) plcnt,
+            (SELECT count(likeId) FROM bb_question_like where id = a.id) likecnt
+        FROM
+            bb_question_answer a
+        WHERE
+            parentId = '' and userId = #{userId}
+            AND DATE_FORMAT(createTime, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+            AND factionId = #{factionId} ) b where b.plcnt >2 and b.likecnt >6;
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectMemberDutyCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM bb_question_faction_member
+        WHERE factionId = (select factionId from bb_question_faction_member m where m.memberId = #{factionId} limit 1) and duty = #{duty}
+    </select>
+
+    <!-- 查询加入的邦派分类是否重复 -->
+    <select id="selectClassifyCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM bb_question_faction_classify c
+        WHERE  factionId in(SELECT factionId FROM bb_question_faction_member where userId = #{userId} and status in(1,2))
+        and c.classifyId in(select classifyId from bb_question_faction_classify where factionId = #{factionId})
+
+    </select>
+
+
+    <!-- 查询邦主 -->
+    <select id="selectFactionLeader" resultType="com.abc12366.bangbang.model.question.QuestionFactionMember" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bb_question_faction_member
+        WHERE factionId = #{factionId} AND duty = '1' LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.TopicRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        topicId, channelId, topicName, shortName, keywords, description, titleImg, contentImg, tplContent,
+        priority,siteId, isRecommend
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Topic" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_topic
+        WHERE topicId = #{topicId}
+    </select>
+
+    <!-- 查询（查询列表） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.TopicBo" parameterType="java.util.Map">
+        SELECT
+        a.topicId, a.channelId, a.topicName, a.shortName, a.keywords, a.description,
+        a.titleImg, a.contentImg, a.tplContent, a.priority,a.siteId,b.domain, b.sitePath, b.siteName,a.isRecommend
+        FROM cms_topic a LEFT JOIN cms_site b ON a.siteId = b.siteId
+        WHERE 1=1
+        <if test="siteId != null and siteId != ''">
+            AND a.siteId = #{siteId}
+        </if>
+        ORDER BY priority ASC
+    </select>
+
+    <!-- 查询（查询列表） -->
+    <select id="selectListBytplContent" resultType="com.abc12366.cms.model.bo.TopicBo" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_topic
+        WHERE tplContent = #{tplContent}
+    </select>
+
+</mapper>

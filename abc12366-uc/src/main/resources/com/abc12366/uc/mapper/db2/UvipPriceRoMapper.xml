@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UvipPriceRoMapper">
+
+    <sql id="Base_Column_List">
+		 id,	productId,	vipLevel,	discount,	tradePrice,	giftPoints,	createTime,	lastUpdate
+	</sql>
+
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.UvipPrice" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_uvip_price
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.order.bo.UvipPriceBO" parameterType="java.lang.String">
+        SELECT
+        p.id,	p.productId,	p.vipLevel,	p.discount,	p.tradePrice,	p.giftPoints,	p.createTime,	p.lastUpdate,l.level as vipLevelName
+        FROM uc_uvip_price p
+        LEFT JOIN uc_uvip_level l on l.levelCode = p.vipLevel
+        WHERE productId = #{productId}
+    </select>
+
+    <select id="selectByLevel" resultType="com.abc12366.uc.model.order.UvipPrice"
+            parameterType="com.abc12366.uc.model.order.UvipPrice">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_uvip_price
+        WHERE productId = #{productId} and vipLevel = #{vipLevel}
+    </select>
+</mapper>

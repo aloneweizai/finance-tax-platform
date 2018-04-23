@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumLabelMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_label
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLabel">
+		 INSERT INTO bb_curriculum_label
+ 		(curriculumId,labelId) 
+		 VALUES 
+ 		(#{curriculumId},#{labelId}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLabel">
+		 INSERT INTO bb_curriculum_label
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="labelId != null">
+				 labelId,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="labelId!=null">
+				 #{labelId},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLabel">
+		 UPDATE bb_curriculum_label
+ 		 <set> 
+			<if test="labelId != null">
+				 labelId = #{labelId},
+			</if>
+
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLabel">
+		 UPDATE bb_curriculum_label
+		 SET 
+			 labelId = #{labelId}
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!--删除：根据标签ID删除-->
+	<delete id="deleteByLabelId" parameterType="java.lang.String">
+		DELETE FROM bb_curriculum_label
+		WHERE labelId = #{lableId}
+	</delete>
+
+	<!--删除：根据tagIds批量删除-->
+	<delete id="deleteByLabelIds" parameterType="java.util.List">
+		DELETE FROM bb_curriculum_label
+		WHERE labelId IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+</mapper>

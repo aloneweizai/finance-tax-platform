@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrderBackRoMapper">
+
+
+    <sql id="Base_Column_List">
+        id, userId, orderNo, reason, remark, expressNo, expressComp, status, createTime, lastUpdate
+    </sql>
+
+    <!--订单退单对象-->
+    <resultMap id="orderBackBOMap" type="com.abc12366.uc.model.order.bo.OrderBackBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="orderNo" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="userRemark" property="userRemark" jdbcType="VARCHAR"/>
+        <result column="adminRemark" property="adminRemark" jdbcType="VARCHAR"/>
+        <result column="expressNo" property="expressNo" jdbcType="VARCHAR"/>
+        <result column="expressComp" property="expressComp" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="operatorUser" property="operatorUser" jdbcType="VARCHAR"/>
+        <result column="adminConfirmRemark" property="adminConfirmRemark" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <association property="user" javaType="com.abc12366.uc.model.User">
+            <id column="userId" property="id"/>
+            <result column="username" property="username"/>
+            <result column="nickname" property="nickname"/>
+            <result column="phone" property="phone"/>
+            <result column="vipLevel" property="vipLevel"/>
+        </association>
+        <association property="orderBO" javaType="com.abc12366.uc.model.order.bo.OrderBO">
+            <id column="orderNo" property="id" jdbcType="VARCHAR"/>
+            <result column="orderNo" property="orderNo" jdbcType="VARCHAR"/>
+            <result column="userId" property="userId" jdbcType="VARCHAR"/>
+            <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+            <result column="deliveryMethod" property="deliveryMethod" jdbcType="VARCHAR"/>
+            <result column="payMethod" property="payMethod" jdbcType="VARCHAR"/>
+            <result column="nowVipLevel" property="nowVipLevel" jdbcType="VARCHAR"/>
+            <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+            <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+            <result column="username" property="username" jdbcType="VARCHAR"/>
+            <result column="isShipping" property="isShipping" jdbcType="INTEGER"/>
+            <result column="isFreeShipping" property="isFreeShipping" jdbcType="INTEGER"/>
+            <result column="deliveryFee" property="deliveryFee" jdbcType="DOUBLE"/>
+            <result column="isInsured" property="isInsured" jdbcType="INTEGER"/>
+            <result column="insuredFee" property="insuredFee" jdbcType="DOUBLE"/>
+            <result column="totalPrice" property="totalPrice" jdbcType="DOUBLE"/>
+            <result column="addressId" property="addressId" jdbcType="VARCHAR"/>
+            <result column="expressNo" property="expressNo" jdbcType="VARCHAR"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            <result column="giftPoints" property="giftPoints" jdbcType="INTEGER"/>
+            <result column="tradeMethod" property="tradeMethod" jdbcType="VARCHAR"/>
+            <result column="isInvoice" property="isInvoice" jdbcType="TINYINT"/>
+            <result column="cancelId" property="cancelId" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.OrderBack" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_order_back
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectOrderBackList" resultMap="orderBackBOMap" parameterType="com.abc12366.uc.model.order.OrderBack">
+        SELECT
+        b.id, b.userId, b.orderNo, b.reason, b.remark, b.expressNo, b.expressComp, b.status, b.createTime, b.lastUpdate,b.adminConfirmRemark,
+        o.orderNo, o.userId, o.orderStatus, o.deliveryMethod, o.payMethod, o.nowVipLevel, o.createTime,
+        o.lastUpdate, o.username, o.isShipping, o.isFreeShipping, o.deliveryFee,
+        o.isInsured, o.insuredFee, o.totalPrice, o.addressId, o.expressNo,
+        o.remark,o.giftPoints,o.tradeMethod,o.isInvoice,o.cancelId,
+        u.id as userId,u.username,u.phone,u.vipLevel,u.nickname
+        FROM uc_order_back b
+        LEFT JOIN uc_order o ON o.orderNo = b.orderNo
+        LEFT JOIN uc_user u ON u.id = b.userId
+        <where>
+            1 = 1
+            <if test=" orderNo != null and orderNo != '' ">
+                and o.orderNo = #{orderNo}
+            </if>
+            <if test=" user.username != null and user.username != '' ">
+                and u.username = #{user.username}
+            </if>
+        </where>
+        order by b.lastUpdate desc
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.TemplateMapper">
+
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.weixin.bo.template.Template">
+        INSERT INTO uc_wxtemplate(template_id,title,primary_industry,deputy_industry,content,example,lastupdate)
+        VALUES (#{template_id}, #{title}, #{primary_industry}, #{deputy_industry}, #{content}, #{example},
+        #{lastupdate})
+    </insert>
+
+    <insert id="insertLog" parameterType="com.abc12366.uc.model.weixin.bo.template.TemplateSendLog">
+        INSERT INTO uc_wxtemplate_log
+        (id,template_id,userId,openid,templateval,returncode,returnmsg,lastupdate,createdate)
+        VALUES 
+        (#{id}, #{template_id}, #{userId}, #{openid}, #{templateval}, #{returncode},#{returnmsg},#{lastupdate},#{createdate})
+    </insert>
+    
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM uc_wxtemplate WHERE template_id = #{template_id}
+    </delete>
+
+    <delete id="deleteAll" parameterType="java.lang.String">
+        DELETE FROM uc_wxtemplate
+    </delete>
+
+</mapper>

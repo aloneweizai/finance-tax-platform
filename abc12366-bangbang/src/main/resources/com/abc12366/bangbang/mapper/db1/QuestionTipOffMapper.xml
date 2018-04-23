@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionTipOffMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_tip_off
+		 WHERE id = #{id}
+	</delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionTipOff">
+        INSERT INTO bb_question_tip_off
+        (id,reason,createIP,createUser,createTime,questionId,sourceId,sourceType,status,refuseReason,rewardsPoints,updateAdmin,updateTime)
+        VALUES
+        (#{id},#{reason},#{createIP},#{createUser},#{createTime},#{questionId},#{sourceId},#{sourceType},#{status},#{refuseReason},#{rewardsPoints},#{updateAdmin},#{updateTime})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionTipOff">
+        INSERT INTO bb_question_tip_off
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null">
+                id,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="createIP != null">
+                createIP,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="questionId != null">
+                questionId,
+            </if>
+            <if test="sourceId != null">
+                sourceId,
+            </if>
+            <if test="sourceType != null">
+                sourceType,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="refuseReason != null">
+                refuseReason,
+            </if>
+            <if test="rewardsPoints != null">
+                rewardsPoints,
+            </if>
+            <if test="updateAdmin != null">
+                updateAdmin,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="reason!=null">
+                #{reason},
+            </if>
+            <if test="createIP!=null">
+                #{createIP},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="questionId!=null">
+                #{questionId},
+            </if>
+            <if test="sourceId!=null">
+                #{sourceId},
+            </if>
+            <if test="sourceType!=null">
+                #{sourceType},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="refuseReason!=null">
+                #{refuseReason},
+            </if>
+            <if test="rewardsPoints!=null">
+                #{rewardsPoints},
+            </if>
+            <if test="updateAdmin!=null">
+                #{updateAdmin},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionTipOff">
+        UPDATE bb_question_tip_off
+        <set>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="createIP != null">
+                createIP = #{createIP},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="questionId != null">
+                questionId = #{questionId},
+            </if>
+            <if test="sourceId != null">
+                sourceId = #{sourceId},
+            </if>
+            <if test="sourceType != null">
+                sourceType = #{sourceType},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="refuseReason != null">
+                refuseReason = #{refuseReason},
+            </if>
+            <if test="rewardsPoints != null">
+                rewardsPoints = #{rewardsPoints},
+            </if>
+            <if test="updateAdmin != null">
+                updateAdmin = #{updateAdmin},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionTipOff">
+		 UPDATE bb_question_tip_off
+		 SET
+			 reason = #{reason},
+			 createIP = #{createIP},
+			 createUser = #{createUser},
+			 createTime = #{createTime},
+			 questionId = #{questionId},
+			 sourceId = #{sourceId},
+			 sourceType = #{sourceType},
+			 status = #{status},
+			 refuseReason = #{refuseReason},
+			 rewardsPoints = #{rewardsPoints},
+			 updateAdmin = #{updateAdmin},
+			 updateTime = #{updateTime}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

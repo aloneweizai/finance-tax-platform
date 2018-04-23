@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.Question">
+		 INSERT INTO bb_question
+ 		(id,userId,title,detail,status,tag,factionId,ip,createTime,lastUpdate,points,isSolve,classifyCode,browseNum)
+		 VALUES 
+ 		(#{id},#{userId},#{title},#{detail},#{status},#{tag},#{factionId},#{ip},#{createTime},#{lastUpdate},#{points},#{isSolve},#{classifyCode},#{browseNum})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.Question">
+		 INSERT INTO bb_question
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="title != null">
+				 title,
+			</if>
+			<if test="detail != null">
+				 detail,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+             <if test="tag != null">
+                 tag,
+             </if>
+             <if test="ip != null">
+                 ip,
+             </if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate,
+			</if>
+			<if test="points != null">
+				 points,
+			</if>
+			<if test="isSolve != null">
+				 isSolve,
+			</if>
+			<if test="classifyCode != null">
+				 classifyCode,
+			</if>
+			<if test="browseNum != null">
+				 browseNum,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="title!=null">
+				 #{title},
+			</if>
+			<if test="detail!=null">
+				 #{detail},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+             <if test="tag!=null">
+                 #{tag},
+             </if>
+             <if test="ip!=null">
+                 #{ip},
+             </if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="lastUpdate!=null">
+				 #{lastUpdate},
+			</if>
+			<if test="points!=null">
+				 #{points},
+			</if>
+			<if test="isSolve!=null">
+				 #{isSolve},
+			</if>
+			<if test="classifyCode!=null">
+				 #{classifyCode},
+			</if>
+			<if test="browseNum!=null">
+				 #{browseNum},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.Question">
+		 UPDATE bb_question
+ 		 <set> 
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="title != null">
+				 title = #{title},
+			</if>
+			<if test="detail != null">
+				 detail = #{detail},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+             <if test="tag != null">
+                 tag = #{tag},
+             </if>
+             <if test="ip != null">
+                 ip = #{ip},
+             </if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="lastUpdate != null">
+				 lastUpdate = #{lastUpdate},
+			</if>
+			<if test="points != null">
+				 points = #{points},
+			</if>
+			<if test="isSolve != null">
+				 isSolve = #{isSolve},
+			</if>
+			<if test="classifyCode != null">
+				 classifyCode = #{classifyCode},
+			</if>
+			<if test="browseNum != null">
+				 browseNum = #{browseNum},
+			</if>
+             <if test="collectNum != null">
+                 collectNum = #{collectNum},
+             </if>
+             <if test="answerNum != null">
+                 answerNum = #{answerNum},
+             </if>
+             <if test="reportNum != null">
+                 reportNum = #{reportNum},
+             </if>
+			<if test="isRecommend != null">
+				isRecommend = #{isRecommend},
+			</if>
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.Question">
+		 UPDATE bb_question
+		 SET 
+			 userId = #{userId},
+			 title = #{title},
+			 detail = #{detail},
+			 status = #{status},
+			 tag = #{tag},
+			 ip = #{ip},
+			 createTime = #{createTime},
+			 lastUpdate = #{lastUpdate},
+			 points = #{points},
+			 isSolve = #{isSolve},
+			 classifyCode = #{classifyCode},
+			 browseNum = #{browseNum}
+		 WHERE id = #{id}
+	</update>
+
+    <!-- 修 改 浏览量-->
+    <update id="updateBrowseNum" parameterType="java.lang.String">
+        UPDATE bb_question
+        set
+            browseNum = browseNum + 1
+        WHERE id = #{id}
+    </update>
+
+	<!-- 修 改 举报数-->
+	<update id="updateReportNum" parameterType="java.lang.String">
+		UPDATE bb_question SET reportNum = reportNum + 1, status = '3' WHERE id = #{id}
+	</update>
+
+	<!-- 话题推荐 -->
+	<update id="recommend">
+		UPDATE bb_question SET isRecommend = #{isRecommend},recommendTime = now() WHERE id = #{id}
+	</update>
+
+</mapper>

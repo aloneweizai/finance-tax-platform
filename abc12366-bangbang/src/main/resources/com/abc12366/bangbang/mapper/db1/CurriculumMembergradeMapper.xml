@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumMembergradeMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_membergrade
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade">
+		 INSERT INTO bb_curriculum_membergrade
+ 		(curriculumId,memberGrade) 
+		 VALUES 
+ 		(#{curriculumId},#{memberGrade}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade">
+		 INSERT INTO bb_curriculum_membergrade
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="memberGrade!=null">
+				 #{memberGrade},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade">
+		 UPDATE bb_curriculum_membergrade
+ 		 <set> 
+			<if test="memberGrade != null">
+				 memberGrade = #{memberGrade},
+			</if>
+
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade">
+		 UPDATE bb_curriculum_membergrade
+		 SET 
+			 memberGrade = #{memberGrade}
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+</mapper>

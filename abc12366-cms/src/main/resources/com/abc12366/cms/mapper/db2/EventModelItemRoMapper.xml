@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.EventModelItemRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        modelitemId, eventId, field, itemLabel, priority, defValue, optValue, textSize, checkWay, areaRows, areaCols,
+        help, helpPosition, dataType, isSingle, isDisplay, isRequired, imageWidth, imageHeight, checkRule
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.EventModelItem" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_event_model_item
+        WHERE modelitemId = #{modelitemId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByEventId" resultType="com.abc12366.cms.model.EventModelItem" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_event_model_item
+        WHERE eventId = #{eventId}
+    </select>
+
+</mapper>

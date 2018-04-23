@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentPictureMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_picture
+        WHERE contentId = #{contentId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentPicture">
+        INSERT INTO cms_content_picture
+        (contentId,priority,imgPath,description)
+        VALUES
+        (#{contentId},#{priority},#{imgPath},#{description})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentPicture">
+        INSERT INTO cms_content_picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="imgPath != null">
+                imgPath,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="imgPath!=null">
+                #{imgPath},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentPicture">
+        UPDATE cms_content_picture
+        <set>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="imgPath != null">
+                imgPath = #{imgPath},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+
+        </set>
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentPicture">
+        UPDATE cms_content_picture
+        SET
+        priority = #{priority},
+        imgPath = #{imgPath},
+        description = #{description}
+        WHERE contentId = #{contentId} and priority = #{priority}
+    </update>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByContentId" parameterType="java.lang.String">
+        DELETE FROM cms_content_picture
+        WHERE contentId = #{contentId}
+    </delete>
+
+</mapper>

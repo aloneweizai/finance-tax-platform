@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.PrizeSetMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_paper_prize_set
+        WHERE questionId = #{questionId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.PrizeSet">
+        INSERT INTO cms_paper_prize_set
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">
+                questionId,
+            </if>
+            <if test="endTime != null">
+                endTime,
+            </if>
+            <if test="awardUser != null">
+                awardUser,
+            </if>
+            <if test="contactWay != null">
+                contactWay,
+            </if>
+            <if test="awardWay != null">
+                awardWay,
+            </if>
+            <if test="prizeRate != null">
+                prizeRate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionId!=null">
+                #{questionId},
+            </if>
+            <if test="endTime!=null">
+                #{endTime},
+            </if>
+            <if test="awardUser!=null">
+                #{awardUser},
+            </if>
+            <if test="contactWay!=null">
+                #{contactWay},
+            </if>
+            <if test="awardWay!=null">
+                #{awardWay},
+            </if>
+            <if test="prizeRate!=null">
+                #{prizeRate},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.PrizeSet">
+        UPDATE cms_paper_prize_set
+        <set>
+            <if test="endTime != null">
+                endTime = #{endTime},
+            </if>
+            <if test="awardUser != null">
+                awardUser = #{awardUser},
+            </if>
+            <if test="contactWay != null">
+                contactWay = #{contactWay},
+            </if>
+            <if test="awardWay != null">
+                awardWay = #{awardWay},
+            </if>
+            <if test="prizeRate != null">
+                prizeRate = #{prizeRate},
+            </if>
+
+        </set>
+        WHERE questionId = #{questionId}
+    </update>
+
+</mapper>

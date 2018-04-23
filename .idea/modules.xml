@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/abc12366-bangbang/abc12366-bangbang.iml" filepath="$PROJECT_DIR$/abc12366-bangbang/abc12366-bangbang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abc12366-cms/abc12366-cms.iml" filepath="$PROJECT_DIR$/abc12366-cms/abc12366-cms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abc12366-gateway/abc12366-gateway.iml" filepath="$PROJECT_DIR$/abc12366-gateway/abc12366-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abc12366-message/abc12366-message.iml" filepath="$PROJECT_DIR$/abc12366-message/abc12366-message.iml" />
+      <module fileurl="file://$PROJECT_DIR$/abc12366-uc/abc12366-uc.iml" filepath="$PROJECT_DIR$/abc12366-uc/abc12366-uc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/finance-tax-platform.iml" filepath="$PROJECT_DIR$/finance-tax-platform.iml" />
+    </modules>
+  </component>
+</project>

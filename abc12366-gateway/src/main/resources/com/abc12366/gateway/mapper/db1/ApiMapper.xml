@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.ApiMapper">
+    <insert id="insert" parameterType="com.abc12366.gateway.model.Api">
+        INSERT INTO gw_api
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="uri != null">
+                uri,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="dictId != null">
+                dictId,
+            </if>
+            <if test="authentication != null">
+                authentication,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="uri!=null">
+                #{uri},
+            </if>
+            <if test="method!=null">
+                #{method},
+            </if>
+            <if test="version!=null">
+                #{version},
+            </if>
+            <if test="dictId!=null">
+                #{dictId},
+            </if>
+            <if test="authentication!=null">
+                #{authentication},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.gateway.model.Api">
+        UPDATE gw_api
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="uri != null">
+                uri = #{uri},
+            </if>
+            <if test="method != null">
+                method = #{method},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="dictId != null">
+                dictId = #{dictId},
+            </if>
+            <if test="authentication != null">
+                authentication = #{authentication},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM gw_api WHERE id = #{id}
+    </delete>
+</mapper>

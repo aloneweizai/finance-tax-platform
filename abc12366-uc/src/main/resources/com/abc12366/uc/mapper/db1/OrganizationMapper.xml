@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.OrganizationMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM uc_organization
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insertSelective" parameterType="com.abc12366.uc.model.admin.Organization">
+        INSERT INTO uc_organization
+        (id,parentId,name,code,areaId,type,contact,phone,address,remark,status,createUser,createTime,lastUser,lastUpdate,province,city,area)
+        VALUES
+        (#{id},#{parentId},#{name},#{code},#{areaId},#{type},#{contact},#{phone},#{address},#{remark},#{status},#{createUser},#{createTime},#{lastUser},#{lastUpdate},#{province},#{city},#{area})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.Organization">
+        INSERT INTO uc_organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="parentId != null">
+                parentId,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="areaId != null">
+                areaId,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUser != null">
+                lastUser,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="code!=null">
+                #{code},
+            </if>
+            <if test="areaId!=null">
+                #{areaId},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="contact!=null">
+                #{contact},
+            </if>
+            <if test="phone!=null">
+                #{phone},
+            </if>
+            <if test="address!=null">
+                #{address},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUser!=null">
+                #{lastUser},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="province!=null">
+                #{province},
+            </if>
+            <if test="city!=null">
+                #{city},
+            </if>
+            <if test="area!=null">
+                #{area},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.admin.Organization">
+        UPDATE uc_organization
+        <set>
+            <if test="parentId != null">
+                parentId = #{parentId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="areaId != null">
+                areaId = #{areaId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="contact != null">
+                contact = #{contact},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUser != null">
+                lastUser = #{lastUser},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.uc.model.admin.Organization">
+        UPDATE uc_organization
+        SET
+        parentId = #{parentId},
+        name = #{name},
+        code = #{code},
+        areaId = #{areaId},
+        type = #{type},
+        contact = #{contact},
+        phone = #{phone},
+        address = #{address},
+        remark = #{remark},
+        status = #{status},
+        createUser = #{createUser},
+        createTime = #{createTime},
+        lastUser = #{lastUser},
+        lastUpdate = #{lastUpdate},
+        province = #{province},
+        city = #{city},
+        area = #{area}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

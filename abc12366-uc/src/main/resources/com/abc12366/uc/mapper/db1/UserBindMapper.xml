@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.UserBindMapper">
+
+    <select id="userDzsbSelectById" resultType="com.abc12366.uc.model.UserDzsb">
+        select id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status, createTime, lastUpdate,
+        expireTime,expandExpireTime,frmc,frzjh,lastLoginTime,nsrlx,sfgtjzh,djrq,bdgroup,remark
+        from uc_user_dzsb
+        where id=#{id}
+    </select>
+
+    <select id="selectListByDate" resultType="java.lang.String" parameterType="java.util.Date">
+        select id from uc_user_dzsb
+        WHERE status = true
+        <![CDATA[
+                and date_format(lastLoginTime, '%Y-%m-%d %H:%i:%s') <= date_format(#{date}, '%Y-%m-%d %H:%i:%s') and lastLoginTime is not null
+                ]]>
+    </select>
+
+    <select id="getUserDzsbBind" resultType="com.abc12366.uc.model.bo.UserDzsbListBO" parameterType="java.lang.String">
+        select uud.id, uud.userId, uud.djxh, uud.nsrsbh, uud.nsrmc, uud.shxydm, uud.swjgMc, uud.swjgDm, uud.status,
+          uud.createTime, uud.lastUpdate, uud.expireTime, uud.expandExpireTime,uud.bdgroup,uud.remark 
+        from uc_user_dzsb uud use INDEX(uc_user_dzsb_userId_index,idx_nsrsbh)
+        where userId=#{userId}
+        and status=1
+        <if test="nsrmc != null"> and uud.nsrmc like CONCAT('%',#{nsrmc},'%') </if>
+        <if test="nsrsbh != null"> and uud.nsrsbh =#{nsrsbh} </if>
+        <if test="bdgroup != null"> and uud.bdgroup like CONCAT('%',#{bdgroup},'%') </if>
+        <if test="remark != null"> and uud.remark like CONCAT('%',#{remark},'%')  </if>
+        order by uud.createTime desc
+    </select>
+
+    <select id="userHngsSelectById" resultType="com.abc12366.uc.model.UserHngs">
+        select id,userId,djxh,nsrsbh,nsrmc,shxydm,swjgMc,swjgDm,bsy,smrzzt,status,createTime,lastUpdate,roleId
+        from uc_user_hngs
+        where id=#{id}
+    </select>
+
+    <select id="userHngsListExist" resultType="com.abc12366.uc.model.UserHngs" parameterType="com.abc12366.uc.model.bo.UserHngsInsertBO">
+        select id,userId,djxh,nsrsbh,nsrmc,shxydm,swjgMc,swjgDm,bsy,smrzzt,status,createTime,lastUpdate,roleId
+        from uc_user_hngs
+        where userId=#{userId}
+        and (nsrsbh=#{bsy} or shxydm=#{bsy})
+        and status=1
+    </select>
+
+    <select id="getUserhngsBind" resultType="com.abc12366.uc.model.bo.UserHngsListBO" parameterType="java.util.Map">
+        select
+        uuh.id,uuh.userId,uuh.djxh,uuh.nsrsbh,uuh.nsrmc,uuh.shxydm,uuh.swjgMc,uuh.swjgDm,uuh.bsy,uuh.smrzzt,uuh.status,uuh.createTime,uuh.lastUpdate,uuh.roleId
+        from uc_user_hngs uuh
+        where uuh.userId=#{userId}
+        and status=1
+        <if test="nsrmc != null"> and uuh.nsrmc like CONCAT('%',#{nsrmc},'%') </if>
+        <if test="nsrsbh != null"> and uuh.nsrsbh =#{nsrsbh} </if>
+        order by uuh.createTime desc
+    </select>
+    <select id="userHndsSelectById" resultType="com.abc12366.uc.model.UserHnds">
+        select id, userId, username, subuser, nsrmc, nsrsbh, djxh, shxydm, swjgMc, swjgDm, status, createTime,
+        lastUpdate
+        from uc_user_hnds
+        where id=#{id}
+    </select>
+    <select id="getUserhndsBind" resultType="com.abc12366.uc.model.bo.UserHndsBO" parameterType="java.lang.String">
+        select id, userId, username, subuser, nsrmc, nsrsbh, djxh, shxydm, swjgMc, swjgDm, status, createTime,
+        lastUpdate
+        from uc_user_hnds
+        where userId=#{userId}
+        and status=1
+        <if test="nsrmc != null"> and nsrmc like CONCAT('%',#{nsrmc},'%') </if>
+        <if test="nsrsbh != null"> and nsrsbh =#{nsrsbh} </if>
+        order by createTime desc
+    </select>
+    <select id="selectListByUserId" parameterType="java.lang.String" resultType="com.abc12366.uc.model.abc4000.NSRXX">
+        select uud.nsrsbh nsrsbh,
+                uud.shxydm shxydm,
+                uud.nsrmc nsrmc,
+                uud.createTime bdsj,
+                uud.expireTime dqr,
+                uud.swjgMc swjgmc,
+                uud.swjgDm swjgdm,
+                uud.expandExpireTime yqdqr
+        from uc_user_dzsb uud
+        where uud.userId = #{userId}
+        and status = '1'
+    </select>
+
+    <select id="selectListByUserIdAndNsrsbhOrShxydm" parameterType="com.abc12366.uc.model.UserDzsb" resultType="com.abc12366.uc.model.abc4000.NSRXX">
+        select 	id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status, createTime, lastUpdate,
+        expireTime,expandExpireTime,frmc,frzjh,lastLoginTime,nsrlx,sfgtjzh,djrq,bdgroup,remark
+        from uc_user_dzsb uud
+        where uud.userId = #{userId}
+        and uud.status = '1'
+        and (nsrsbh = #{nsrsbh} OR shxydm=#{shxydm})
+    </select>
+
+    <select id="selectListByUserIdAndNsrsbh" parameterType="com.abc12366.uc.model.UserDzsb" resultType="com.abc12366.uc.model.UserDzsb">
+        select 	id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status, createTime, lastUpdate,
+        expireTime,expandExpireTime,frmc,frzjh,lastLoginTime,nsrlx,sfgtjzh,djrq,bdgroup,remark
+        from uc_user_dzsb uud
+        where uud.userId = #{userId}
+        and nsrsbh = #{nsrsbh}
+    </select>
+
+    <select id="dzsbCount" resultType="com.abc12366.uc.model.UserDzsb">
+        select id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status, createTime, lastUpdate,bdgroup,remark 
+        from uc_user_dzsb
+        where userId=#{userId}
+        and status=1
+    </select>
+
+    <select id="hngsCount" resultType="com.abc12366.uc.model.UserHngs">
+        select id,userId,djxh,nsrsbh,nsrmc,shxydm,swjgMc,swjgDm,bsy,smrzzt,status,createTime,lastUpdate,roleId
+        from uc_user_hngs
+        where userId=#{userId}
+        and status=1
+    </select>
+
+    <select id="hndsCount" resultType="com.abc12366.uc.model.UserHnds">
+        select id, userId, username, subuser, nsrmc, nsrsbh, djxh, shxydm, swjgMc, swjgDm, status, createTime,
+        lastUpdate
+        from uc_user_hnds
+        where userId=#{userId}
+        and status=1
+    </select>
+
+    <select id="bindCount" resultType="com.abc12366.uc.model.bo.ShxydmBO" parameterType="java.lang.String">
+        SELECT DISTINCT d.shxydm FROM (
+            SELECT a.shxydm FROM uc_user_dzsb a WHERE a.userId=#{userId} AND a.status=1
+            UNION
+            SELECT b.shxydm FROM uc_user_hngs b WHERE b.userId=#{userId} AND b.status=1
+            UNION
+            SELECT c.shxydm FROM uc_user_hnds c WHERE c.userId=#{userId} AND c.status=1
+        ) d
+    </select>
+
+
+    <insert id="dzsbBind" parameterType="com.abc12366.uc.model.UserDzsb">
+        insert into uc_user_dzsb(id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status,
+        createTime,lastUpdate,expireTime,expandExpireTime,frmc,frzjh,lastLoginTime,nsrlx,sfgtjzh,djrq,bdgroup,remark)
+        values (#{id}, #{userId}, #{djxh}, #{nsrsbh}, #{nsrmc}, #{shxydm}, #{swjgMc}, #{swjgDm}, #{status},
+        #{createTime}, #{lastUpdate}, #{expireTime}, #{expandExpireTime}, #{frmc},#{frzjh},#{lastLoginTime},
+        #{nsrlx},#{sfgtjzh},#{djrq},#{bdgroup},#{remark})
+    </insert>
+
+    <update id="dzsbUnbind" parameterType="java.lang.String">
+        update uc_user_dzsb
+        <set>
+            status=FALSE,
+            lastUpdate=now()
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        update uc_user_dzsb
+        <set>
+            status=FALSE,
+            lastUpdate=now()
+        </set>
+        WHERE id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <insert id="hngsBind" parameterType="com.abc12366.uc.model.UserHngs">
+        insert into uc_user_hngs(id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, bsy, smrzzt, status,
+        createTime, lastUpdate,roleId)
+        values(#{id}, #{userId}, #{djxh}, #{nsrsbh}, #{nsrmc}, #{shxydm}, #{swjgMc}, #{swjgDm},#{bsy},#{smrzzt},
+        #{status}, #{createTime}, #{lastUpdate}, #{roleId})
+    </insert>
+
+    <update id="hngsUnbind" parameterType="java.lang.String">
+        update uc_user_hngs
+        <set>
+            status=FALSE,
+            lastUpdate= now()
+        </set>
+        where id=#{id}
+    </update>
+    <insert id="hndsBind" parameterType="com.abc12366.uc.model.UserHnds">
+        insert into uc_user_hnds(id, userId, username, subuser, nsrmc, nsrsbh, djxh, shxydm, swjgMc, swjgDm, status,
+        createTime, lastUpdate)
+        values(#{id}, #{userId}, #{username}, #{subuser}, #{nsrmc}, #{nsrsbh}, #{djxh}, #{shxydm},#{swjgMc}, #{swjgDm},
+        #{status}, #{createTime}, #{lastUpdate})
+    </insert>
+
+    <update id="hndsUnbind" parameterType="java.lang.String">
+        update uc_user_hnds
+        <set>
+            status=FALSE,
+            lastUpdate=now()
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="update" parameterType="com.abc12366.uc.model.UserDzsb">
+        update uc_user_dzsb uud
+        <set>
+            uud.status = #{status},
+            uud.bdgroup = #{bdgroup},
+            <if test="nsrsbh!=null and nsrsbh !=''">uud.nsrsbh = #{nsrsbh},</if>
+            <if test="nsrmc!=null and nsrmc !=''">uud.nsrmc = #{nsrmc},</if>
+            <if test="shxydm!=null  and shxydm !=''">uud.shxydm = #{shxydm},</if>
+            <if test="swjgMc!=null  and swjgMc !=''">uud.swjgMc = #{swjgMc},</if>
+            <if test="swjgDm!=null  and swjgDm !=''">uud.swjgDm = #{swjgDm},</if>
+            <if test="lastUpdate!=null">uud.lastUpdate = #{lastUpdate},</if>
+            <if test="expireTime!=null">uud.expireTime = #{expireTime},</if>
+            <if test="expandExpireTime!=null">uud.expandExpireTime = #{expandExpireTime},</if>
+            <if test="frmc!=null and frmc !=''">uud.frmc = #{frmc},</if>
+            <if test="frzjh!=null and frzjh !=''">uud.frzjh = #{frzjh},</if>
+            <if test="lastLoginTime!=null">uud.lastLoginTime = #{lastLoginTime},</if>
+            <if test="nsrlx!=null and nsrlx !=''">uud.nsrlx = #{nsrlx},</if>
+            <if test="sfgtjzh!=null and sfgtjzh !=''">uud.sfgtjzh = #{sfgtjzh},</if>
+            <if test="djrq!=null and djrq !=''">uud.djrq = #{djrq},</if>
+            <if test="remark!=null and remark !=''">uud.remark = #{remark}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateHngs" parameterType="com.abc12366.uc.model.UserHngs">
+        update uc_user_hngs uud
+        <set>
+            <if test="nsrsbh!=null and nsrsbh != ''">uud.nsrsbh = #{nsrsbh},</if>
+            <if test="bsy!=null and bsy != ''">uud.bsy = #{bsy},</if>
+            <if test="nsrmc!=null and nsrmc != ''">uud.nsrmc = #{nsrmc},</if>
+            <if test="shxydm!=null and shxydm != ''">uud.shxydm = #{shxydm},</if>
+            <if test="smrzzt!=null and smrzzt != ''">uud.smrzzt = #{smrzzt},</if>
+            <if test="swjgMc!=null and swjgMc != ''">uud.swjgMc = #{swjgMc},</if>
+            <if test="swjgDm!=null and swjgDm != ''">uud.swjgDm = #{swjgDm},</if>
+            <if test="lastUpdate!=null">uud.lastUpdate = #{lastUpdate},</if>
+            <if test="roleId!=null and roleId != ''">uud.roleId = #{roleId}</if>
+        </set>
+        where uud.userId = #{userId}
+        and uud.djxh = #{djxh}
+        and status=1
+    </update>
+    <delete id="deleteDzsb" parameterType="java.lang.String">
+        delete from uc_user_dzsb where id = #{id}
+    </delete>
+    
+    <insert id="insertRestPwdLog" parameterType="com.abc12366.uc.model.NsrsbhPasswordLog">
+        INSERT INTO uc_nsrsbh_password_log
+        (id, userId, nsrsbh, frmc, frzjh, createTime, ip ,code ,message)
+        VALUES
+        (#{id}, #{userId}, #{nsrsbh}, #{frmc}, #{frzjh}, #{createTime}, #{ip}, #{code}, #{message})
+    </insert>
+    
+    <select id="restPwdLogList" resultType="com.abc12366.uc.model.NsrsbhPasswordLog" parameterType="java.util.Map">
+        SELECT l.*,u.username,u.nickname 
+        FROM uc_nsrsbh_password_log l, uc_user u 
+        WHERE u.id = l.userId 
+        <if test="nsrsbh != null and nsrsbh != ''"> and l.nsrsbh =#{nsrsbh} </if>
+        ORDER BY l.createTime DESC
+    </select>
+    
+    <select id="dzsbRegisterStat" resultType="com.abc12366.uc.model.DzsbRegisterStat" parameterType="java.util.Map">
+           SELECT djrq, count(id) as total 
+           FROM uc_user_dzsb 
+           <where>
+           <if test="beginDate != null and beginDate != ''"><![CDATA[ djrq >= #{beginDate} ]]></if>
+           <if test="endDate != null and endDate != ''"><![CDATA[ and djrq <= #{endDate} ]]></if>
+           </where>
+           GROUP BY djrq
+    </select>
+    
+    <select id="dzsbRegisterStatM" resultType="com.abc12366.uc.model.DzsbRegisterStat" parameterType="java.util.Map">
+           SELECT left(djrq,7) as djrq, count(id) as total 
+           FROM uc_user_dzsb 
+           <where>
+           <if test="beginDate != null and beginDate != ''"><![CDATA[ djrq >= #{beginDate} ]]></if>
+           <if test="endDate != null and endDate != ''"><![CDATA[ and djrq <= #{endDate} ]]></if>
+           </where>
+           GROUP BY left(djrq,7)
+    </select>
+    
+    <select id="dzsbRegisterStatInfo" resultType="java.util.Map" parameterType="java.lang.String">
+           SELECT * 
+           FROM uc_user_dzsb 
+           <where>
+           <if test="_parameter.length == 10"><![CDATA[ djrq = #{date} ]]></if>
+           <if test="_parameter.length == 7"><![CDATA[ left(djrq,7) = #{date} ]]></if>
+           </where>
+           GROUP BY id DESC
+    </select>
+    
+    <select id="findBroup" resultType="java.util.Map" parameterType="java.lang.String">
+           SELECT bdgroup FROM uc_user_dzsb 
+           WHERE userId= #{userId} AND bdgroup IS NOT NULL AND bdgroup !='' AND status = 1
+           GROUP BY bdgroup 
+           ORDER BY bdgroup
+    </select>
+    
+    <update id="updateDzsbgroup" parameterType="java.util.Map">
+        update uc_user_dzsb
+        SET bdgroup = #{bdgroup}
+        where id=#{id}
+    </update>
+    
+</mapper>

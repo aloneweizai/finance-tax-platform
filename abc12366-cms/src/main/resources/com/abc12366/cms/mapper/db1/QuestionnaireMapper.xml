@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.QuestionnaireMapper">
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_paper_questionnaire
+        WHERE id = #{id}
+    </delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        DELETE FROM cms_paper_questionnaire
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        INSERT INTO cms_paper_questionnaire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="simpleDesc != null">
+                simpleDesc,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+            <if test="updateUser != null">
+                updateUser,
+            </if>
+            <if test="recoveryRate != null">
+                recoveryRate,
+            </if>
+            <if test="accessRate != null">
+                accessRate,
+            </if>
+            <if test="sceneCode != null">
+                sceneCode,
+            </if>
+            <if test="tradeCode != null">
+                tradeCode,
+            </if>
+            <if test="endDesc != null">
+                endDesc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="simpleDesc!=null">
+                #{simpleDesc},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="updateUser!=null">
+                #{updateUser},
+            </if>
+            <if test="recoveryRate!=null">
+                #{recoveryRate},
+            </if>
+            <if test="accessRate!=null">
+                #{accessRate},
+            </if>
+            <if test="sceneCode!=null">
+                #{sceneCode},
+            </if>
+            <if test="tradeCode!=null">
+                #{tradeCode},
+            </if>
+            <if test="endDesc!=null">
+                #{endDesc},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        UPDATE cms_paper_questionnaire
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="simpleDesc != null">
+                simpleDesc = #{simpleDesc},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            <if test="updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            <if test="recoveryRate != null">
+                recoveryRate = #{recoveryRate},
+            </if>
+            <if test="accessRate != null">
+                accessRate = #{accessRate},
+            </if>
+            <if test="sceneCode != null">
+                sceneCode = #{sceneCode},
+            </if>
+            <if test="tradeCode != null">
+                tradeCode = #{tradeCode},
+            </if>
+            <if test="endDesc != null">
+                endDesc = #{endDesc},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改 访问量-->
+    <update id="updateAccessRate" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        UPDATE cms_paper_questionnaire
+        <set>
+            accessRate = accessRate + 1,
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改 回收量-->
+    <update id="updateRecoveryRate" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        UPDATE cms_paper_questionnaire
+        <set>
+            recoveryRate = recoveryRate + 1,
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改 皮肤路径-->
+    <update id="updateSkinUrl" parameterType="com.abc12366.cms.model.questionnaire.Questionnaire">
+        UPDATE cms_paper_questionnaire
+        <set>
+            skinUrl = #{skinUrl},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改 皮肤路径-->
+    <update id="updateStatus">
+        update cms_paper_questionnaire q set q.status = 2 where q.status = 0 and q.id in (select p.questionId from
+        cms_paper_questionnaire_param p
+        where q.id = p.questionId and <![CDATA[ p.recoveryEndTime < now()]]>)
+    </update>
+
+</mapper>

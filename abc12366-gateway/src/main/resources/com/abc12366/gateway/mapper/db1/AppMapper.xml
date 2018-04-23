@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.AppMapper">
+
+    <select id="selectOne" resultType="com.abc12366.gateway.model.App" parameterType="com.abc12366.gateway.model.App">
+        SELECT id, name,nickname, password, accessToken, lastResetTokenTime, startTime, endTime, remark, status,
+        createTime, lastUpdate
+        FROM gw_app
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="accessToken != null">
+                AND accessToken = #{accessToken}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.abc12366.gateway.model.App">
+        INSERT INTO gw_app
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="accessToken != null">
+                accessToken,
+            </if>
+            <if test="lastResetTokenTime != null">
+                lastResetTokenTime,
+            </if>
+            <if test="startTime != null">
+                startTime,
+            </if>
+            <if test="endTime != null">
+                endTime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="nickname!=null">
+                #{nickname},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="accessToken!=null">
+                #{accessToken},
+            </if>
+            <if test="lastResetTokenTime!=null">
+                #{lastResetTokenTime},
+            </if>
+            <if test="startTime!=null">
+                #{startTime},
+            </if>
+            <if test="endTime!=null">
+                #{endTime},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.gateway.model.bo.AppBO">
+        UPDATE gw_app
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="accessToken != null">
+                accessToken = #{accessToken},
+            </if>
+            <if test="lastResetTokenTime != null">
+                lastResetTokenTime = #{lastResetTokenTime},
+            </if>
+            <if test="startTime != null">
+                startTime = #{startTime},
+            </if>
+            <if test="endTime != null">
+                endTime = #{endTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.VipLogRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.VipLogBO" parameterType="java.lang.String">
+        SELECT uulo.id, uulo.userId, uulo.source, uulo.levelId,uule.level,uulo.createTime,
+         uulo.vipExpireDate
+        from uc_uvip_log uulo left join uc_uvip_level uule
+        ON uulo.levelId = uule.levelCode
+        where uulo.userId = #{userId}
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectListByOrder" resultType="com.abc12366.uc.model.bo.VipLogOrderBO" parameterType="java.lang.String">
+        SELECT uulo.id, uulo.userId, uulo.source, uulo.levelId,uule.level,uulo.createTime,
+         uulo.vipExpireDate,o.orderStatus
+        from uc_uvip_log uulo left join uc_uvip_level uule ON uulo.levelId = uule.levelCode
+        LEFT JOIN uc_order o ON o.orderNo = uulo.source
+        where
+          <![CDATA[
+            uulo.vipExpireDate >= now()
+          ]]>
+          and uulo.userId = #{userId}
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectCountByCode" resultType="com.abc12366.uc.model.bo.VipLevelStatisticTemp" parameterType="java.util.Map">
+        SELECT
+        (SELECT COUNT(1) allCount FROM uc_user WHERE vipLevel=#{levelCode}
+        ) allCount,
+        (SELECT COUNT(uulo.id) increase FROM uc_uvip_log uulo join uc_user a on uulo.userId=a.id WHERE uulo.levelId =#{levelCode} AND uulo.createTime &gt;=#{start} AND uulo.createTime &lt; #{end}
+        ) increase,
+        (SELECT COUNT(uulo.id) lastIncrease FROM uc_uvip_log uulo join uc_user a on uulo.userId=a.id  WHERE uulo.levelId =#{levelCode} AND uulo.createTime &gt;=#{lastStart} AND uulo.createTime &lt;#{lastEnd}
+        ) lastIncrease,
+        (SELECT COUNT(uulo.id) lastYearAll FROM uc_uvip_log uulo join uc_user a on uulo.userId=a.id  WHERE uulo.levelId =#{levelCode} AND uulo.createTime &lt;#{start}
+        ) lastYearAll
+        FROM DUAL
+    </select>
+
+    <select id="selectCountAll" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from uc_user where vipLevel=#{levelCode}
+    </select>
+</mapper>

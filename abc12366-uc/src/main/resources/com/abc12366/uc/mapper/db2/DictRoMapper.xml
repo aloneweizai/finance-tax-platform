@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.DictRoMapper">
+
+    <sql id="Base_Column_List">
+        id, dictId, dictName, fieldKey, fieldValue, status, createTime, createUser, lastUpdate, lastUser,sort
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.Dict" parameterType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        <where>
+            1=1
+            <if test="dictName != null and dictName!=''">and dictName LIKE CONCAT('%',#{dictName},'%')</if>
+            <if test="status != null ">and status = #{status}</if>
+        </where>
+        ORDER BY dictName ASC,sort ASC
+    </select>
+
+    <select id="selectListByDictName" resultType="com.abc12366.uc.model.Dict"
+            parameterType="com.abc12366.uc.model.Dict">
+        select
+        distinct dictName
+        from uc_dict
+        <where>
+            1=1
+            <if test="dictName != null and dictName!=''">and dictName LIKE CONCAT('%',#{dictName},'%')</if>
+        </where>
+        ORDER BY dictName ASC,sort ASC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.Dict" parameterType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        <where>
+            1=1
+            <if test="dictId != null and dictId!=''">and dictId = #{dictId}</if>
+            <if test="fieldValue != null ">and fieldValue = #{fieldValue}</if>
+        </where>
+    </select>
+
+    <select id="selectFirstLevel" resultType="com.abc12366.uc.model.Dict">
+        select id, dictId, dictName
+        from uc_dict
+    </select>
+
+    <select id="selectById" resultType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where id = #{id}
+    </select>
+
+    <select id="selectByDictId" resultType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where dictId = #{dictId}
+        ORDER BY dictName ASC,sort ASC
+    </select>
+
+    <select id="selectByDictName" resultType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where dictName = #{dictName}
+        ORDER BY  sort ASC
+    </select>
+
+    <!-- 根据dictId，fieldKey条件查询字典表数据-->
+    <select id="selectDict" resultType="com.abc12366.uc.model.Dict" parameterType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where dictId = #{dictId} AND fieldValue = #{fieldValue}
+        ORDER BY  sort ASC
+    </select>
+
+    <select id="selectDictList" resultType="com.abc12366.uc.model.Dict" parameterType="com.abc12366.uc.model.Dict">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        <where>
+            status = '1'
+            <if test="dictId != null and dictId!='' ">and dictId = #{dictId}</if>
+        </where>
+        ORDER BY dictName ASC,sort ASC
+    </select>
+
+    <select id="selectByParentDictId" resultType="com.abc12366.uc.model.bo.DictBO" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where dictId = #{dictId}
+    </select>
+
+    <select id="selectByFieldValue" resultType="com.abc12366.uc.model.bo.DictBO" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from uc_dict
+        where fieldValue = #{fieldValue}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionTipOffRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,	reason,	createUser,	createTime,	sourceId,	sourceType,	updateAdmin,	updateTime, rewardsPoints, refuseReason
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionTipOffBo"
+            parameterType = "com.abc12366.bangbang.model.question.bo.QuestionTipOffParamBo">
+        SELECT t.*,
+        (CASE
+        WHEN t1.title IS NOT NULL THEN CONCAT(t1.title,t1.detail)
+        WHEN t2.answer IS NOT NULL THEN t2.answer
+        WHEN t6.title IS NOT NULL THEN CONCAT(t6.title,t6.describ)
+        WHEN t4.commentTxt IS NOT NULL THEN  t4.commentTxt
+        WHEN t5.commentTxt IS NOT NULL THEN  t5.commentTxt
+        END ) AS content,
+        t3.nickname as createUsername
+        FROM bb_question_tip_off t
+        LEFT JOIN bb_question t1 ON (t.sourceId=t1.id AND t.sourceType = 'question')
+        LEFT JOIN bb_question_answer t2 ON (t.sourceId=t2.id  AND t.sourceType = 'answer')
+        LEFT JOIN bb_cheats t6 ON(t.sourceId=t6.id AND t.sourceType ='cheats')
+        LEFT JOIN bb_cheats_comment t4 ON(t.sourceId=t4.id AND t.sourceType ='cheats_comment')
+        LEFT JOIN bb_question_comment t5 ON (t.sourceId=t5.id  AND t.sourceType='comment')
+
+        LEFT JOIN abc12366_uc.uc_user t3 ON t.createUser = t3.id
+        <if test="status!=null and status!=''">
+            WHERE t.status = #{status}
+        </if>
+        ORDER BY t.createTime DESC
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOne" resultType="com.abc12366.bangbang.model.question.bo.QuestionTipOffBo" parameterType="java.lang.String">
+        SELECT t.*,
+        (CASE
+        WHEN t1.title IS NOT NULL THEN CONCAT(t1.title,t1.detail)
+        WHEN t2.answer IS NOT NULL THEN t2.answer
+        WHEN t6.title IS NOT NULL THEN CONCAT(t6.title,t6.describ)
+        WHEN t4.commentTxt IS NOT NULL THEN  t4.commentTxt
+        WHEN t5.commentTxt IS NOT NULL THEN  t5.commentTxt
+        END ) AS content,
+        t3.nickname as createUsername
+        FROM bb_question_tip_off t
+        LEFT JOIN bb_question t1 ON (t.sourceId=t1.id AND t.sourceType = 'question')
+        LEFT JOIN bb_question_answer t2 ON (t.sourceId=t2.id  AND t.sourceType = 'answer')
+        LEFT JOIN bb_cheats t6 ON(t.sourceId=t6.id AND t.sourceType ='cheats')
+        LEFT JOIN bb_cheats_comment t4 ON(t.sourceId=t4.id AND t.sourceType ='cheats_comment')
+        LEFT JOIN bb_question_comment t5 ON (t.sourceId=t5.id  AND t.sourceType='comment')
+
+        LEFT JOIN abc12366_uc.uc_user t3 ON t.createUser = t3.id
+        WHERE t.id = #{id}
+    </select>
+
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionTipOff" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bb_question_tip_off
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectExist" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(id)
+        FROM bb_question_tip_off
+        WHERE sourceId = #{sourceId} and createUser = #{createUser}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectTipoffCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(id)
+        FROM bb_question_tip_off
+        WHERE sourceId = #{sourceId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCntByStatus" resultType="java.lang.Long" parameterType="java.lang.String">
+        SELECT count(1) FROM bb_question_tip_off WHERE status = #{status}
+    </select>
+
+</mapper>

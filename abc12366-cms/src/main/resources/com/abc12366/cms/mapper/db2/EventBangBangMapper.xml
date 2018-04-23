@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.EventBangBangMapper">
+
+	<select id="singleEvent" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.SingleEventBo" >
+		SELECT a.eventId,a.province,a.city,a.address,a.picture,a.begintime,a.endtime,a.peoppleNum,b.sponsorName,a.`bmendtime`,a.title,a.status
+		FROM `cms_event` a LEFT JOIN cms_event_sponsor b ON a.sponsorId = b.sponsorId
+		WHERE STATUS=2
+		<if test="category!=null and category!=''">
+			and a.category=#{category}
+		</if>
+		ORDER BY createtime DESC limit 1
+	</select>
+
+	<select id="singleEventList" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.SingleEventBo" >
+		SELECT a.eventId,a.province,a.city,a.address,a.picture,a.begintime,a.endtime,a.peoppleNum,b.sponsorName,a.`bmendtime`,a.title,a.status
+		FROM `cms_event` a LEFT JOIN cms_event_sponsor b ON a.sponsorId = b.sponsorId
+		WHERE STATUS in (2,3)
+		<if test="category!=null and category!=''">
+			and a.category=#{category}
+		</if>
+		ORDER BY status asc,createtime DESC
+	</select>
+
+	<select id="browseCount" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.EventBrowseCountBo">
+		SELECT eventid,COUNT(eventid) `count` FROM `cms_event_record`
+		 <if test="eventid!=null and eventid!=''">
+			where eventid=#{eventid}
+		 </if>
+		 GROUP BY eventid
+	</select>
+
+	<select id="selectModelItem" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.EventApplyFieldBo">
+		SELECT fieldkey,fieldvalue,isRequired FROM `cms_event_model_item` a LEFT JOIN cms_view_sys_dict b ON a.`field`=b.`fieldValue` WHERE
+		b.dictid='bmbtzl' AND	eventid=#{eventid}
+	</select>
+
+	<select id="selectEventId" resultType="com.abc12366.cms.model.event.EventIdBo" parameterType="java.util.Map">
+		SELECT eventid,title,province,city,address,picture,begintime,endtime,description,peoppleNum,usergrade,sponsorid,status,bmendtime,isCheck,isUserGrade FROM `cms_event` a WHERE eventid=#{eventid}
+	</select>
+
+	<select id="selectEventSponsor" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.EventSponsorBbBo">
+		SELECT sponsorid,sponsorname,sponsorlxr,sponsortel,sponsoremail,sponsorintro FROM `cms_event_sponsor` WHERE sponsorid=#{sponsorid}
+	</select>
+
+	<select id="selectEventApplyStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(applyid) `count` FROM `cms_event_apply` WHERE userid=#{userid} and eventid=#{eventid}
+	</select>
+
+	<select id="selectEventRelevant" parameterType="java.util.Map" resultType="com.abc12366.cms.model.event.EventIdBo">
+		SELECT eventid,title,province,city,address,picture,begintime,endtime,description,peoppleNum,usergrade,sponsorid,STATUS,bmendtime,isCheck,isUserGrade FROM cms_event WHERE STATUS=2 AND eventid!=#{eventid} ORDER BY createtime DESC
+	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CheatsTagRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	cheatsId,	tagId
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.CheatsTag" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_cheats_tag
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.CheatsTag" parameterType="java.lang.String">
+        SELECT
+          c.id,	cheatsId,	c.tagId,k.name tagName
+        FROM bb_cheats_tag c left join bb_knowledge_tag k on c.tagId = k.id
+        WHERE cheatsId = #{cheatsId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectTagList" resultType="com.abc12366.bangbang.model.question.bo.CheatsTagBo" parameterType="java.lang.String">
+        SELECT
+        a.tagId,COUNT(a.tagId) priority,(select name from abc12366_bangbang.bb_knowledge_tag where id = a.tagId) tagName,
+        (select parentCode from bb_question_classify_tag t left join bb_question_classify c on t.classifyId = c.classifyCode where t.tagId = a.tagId limit 1) parentCode,
+        (select classifyId from abc12366_bangbang.bb_question_classify_tag where tagId = a.tagId limit 1) classifyCode
+        FROM bb_cheats_tag a
+        WHERE 1=1
+        GROUP BY a.tagId order by priority desc
+    </select>
+
+</mapper>

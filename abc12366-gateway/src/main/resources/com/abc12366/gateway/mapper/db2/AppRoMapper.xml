@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.AppRoMapper">
+    <select id="selectOne" resultType="com.abc12366.gateway.model.App" parameterType="com.abc12366.gateway.model.App">
+        SELECT id, name,nickname, password, accessToken, lastResetTokenTime, startTime, endTime, remark, status,
+        createTime, lastUpdate
+        FROM gw_app
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="accessToken != null">
+                AND accessToken = #{accessToken}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByName" resultType="com.abc12366.gateway.model.App" parameterType="java.lang.String">
+        SELECT id, name,nickname,password, accessToken, lastResetTokenTime, startTime, endTime, remark, status,
+        createTime, lastUpdate
+        FROM gw_app
+        WHERE name = #{name}
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.gateway.model.bo.AppBO"
+            parameterType="com.abc12366.gateway.model.bo.AppBO">
+        SELECT id, name,nickname, accessToken, lastResetTokenTime, startTime, endTime, remark, status,
+        createTime, lastUpdate
+        FROM gw_app
+        <where>
+            <if test="name != null and name != ''">
+                name=#{name}
+            </if>
+            <if test="accessToken != null and accessToken != ''">
+                accessToken=#{accessToken}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(startTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+              and date_format(endTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+              and date_format(startTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              and date_format(endTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              ]]>
+            </if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectById" resultType="com.abc12366.gateway.model.App">
+        SELECT id, name,nickname, password, accessToken, lastResetTokenTime, startTime, endTime, remark, status,
+        createTime, lastUpdate
+        FROM gw_app
+        WHERE id=#{id}
+    </select>
+</mapper>

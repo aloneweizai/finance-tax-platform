@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.InvoiceUseApplyRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		id,	applyUser,	applyTime,	issueStatus,	examineStatus,	distributeUser,	distributeTime,	signUser,	signTime,	remark
+	</sql>
+
+    <resultMap id="invoiceUseApplyListMap" type="com.abc12366.uc.model.invoice.bo.InvoiceUseApplyBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="applyUser" property="applyUser" jdbcType="VARCHAR"/>
+        <result column="applyUserName" property="applyUserName" jdbcType="VARCHAR"/>
+        <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="issueStatus" property="issueStatus" jdbcType="VARCHAR"/>
+        <result column="examineStatus" property="examineStatus" jdbcType="VARCHAR"/>
+        <result column="distributeTime" property="distributeTime" jdbcType="TIMESTAMP"/>
+        <result column="signUser" property="signUser" jdbcType="VARCHAR"/>
+        <result column="signTime" property="signTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="applyBook" property="applyBook" jdbcType="VARCHAR"/>
+        <collection property="invoiceUseDetailBOList" ofType="com.abc12366.uc.model.invoice.bo.InvoiceUseDetailBO" column="id"
+                    select="getInvoiceUseDetailBO">
+        </collection>
+    </resultMap>
+
+    <resultMap id="invoiceUseApplyMap" type="com.abc12366.uc.model.invoice.bo.InvoiceUseApplyBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="applyUser" property="applyUser" jdbcType="VARCHAR"/>
+        <result column="applyUserName" property="applyUserName" jdbcType="VARCHAR"/>
+        <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="issueStatus" property="issueStatus" jdbcType="VARCHAR"/>
+        <result column="examineStatus" property="examineStatus" jdbcType="VARCHAR"/>
+        <result column="distributeTime" property="distributeTime" jdbcType="TIMESTAMP"/>
+        <result column="signUser" property="signUser" jdbcType="VARCHAR"/>
+        <result column="signUserName" property="signUserName" jdbcType="VARCHAR"/>
+        <result column="signTime" property="signTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <collection property="invoiceUseDetailBOList" ofType="com.abc12366.uc.model.invoice.bo.InvoiceUseDetailBO" column="id"
+                     select="getInvoiceUseDetailBO">
+        </collection>
+        <collection property="invoiceApprovalLogList" ofType="com.abc12366.uc.model.invoice.bo.InvoiceApprovalLogBO" column="id"
+                    select="getInvoiceApprovalLogBO"></collection>
+        <collection property="invoiceDistributeBOList" ofType="com.abc12366.uc.model.invoice.bo.InvoiceDistributeBO" column="id"
+                    select="getInvoiceDistributeBO"></collection>
+    </resultMap>
+
+    <!-- 发票分发信息对象-->
+    <resultMap id="invoiceDistributeBOMap" type="com.abc12366.uc.model.invoice.bo.InvoiceDistributeBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="invoiceRepoId" property="invoiceRepoId" jdbcType="VARCHAR"/>
+        <result column="invoiceCode" property="invoiceCode" jdbcType="VARCHAR"/>
+        <result column="invoiceNoStart" property="invoiceNoStart" jdbcType="VARCHAR"/>
+        <result column="invoiceNoEnd" property="invoiceNoEnd" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="book" property="book" jdbcType="INTEGER"/>
+        <result column="useId" property="useId" jdbcType="VARCHAR"/>
+        <result column="invoiceTypeCode" property="invoiceTypeCode" jdbcType="VARCHAR"/>
+        <result column="distributeUser" property="distributeUser" jdbcType="VARCHAR"/>
+        <result column="distributeUserName" property="distributeUserName" jdbcType="VARCHAR"/>
+        <result column="distributeTime" property="distributeTime" jdbcType="TIMESTAMP"/>
+        <result column="signUser" property="signUser" jdbcType="VARCHAR"/>
+        <result column="signTime" property="signTime" jdbcType="TIMESTAMP"/>
+        <result column="fieldKey" property="fieldKey" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!-- 发票领用明细表对象-->
+    <resultMap id="invoiceUseDetailMap" type="com.abc12366.uc.model.invoice.bo.InvoiceUseDetailBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="useId" property="useId" jdbcType="VARCHAR"/>
+        <result column="invoiceTypeCode" property="invoiceTypeCode" jdbcType="VARCHAR"/>
+        <result column="repoNum" property="repoNum" jdbcType="INTEGER"/>
+        <result column="applyNum" property="applyNum" jdbcType="INTEGER"/>
+        <result column="realNum" property="realNum" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="fieldKey" property="fieldKey" jdbcType="VARCHAR"/>
+        <association property="usableShare" column="invoiceTypeCode" select="selectUsableShare"/>
+    </resultMap>
+
+    <!--查询可用份数-->
+    <select id="selectUsableShare" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT sum(share) as usableShare
+        FROM uc_invoice_repo
+        where status = '0' and invoiceTypeCode = #{invoiceTypeCode} ORDER BY (invoiceTypeCode+0);
+    </select>
+    <!-- 发票领用明细表对象-->
+    <resultMap id="invoiceApprovalLogMap" type="com.abc12366.uc.model.invoice.bo.InvoiceApprovalLogBO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="useId" property="useId" jdbcType="VARCHAR"/>
+        <result column="approvalResult" property="approvalResult" jdbcType="VARCHAR"/>
+        <result column="approvalOpinions" property="approvalOpinions" jdbcType="VARCHAR"/>
+        <result column="approver" property="approver" jdbcType="VARCHAR"/>
+        <result column="approverTime" property="approverTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 查询（发票分发信息对象） -->
+    <select id="getInvoiceDistributeBO" resultMap="invoiceDistributeBOMap" parameterType="java.lang.String">
+        SELECT
+        te.id,	te.invoiceRepoId,	te.invoiceCode,	te.invoiceNoStart,	te.invoiceNoEnd,	te.status,	te.share,	te.book,
+        te.remark,	te.useId,	te.invoiceTypeCode,	te.distributeUser,	te.distributeTime,	te.signUser,	te.signTime,dt.fieldKey as fieldKey
+        FROM uc_invoice_distribute te
+        LEFT JOIN uc_dict dt on dt.fieldValue = te.invoiceTypeCode and dt.dictId='ptfp'
+        WHERE te.useId = #{useId}
+    </select>
+
+    <!-- 查询（发票领用日志） -->
+    <select id="getInvoiceApprovalLogBO" resultMap="invoiceApprovalLogMap" parameterType="java.lang.String">
+        SELECT
+        id,	useId,	approvalResult,	approvalOpinions,	approver,	approverTime,nickName
+        FROM uc_invoice_approval_log
+        WHERE useId = #{useId}
+        order by approverTime asc
+    </select>
+
+    <!-- 查询（发票领用明细表） -->
+    <select id="getInvoiceUseDetailBO" resultMap="invoiceUseDetailMap" parameterType="java.lang.String">
+        SELECT
+        d.id,d.useId,	d.invoiceTypeCode,	d.repoNum,	d.applyNum,d.	realNum,d.checkBook,	d.remark,t.fieldKey as fieldKey
+        FROM uc_invoice_use_detail d
+        LEFT JOIN uc_dict t on t.id = d.invoiceTypeCode
+		WHERE d.useId = #{useId}
+    </select>
+
+    <!-- 查询主键ID -->
+    <select id="selectInvoiceRepoNum" resultType="com.abc12366.uc.model.invoice.bo.InvoiceUseApplyBO" parameterType="java.lang.String">
+        SELECT
+        sum(book) as repoNum,sum(share) as usableShare
+        FROM uc_invoice_repo
+        where invoiceTypeCode like CONCAT('%',#{invoiceTypeCode},'%') ORDER BY (invoiceTypeCode+0);
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.invoice.InvoiceUseApply"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_invoice_use_apply
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据条件List查询） -->
+    <select id="selectList" resultMap="invoiceUseApplyListMap"
+            parameterType="com.abc12366.uc.model.invoice.bo.InvoiceUseApplyBO">
+        SELECT
+        a.id,	a.applyUser,	a.applyTime,	a.issueStatus,	a.examineStatus,	a.distributeUser,
+        a.distributeTime,	a.signUser,	a.signTime,	a.remark,u.nickname as applyUserName,
+        (SELECT sum(d.applyNum) from uc_invoice_use_detail d where d.useId = a.id) as applyBook
+        FROM uc_invoice_use_apply a
+        LEFT JOIN uc_admin u on u.id = a.applyUser
+        <where>
+            1 = 1
+            <if test=" issueStatus != null and issueStatus != '' ">
+                and a.issueStatus = #{issueStatus}
+            </if>
+            <if test=" examineStatus != null and examineStatus != '' ">
+                and a.examineStatus = #{examineStatus}
+            </if>
+            <if test=" applyUser != null and applyUser != '' ">
+                and u.nickname = #{applyUser}
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+              and date_format(a.applyTime, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+              and date_format(a.applyTime, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+              ]]>
+            </if>
+        </where>
+        ORDER BY a.applyTime DESC
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectInvoiceUseApply" resultMap="invoiceUseApplyMap" parameterType="com.abc12366.uc.model.invoice.bo.InvoiceUseApplyBO">
+        SELECT
+        a.id,	a.applyUser,	a.applyTime,	a.issueStatus,	a.examineStatus,	a.distributeUser,
+        a.distributeTime,	a.signUser,	a.signTime,	a.remark,m.nickname as applyUserName,n.nickname as signUserName,u.nickname as distributeUserName
+        FROM uc_invoice_use_apply a
+        LEFT JOIN uc_admin u on u.id = a.distributeUser
+        LEFT JOIN uc_admin n on n.id = a.signUser
+		LEFT JOIN uc_admin m on m.id = a.applyUser
+        where a.id = #{id}
+    </select>
+
+    <select id="selectTodoListCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM uc_invoice_use_apply WHERE examineStatus = '0'
+    </select>
+</mapper>

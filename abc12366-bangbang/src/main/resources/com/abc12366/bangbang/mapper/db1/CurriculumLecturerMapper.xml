@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumLecturerMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_lecturer
+		 WHERE lecturerId = #{lecturerId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturer">
+		 INSERT INTO bb_curriculum_lecturer
+ 		(lecturerId,userId,lecturerName,createTime,updateTime,intro,phone,company,lecturerQQ,lecturerEmail,lecturerPicture)
+		 VALUES 
+ 		(#{lecturerId},#{userId},#{lecturerName},#{createTime},#{updateTime},#{intro},#{phone},#{company},#{lecturerQQ},#{lecturerEmail},#{lecturerPicture})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturer">
+		 INSERT INTO bb_curriculum_lecturer
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="lecturerId != null">
+				 lecturerId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="lecturerName != null">
+				 lecturerName,
+			</if>
+             <if test="createTime != null">
+                 createTime,
+             </if>
+             <if test="updateTime != null">
+                 updateTime,
+             </if>
+			<if test="intro != null">
+				 intro,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="company != null">
+				 company,
+			</if>
+			<if test="lecturerQQ != null">
+				 lecturerQQ,
+			</if>
+			<if test="lecturerEmail != null">
+				 lecturerEmail,
+			</if>
+			<if test="lecturerPicture != null">
+				 lecturerPicture,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="lecturerId!=null">
+				 #{lecturerId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="lecturerName!=null">
+				 #{lecturerName},
+			</if>
+             <if test="createTime!=null">
+                 #{createTime},
+             </if>
+             <if test="updateTime!=null">
+                 #{updateTime},
+             </if>
+			<if test="intro!=null">
+				 #{intro},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="company!=null">
+				 #{company},
+			</if>
+			<if test="lecturerQQ!=null">
+				 #{lecturerQQ},
+			</if>
+			<if test="lecturerEmail!=null">
+				 #{lecturerEmail},
+			</if>
+			<if test="lecturerPicture!=null">
+				 #{lecturerPicture},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturer">
+		 UPDATE bb_curriculum_lecturer
+ 		 <set> 
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="lecturerName != null">
+				 lecturerName = #{lecturerName},
+			</if>
+             <if test="createTime != null">
+                 createTime = #{createTime},
+             </if>
+             <if test="updateTime != null">
+                 updateTime = #{updateTime},
+             </if>
+			<if test="intro != null">
+				 intro = #{intro},
+			</if>
+			<if test="phone != null">
+				 phone = #{phone},
+			</if>
+			<if test="company != null">
+				 company = #{company},
+			</if>
+			<if test="lecturerQQ != null">
+				 lecturerQQ = #{lecturerQQ},
+			</if>
+			<if test="lecturerEmail != null">
+				 lecturerEmail = #{lecturerEmail},
+			</if>
+			<if test="lecturerPicture != null">
+				 lecturerPicture = #{lecturerPicture},
+			</if>
+
+ 		 </set>
+		 WHERE lecturerId = #{lecturerId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumLecturer">
+		 UPDATE bb_curriculum_lecturer
+		 SET 
+			 userId = #{userId},
+			 lecturerName = #{lecturerName},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime},
+			 intro = #{intro},
+			 phone = #{phone},
+			 company = #{company},
+			 lecturerQQ = #{lecturerQQ},
+			 lecturerEmail = #{lecturerEmail},
+			 lecturerPicture = #{lecturerPicture}
+		 WHERE lecturerId = #{lecturerId}
+	</update>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.WxMsgMapper">
+
+    <insert id="insertNews" parameterType="com.abc12366.uc.model.weixin.bo.message.News">
+        INSERT INTO uc_wxnews(id,ArticleCount,creatDate,lastUpdate)
+        VALUES (#{id}, #{articleCount}, #{creatDate}, #{lastUpdate})
+    </insert>
+
+    <insert id="insertArticle" parameterType="com.abc12366.uc.model.weixin.bo.message.Article">
+        INSERT INTO uc_wxarticle(newsId,Title,Description,PicUrl,Url)
+        VALUES (#{newsId}, #{title}, #{description}, #{picUrl}, #{url})
+    </insert>
+
+    <update id="updateNews" parameterType="com.abc12366.uc.model.weixin.bo.message.News">
+        UPDATE uc_wxnews
+        set ArticleCount=#{articleCount},lastUpdate=#{lastUpdate}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteArticle" parameterType="java.lang.String">
+        DELETE FROM uc_wxarticle WHERE newsId = #{id}
+    </delete>
+
+    <delete id="deleteNews" parameterType="java.lang.String">
+        DELETE FROM uc_wxnews WHERE id = #{id}
+    </delete>
+
+    <insert id="insertRemsg" parameterType="com.abc12366.uc.model.weixin.bo.message.ReturnMsg">
+        INSERT INTO uc_wxremsg(id,setting,keyString,msgType,content,mediaId,imgurl,newsId,createDate,lastUpdate,searchTp,sort)
+        VALUES (#{id}, #{setting}, #{keyString}, #{msgType}, #{content}, #{mediaId}, #{imgurl}, #{newsId},
+        #{createDate}, #{lastUpdate},#{searchTp},#{sort})
+    </insert>
+
+    <update id="updateRemsg" parameterType="com.abc12366.uc.model.weixin.bo.message.ReturnMsg">
+        UPDATE uc_wxremsg
+        set setting=#{setting},keyString=#{keyString},msgType=#{msgType},content=#{content},
+        mediaId=#{mediaId},imgurl=#{imgurl},newsId=#{newsId},lastUpdate=#{lastUpdate},searchTp=#{searchTp},sort=#{sort}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteWxremsg" parameterType="java.lang.String">
+        DELETE FROM uc_wxremsg WHERE id = #{id}
+    </delete>
+
+</mapper>

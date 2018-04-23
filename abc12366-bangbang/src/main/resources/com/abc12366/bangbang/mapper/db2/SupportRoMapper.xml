@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.SupportRoMapper">
+    <select id="selectList" resultType="com.abc12366.bangbang.model.bo.SupportBO" parameterType="java.util.Map">
+        select id,subjectId,userId,type,createTime,lastUpdate
+        from bb_support
+        where userId=#{userId}
+        and type=#{subject}
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectCount" resultType="java.lang.String" parameterType="java.util.Map">
+        select count(1)
+        from bb_support
+        where type=#{subject}
+        and subjectId=#{id}
+    </select>
+
+    <select id="selectExist" resultType="com.abc12366.bangbang.model.bo.SupportBO" parameterType="java.util.Map">
+        select id,subjectId,userId,type,createTime,lastUpdate
+        from bb_support
+        where subjectId=#{subjectId}
+        and userId=#{userId}
+        and type=#{type}
+    </select>
+</mapper>

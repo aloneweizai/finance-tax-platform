@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.SubjectTagRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.SubjectTagBO" parameterType="java.util.HashMap">
+        SELECT id,userId,subjectId,tagId,type,createTime
+        from uc_subject_tag
+        where type=#{subject}
+        and subjectId=#{id}
+    </select>
+
+    <select id="selectListByTagIdsAndSubjectIds" resultType="com.abc12366.uc.model.bo.SubjectTagBO"
+            parameterType="java.util.HashMap">
+        SELECT id,userId,subjectId,tagId,type,createTime
+        from uc_subject_tag
+        where tagId in (#{tagIds})
+        and subjectId in (#{subjectIds})
+    </select>
+
+    <select id="getSubjectIdsCategorys" resultType="com.abc12366.uc.model.bo.SubjectTagBO"
+            parameterType="java.util.HashMap">
+        SELECT z.id,z.userId,z.subjectId,z.tagId,z.type,z.createTime,
+             (select a.category from uc_tag a where a.id=z.tagId) as category
+        from uc_subject_tag z
+        where z.subjectId =#{subjectId}
+    </select>
+    <select id="selectExist" resultType="com.abc12366.uc.model.bo.SubjectTagBO" parameterType="java.util.HashMap">
+        SELECT id,userId,subjectId,tagId,type,createTime
+        from uc_subject_tag
+        where tagId=#{tagId}
+        and subjectId=#{subjectId}
+    </select>
+
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeTagRelMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, knowledgeId, tagId
+    </sql>
+
+
+    <!-- 查询标签名称 （根据知识库id ）-->
+    <select id="selectTagNamesByKnowledgeId" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT NAME FROM bb_knowledge_tag WHERE id IN (
+            SELECT tagId FROM bb_knowledge_tag_rel
+            WHERE knowledgeId =  #{knowledgeId}
+        )
+        AND STATUS = TRUE
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.KnowledgeTagRel" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_tag_rel
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询 -->
+    <select id="selectByKnowledgeIdAndTagId" resultType="com.abc12366.bangbang.model.KnowledgeTagRel">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_tag_rel
+        WHERE knowledgeId = #{knowledgeId} AND tagId = #{tagId}
+    </select>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_tag_rel
+        WHERE id = #{id}
+    </delete>
+
+    <!--删除：根据KnowledgeId删除-->
+    <delete id="deleteByKnowledgeId" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_tag_rel
+        WHERE knowledgeId = #{knowledgeId}
+    </delete>
+    <!--删除：根据KnowledgeIds批量删除-->
+    <delete id="deleteByKnowledgeIds" parameterType="java.util.List">
+        DELETE FROM bb_knowledge_tag_rel
+        WHERE knowledgeId IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--删除：根据tagId删除-->
+    <delete id="deleteByTagId" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_tag_rel
+        WHERE tagId = #{tagId}
+    </delete>
+    <!--删除：根据tagIds批量删除-->
+    <delete id="deleteByTagIds" parameterType="java.util.List">
+        DELETE FROM bb_knowledge_tag_rel
+        WHERE tagId IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.KnowledgeTagRel">
+        INSERT INTO bb_knowledge_tag_rel
+        (id,knowledgeId,tagId)
+        VALUES
+        (#{id},#{knowledgeId},#{tagId})
+    </insert>
+
+    <!-- 添加 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO bb_knowledge_tag_rel
+        (id,knowledgeId,tagId)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.knowledgeId},#{item.tagId})
+        </foreach>
+    </insert>
+
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.bangbang.model.KnowledgeTagRel">
+        INSERT INTO bb_knowledge_tag_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="knowledgeId != null">
+                knowledgeId,
+            </if>
+            <if test="tagId != null">
+                tagId,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="knowledgeId!=null">
+                #{knowledgeId},
+            </if>
+            <if test="tagId!=null">
+                #{tagId},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.KnowledgeTagRel">
+        UPDATE bb_knowledge_tag_rel
+        <set>
+            <if test="knowledgeId != null">
+                knowledgeId = #{knowledgeId},
+            </if>
+            <if test="tagId != null">
+                tagId = #{tagId},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.KnowledgeTagRel">
+        UPDATE bb_knowledge_tag_rel
+        SET
+        knowledgeId = #{knowledgeId},
+        tagId = #{tagId}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

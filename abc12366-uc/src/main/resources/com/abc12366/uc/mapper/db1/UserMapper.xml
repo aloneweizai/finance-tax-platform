@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.UserMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.User">
+        insert into uc_user (id, username, phone, password, regMail, regIP, salt, nickname, status, createTime,
+        lastUpdate, userPicturePath, maxUserPicturePath, midUserPicturePath, minUserPicturePath, points, exp, vipLevel, usernameModifiedTimes)
+        values (#{id}, #{username}, #{phone},#{password}, #{regMail}, #{regIP}, #{salt}, #{nickname}, #{status},
+        #{createTime}, #{lastUpdate}, #{userPicturePath}, #{maxUserPicturePath}, #{midUserPicturePath},
+        #{minUserPicturePath}, #{points}, #{exp}, #{vipLevel} ,#{usernameModifiedTimes})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.User">
+        update uc_user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="regMail != null">regMail = #{regMail},</if>
+            <if test="regIP != null">regIP = #{regIP},</if>
+            <if test="salt != null">salt = #{salt},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="userPicturePath != null">userPicturePath = #{userPicturePath},</if>
+            <if test="maxUserPicturePath != null">maxUserPicturePath = #{maxUserPicturePath},</if>
+            <if test="midUserPicturePath != null">midUserPicturePath = #{midUserPicturePath},</if>
+            <if test="minUserPicturePath != null">minUserPicturePath = #{minUserPicturePath},</if>
+            <if test="vipLevel != null">vipLevel = #{vipLevel},</if>
+            <if test="usernameModifiedTimes != null">usernameModifiedTimes = #{usernameModifiedTimes},</if>
+            <if test="vipExpireDate != null">vipExpireDate = #{vipExpireDate},</if>
+            <if test="wxopenid != null">wxopenid = #{wxopenid},</if>
+            <if test="wxheadimg != null">wxheadimg = #{wxheadimg},</if>
+            <if test="wxnickname != null">wxnickname = #{wxnickname},</if>
+            <if test="bdqudao != null">bdqudao = #{bdqudao},</if>
+            <if test="amount != null">amount = #{amount},</if>
+        </set>
+        where id=#{id}
+    </update>
+    
+    <update id="qxwxbd" parameterType="java.lang.String">
+        update uc_user set wxopenid=null,wxheadimg=null,wxnickname=null where wxopenid=#{wxopenid}
+    </update>
+
+    <update id="updateBatch" parameterType="java.util.Map">
+        UPDATE uc_user
+        <set>
+            vipLevel = #{vipLevel},
+            lastUpdate = now()
+        </set>
+        WHERE id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updatePhone" parameterType="com.abc12366.uc.model.User">
+        update uc_user
+        <set>
+            phone = #{phone}
+            <if test="lastUpdate != null">,lastUpdate = #{lastUpdate}</if>
+            <if test="username != null and username != ''">,username = #{username}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_user
+        where id=#{id}
+    </delete>
+
+    <delete id="deleteContinuePwdWrong" parameterType="java.lang.String">
+        delete from uc_login_password_wrong_count
+        where userId = #{userId}
+    </delete>
+    <insert id="insertContinuePwdWrong" parameterType="com.abc12366.uc.model.UserLoginPasswordWrongCount">
+        insert into uc_login_password_wrong_count(id, userId, count, limitTime)
+        values(#{id},#{userId},#{count},#{limitTime})
+    </insert>
+    <update id="updateContinuePwdWrong" parameterType="com.abc12366.uc.model.UserLoginPasswordWrongCount">
+        update uc_login_password_wrong_count
+        <set>
+            <if test="count != null">count = #{count},</if>
+            <if test="limitTime != null">limitTime = #{limitTime}</if>
+        </set>
+        where userId=#{userId}
+    </update>
+
+    <update id="updatePassword" parameterType="com.abc12366.uc.model.User">
+        update uc_user
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <resultMap type="com.abc12366.uc.model.bo.UserRetainedRateBO" id="resultMap">
+        <result column="userCount" property="userCount" jdbcType="INTEGER"/>
+        <result column="rateCount" property="rateCount" jdbcType="INTEGER"/>
+        <result column="rate" property="rate" jdbcType="DOUBLE"/>
+    </resultMap>
+    <!-- 获取留存率 -->
+    <select id="statisUserRetainedRate" parameterType="java.util.Map" resultMap="resultMap" statementType="CALLABLE">
+        {call getUserRetentionRate(
+        #{startTime,jdbcType=TIMESTAMP,mode=IN},
+        #{number,jdbcType=VARCHAR,mode=IN}
+        )
+        }
+    </select>
+    
+    <select id="selectByUsernameOrPhone" resultType="com.abc12366.uc.model.User"
+            parameterType="com.abc12366.uc.model.bo.LoginBO">
+        select uu.id, uu.username, uu.password, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        <where>
+            <if test="usernameOrPhone != null">
+                uu.username = #{usernameOrPhone}
+            </if>
+            <if test="usernameOrPhone != null">
+                OR uu.phone = #{usernameOrPhone}
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.UserListBO" parameterType="java.util.Map">
+        <choose>
+            <when test="tagId != null and tagId.size > 0">
+                SELECT u.id, u.username, u.phone, u.nickname, u.status, u.createTime, u.lastUpdate, u.points, u.exp, u.vipLevel, u.wxnickname, u.amount
+                FROM uc_user u RIGHT JOIN (SELECT DISTINCT a.subjectId FROM
+                <foreach item="item" collection="tagId" separator="union all" open="(" close=")" index="">
+                    SELECT subjectId FROM uc_subject_tag WHERE tagId=#{item}
+                </foreach>
+                a group by a.subjectId HAVING COUNT(subjectId) >= #{tagIdCount}) b ON b.subjectId = u.id
+                <where>
+                    u.id is not null
+                    <if test="status!=null">
+                        and u.status=#{status}
+                    </if>
+                    <if test="vipLevel != null and vipLevel != ''">
+                        and u.vipLevel=#{vipLevel}
+                    </if>
+                    <if test="exp != null and exp != '' and expOper != null and expOper != ''">
+                        and u.exp ${expOper} #{exp}
+                    </if>
+                    <if test="points != null and points != '' and pointsOper != null and pointsOper != ''">
+                        and u.points ${pointsOper} #{points}
+                    </if>
+                    <if test="startDate !=null and startDate != ''">
+                        and u.createTime >= #{startDate}
+                    </if>
+                    <if test="endDate !=null and endDate != ''">
+                        and u.createTime <![CDATA[<=]]> date_add(#{endDate}, INTERVAL 1 day)
+                    </if>
+                    <if test="realName != null and realName != ''">
+                        and u.id in (SELECT userId FROM abc12366_uc.uc_user_extend WHERE realName = #{realName})
+                    </if>
+                    <if test="username != null and username != ''">
+                        and u.username=#{username}
+                    </if>
+                    <if test="phone != null and phone != ''">
+                        and u.phone=#{phone}
+                    </if>
+                    <if test="nickname != null and nickname != ''">
+                        and u.nickname=#{nickname}
+                    </if>
+                    <if test="id != null and id != ''">
+                        and u.id=#{id}
+                    </if>
+                </where>
+                ORDER BY createTime DESC
+            </when>
+            <otherwise>
+                SELECT id, username, phone, nickname, status, createTime, lastUpdate, points, exp, vipLevel, wxnickname, amount
+                FROM uc_user
+                <where>
+                    <if test="status!=null">
+                        status=#{status}
+                    </if>
+                    <if test="vipLevel != null and vipLevel != ''">
+                        and vipLevel=#{vipLevel}
+                    </if>
+                    <if test="exp != null and exp != '' and expOper != null and expOper != ''">
+                        and exp ${expOper} #{exp}
+                    </if>
+                    <if test="points != null and points != '' and pointsOper != null and pointsOper != ''">
+                        and points ${pointsOper} #{points}
+                    </if>
+                    <if test="startDate !=null and startDate != ''">
+                        and createTime >= #{startDate}
+                    </if>
+                    <if test="endDate !=null and endDate != ''">
+                        and createTime <![CDATA[<=]]> date_add(#{endDate}, INTERVAL 1 day)
+                    </if>
+                    <!--<if test="tagId != null and tagId.size > 0">
+                        and EXISTS (SELECT DISTINCT a.subjectId FROM
+                        <foreach item="item" collection="tagId" separator="union all" open="(" close=")" index="">
+                            SELECT subjectId FROM uc_subject_tag WHERE tagId=#{item}
+                        </foreach>
+                        a WHERE a.subjectId = id group by a.subjectId HAVING COUNT(subjectId) >= #{tagIdCount})
+                    </if>-->
+                    <if test="realName != null and realName != ''">
+                        and id in (SELECT userId FROM abc12366_uc.uc_user_extend WHERE realName = #{realName})
+                    </if>
+                    <if test="username != null and username != ''">
+                        and username=#{username}
+                    </if>
+                    <if test="phone != null and phone != ''">
+                        and phone=#{phone}
+                    </if>
+                    <if test="nickname != null and nickname != ''">
+                        and nickname=#{nickname}
+                    </if>
+                    <if test="id != null and id != ''">
+                        and id=#{id}
+                    </if>
+                </where>
+                ORDER BY createTime DESC
+            </otherwise>
+        </choose>
+
+    </select>
+    
+    <select id="selectOne" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+       select uu.id, uu.username, uu.password, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname, uu.oldId,uu.amount,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        where uu.id = #{id}
+    </select>
+    
+    <select id="selectOneByToken" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status, uu.createTime,
+        uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu, uc_token ut
+        where uu.id=ut.userId
+        and ut.token=#{userToken}
+    </select>
+    
+    <select id="selectListExcludedId" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname,
+        uu.status,
+        uu.createTime, uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,usernameModifiedTimes,vipExpireDate,uu.wxopenid,uu.wxheadimg,uu.wxnickname 
+        from uc_user uu
+        where uu.id != #{id}
+    </select>
+    
+    <select id="selectValidOne" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        select uu.id, uu.username, uu.password, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname
+        from uc_user uu
+        where uu.id = #{id}
+        and status=1
+    </select>
+    
+    <select id="selectByopenid" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,usernameModifiedTimes,vipExpireDate,uu.wxopenid,uu.wxheadimg,uu.wxnickname,
+        (select uul.level from uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from uc_user uu
+        where uu.wxopenid = #{wxopenid}
+    </select>
+    
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectUserVipList" resultType="com.abc12366.uc.model.User" parameterType="java.util.Date">
+        select id
+        from uc_user
+        WHERE status = true
+        <![CDATA[
+                and date_format(vipExpireDate, '%Y-%m-%d %H:%i:%s') <= date_format(#{date}, '%Y-%m-%d %H:%i:%s')
+                ]]>
+    </select>
+    
+    <select id="selectContinuePwdWrong" resultType="com.abc12366.uc.model.UserLoginPasswordWrongCount" parameterType="java.lang.String">
+        select id, userId, count, limitTime
+        from uc_login_password_wrong_count
+        where userId = #{userId}
+    </select>
+    
+    <select id="selectSimple" parameterType="java.lang.String" resultType="com.abc12366.uc.model.bo.UserSimpleInfoBO">
+        select uu.id, uu.nickName, uu.userPicturePath, uue.tags, uue.signature, uue.education,
+         uue.graduate, uue.occupation, uue.income, uue.careerDuration
+        from uc_user uu
+        left join uc_user_extend uue
+        on uue.userId = uu.id
+        where uu.id = #{userId}
+    </select>
+    
+    <select id="getAllNomalCont" resultType="java.lang.Integer">
+        select count(id) from uc_user where status = true
+    </select>
+    
+    <select id="getNomalList" resultType="com.abc12366.uc.model.bo.UserBO" parameterType="java.util.Map">
+        SELECT u.id,u.wxopenid,u.phone,u.vipLevel,u.vipExpireDate,l.level as vipLevelName
+        FROM uc_user u, uc_uvip_level l
+        where
+        u.status = true
+        and l.status = true
+        and u.vipLevel=l.levelCode
+        LIMIT #{begin},#{size}
+    </select>
+    
+    <select id="selectByWxUserId" resultType="com.abc12366.uc.model.User" parameterType="com.abc12366.uc.model.User">
+        SELECT id, username, phone, password, regMail,
+          regIP, salt, nickname, status, createTime,
+          lastUpdate, userPicturePath, maxUserPicturePath, midUserPicturePath, minUserPicturePath,
+          points, exp, vipLevel, usernameModifiedTimes, vipExpireDate,
+          wxopenid, wxheadimg, wxnickname, bdqudao
+        FROM uc_user where id=#{id} and wxopenid=#{wxopenid}
+    </select>
+    
+    <select id="findByHngsNsrsbh" resultType="com.abc12366.uc.model.User" parameterType="java.lang.String">
+        SELECT u.id, u.username, u.phone, u.password, u.regMail,
+          u.regIP, u.salt, u.nickname, u.status, u.createTime,
+          u.lastUpdate, u.userPicturePath, u.maxUserPicturePath, u.midUserPicturePath, u.minUserPicturePath,
+          u.points, u.exp, u.vipLevel, u.usernameModifiedTimes, u.vipExpireDate,
+          u.wxopenid, u.wxheadimg, u.wxnickname, u.bdqudao
+        FROM  uc_user_hngs h, uc_user u where h.userId=u.id and h.status=1 and h.nsrsbh=#{nsrshb}
+    </select>
+    
+    <select id="selectOneByPhone" resultType="com.abc12366.uc.model.bo.UserBO"
+            parameterType="java.lang.String">
+        select uu.id, uu.username, insert(uu.phone, 4, 4, '****') phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status,
+        uu.createTime, uu.lastUpdate,uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath,
+        uu.minUserPicturePath, uu.points, uu.exp,uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,uu.oldId
+        from uc_user uu
+        where phone=#{phone}
+    </select>
+    
+    <select id="selectUserById" resultType="com.abc12366.uc.model.User" parameterType="com.abc12366.uc.model.User">
+        SELECT id, username, phone, password, regMail, regIP, salt, nickname, status, createTime,
+          lastUpdate, userPicturePath, maxUserPicturePath, midUserPicturePath, minUserPicturePath,
+          points, exp, vipLevel, usernameModifiedTimes, vipExpireDate, wxopenid, wxheadimg, wxnickname, bdqudao, oldId
+        FROM uc_user
+        <where>
+            <if test="id != null and id != ''">
+                id=#{id}
+            </if>
+            <if test="wxopenid != null and wxopenid != ''">
+                wxopenid=#{wxopenid}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateExp" parameterType="com.abc12366.uc.model.User">
+        update uc_user
+        <set>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="exp != null">exp = #{exp}</if>
+        </set>
+        where id=#{id}
+    </update>
+    <update id="updatePoints" parameterType="com.abc12366.uc.model.User">
+        update uc_user
+        <set>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="points != null">points = #{points}</if>
+        </set>
+        where id=#{id}
+    </update>
+    
+    <select id="selectByUnameOrPhone" resultType="com.abc12366.uc.model.bo.UserJyxx"
+            parameterType="java.lang.String">
+        select id, username, phone, salt from uc_user 
+        where username = #{usernameOrPhone} OR phone = #{usernameOrPhone} 
+    </select>
+    
+    <select id="selectUserSubscriptionList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.UserSubscriptionInfo">
+        SELECT 
+        s.type, s.busiType, s.hasWeb, s.webForce, s.hasWechat, s.wechatForce, s.hasMessage, s.messageForce,
+        u.userId, s.id as settingId, IFNULL(u.web,if(s.hasWeb = 1,1,0)) as web, IFNULL(u.wechat,if(s.hasWechat = 1,1,0)) as wechat, IFNULL(u.message,if(s.hasMessage = 1,1,0)) as message 
+        FROM abc12366_message.msg_subscription_setting s LEFT JOIN 
+        ( select userId, settingId, web, wechat, message from abc12366_message.msg_subscription_user where userId= #{userId} ) u 
+        on u.settingId = s.id
+        where 1 = 1
+        <if test="type != null and type != ''">AND s.type = #{type}</if>
+        <if test="busiType != null and busiType != ''">AND s.busiType = #{busiType}</if>
+        ORDER BY s.createTime DESC
+    </select>
+
+</mapper>

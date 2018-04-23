@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.OrganizationRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, parentId, name, code, areaId, type, contact, phone, address, remark, status, createUser, createTime,
+        lastUser, lastUpdate, province, city, area
+    </sql>
+
+
+    <resultMap id="orgBoResultMap" type="com.abc12366.uc.model.admin.bo.OrganizationBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="parentId" property="parentId" jdbcType="VARCHAR"/>
+        <result column="parentName" property="parentName" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="areaId" property="areaId" jdbcType="TINYINT"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="createUser" property="createUser" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUser" property="lastUser" jdbcType="VARCHAR"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOrganizationById" resultMap="orgBoResultMap" parameterType="java.lang.String">
+        select
+        o.id,
+        o.parentId,
+        p.name as parentName,
+        o.name,
+        o.code,
+        o.areaId,
+        o.type,
+        o.contact,
+        o.phone,
+        o.address,
+        o.remark,
+        o.status,
+        o.createUser,
+        o.createTime,
+        o.lastUser,
+        o.lastUpdate,
+        o.province,
+        o.city,
+        o.area
+        from uc_organization o
+        left JOIN uc_organization p on o.parentId = p.id
+        WHERE o.id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOrganizationByName" resultMap="orgBoResultMap" parameterType="java.lang.String">
+        select
+        o.id,
+        o.parentId,
+        p.name as parentName,
+        o.name,
+        o.code,
+        o.areaId,
+        o.type,
+        o.contact,
+        o.phone,
+        o.address,
+        o.remark,
+        o.status,
+        o.createUser,
+        o.createTime,
+        o.lastUser,
+        o.lastUpdate,
+        o.province,
+        o.city,
+        o.area
+        from uc_organization o
+        left JOIN uc_organization p on o.parentId = p.id
+        WHERE o.name = #{name}
+    </select>
+
+    <!-- 查询（根据主键父ID查询所有子节点） -->
+    <select id="selectChildOrg" resultMap="orgBoResultMap" parameterType="java.lang.String">
+        select
+        o.id,
+        o.parentId,
+        p.name as parentName,
+        o.name,
+        o.code,
+        o.areaId,
+        o.type,
+        o.contact,
+        o.phone,
+        o.address,
+        o.remark,
+        o.status,
+        o.createUser,
+        o.createTime,
+        o.lastUser,
+        o.lastUpdate,
+        o.province,
+        o.city,
+        o.area
+        from uc_organization o
+        left JOIN uc_organization p on o.parentId = p.id
+        WHERE o.parentId = #{parentId}
+    </select>
+
+
+    <select id="selectList" resultMap="orgBoResultMap" parameterType="com.abc12366.uc.model.admin.Organization">
+        select
+        o.id,
+        o.parentId,
+        p.name as parentName,
+        o.name,
+        o.code,
+        o.areaId,
+        o.type,
+        o.contact,
+        o.phone,
+        o.address,
+        o.remark,
+        o.status,
+        o.createUser,
+        o.createTime,
+        o.lastUser,
+        o.lastUpdate,
+        o.province,
+        o.city,
+        o.area
+        from uc_organization o
+        left JOIN uc_organization p on o.parentId = p.id
+        <where>
+            1=1
+            <if test="name != null and name!=''">and o.name LIKE CONCAT('%',#{name},'%')</if>
+            <if test="type != null and type!=''">AND o.type = #{type}</if>
+            <if test="status != null and status!=''">AND o.status = #{status}</if>
+            <if test="parentId != null">AND o.parentId = #{parentId}</if>
+        </where>
+        ORDER BY o.name ASC
+    </select>
+
+</mapper>

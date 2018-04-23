@@ -1,0 +1,8 @@
+#Fri Aug 11 14:44:29 CST 2017
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.SLZSXX=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.SLZSXXDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.QTXXS=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.QTXXSDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.Rqfw=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.RqfwDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.T_NSRMMGX=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.T_NSRMMGXDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.QTXX=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.QTXXDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.SWJGZSXX=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.SWJGZSXXDescriptor
+com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.NSRMMGX=com.abc12366.uc.tdps.vo.CrmnsrmmGxResponse.descriptors.NSRMMGXDescriptor

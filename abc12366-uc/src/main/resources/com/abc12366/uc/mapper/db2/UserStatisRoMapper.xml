@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserStatisRoMapper">
+    <select id="tagCountUsers" resultType="com.abc12366.uc.model.User" parameterType="java.lang.Object">
+        SELECT a.id, a.username, a.phone, a.regMail, a.regIP, a.salt, a.nickname,
+                a.status,a.createTime, a.lastUpdate,a.userPicturePath, a.maxUserPicturePath, a.midUserPicturePath,
+                a.minUserPicturePath, a.points, a.exp,a.vipLevel,usernameModifiedTimes,vipExpireDate,a.wxopenid,
+                a.wxheadimg,a.wxnickname
+        FROM uc_user a JOIN uc_subject_tag b JOIN uc_tag c ON a.id=b.subjectId AND b.tagId=c.id
+        WHERE a.createTime &gt;=#{start} and a.createTime &lt; #{end}
+        AND  c.tagName = #{tagName}
+        order by a.createTime desc
+    </select>
+
+    <select id="regionCountry" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.bo.RigionStatisBO">
+        SELECT concat(#{start},'～',#{end}) timeInterval,b.province regionName,a.province regionCode, COUNT(a.province) allCount,#{tagNameStr} tagName
+        FROM uc_user_extend a JOIN uc_user c ON c.id=a.userId JOIN uc_province b ON a.province=b.provinceId
+        <where>
+            1=1
+            <if test="start != null">and c.createTime &gt;=#{start}</if>
+            <if test="end != null">and c.createTime &lt;=#{end} </if>
+            <if test="tagName !=null">
+              <foreach collection="tagName" index="index" item="tname">
+                  AND  EXISTS (SELECT 1 FROM uc_subject_tag d JOIN uc_tag e ON d.tagId=e.id WHERE c.id=d.subjectId AND e.tagName=#{tname})
+              </foreach>
+            </if>
+        </where>
+        GROUP BY a.province
+    </select>
+
+    <select id="regionProvince" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.bo.RigionStatisBO">
+        SELECT concat(#{start},'～',#{end}) timeInterval,b.city regionName,a.city regionCode, COUNT(a.city) allCount,#{tagNameStr} tagName
+        FROM uc_user_extend a JOIN uc_user c ON c.id=a.userId JOIN uc_city b ON a.city=b.cityId JOIN uc_province d ON d.provinceId = b.provinceId
+        <where>
+            1=1
+            <if test="start != null">and c.createTime &gt;=#{start}</if>
+            <if test="end != null">and c.createTime &lt;=#{end} </if>
+            <if test="province != null">and d.province=#{province} </if>
+            <if test="tagName !=null">
+                <foreach collection="tagName" index="index" item="tname">
+                    AND  EXISTS (SELECT 1 FROM uc_subject_tag d JOIN uc_tag e ON d.tagId=e.id WHERE c.id=d.subjectId AND e.tagName=#{tname})
+                </foreach>
+            </if>
+        </where>
+        GROUP BY a.city
+    </select>
+
+    <select id="regionProvinceUinfo" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.User">
+        select c.id, c.username, c.phone, c.regMail, c.regIP, c.salt, c.nickname,
+        c.status,c.createTime, c.lastUpdate,c.userPicturePath, c.maxUserPicturePath, c.midUserPicturePath,
+        c.minUserPicturePath, c.points, c.exp,c.vipLevel,c.usernameModifiedTimes,c.vipExpireDate,c.wxopenid,
+        c.wxheadimg,c.wxnickname
+        FROM uc_user_extend a JOIN uc_user c ON c.id=a.userId JOIN uc_province b ON a.province=b.provinceId
+        <where>
+            1=1
+            <if test="start != null">and c.createTime &gt;=#{start}</if>
+            <if test="end != null">and c.createTime &lt;=#{end} </if>
+            <if test="province != null">and b.province=#{province} </if>
+            <if test="tagName !=null">
+                <foreach collection="tagName" index="index" item="tname">
+                    AND  EXISTS (SELECT 1 FROM uc_subject_tag d JOIN uc_tag e ON d.tagId=e.id WHERE c.id=d.subjectId AND e.tagName=#{tname})
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="regionCityUinfo" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.User">
+        select c.id, c.username, c.phone, c.regMail, c.regIP, c.salt, c.nickname,
+        c.status,c.createTime, c.lastUpdate,c.userPicturePath, c.maxUserPicturePath, c.midUserPicturePath,
+        c.minUserPicturePath, c.points, c.exp,c.vipLevel,c.usernameModifiedTimes,c.vipExpireDate,c.wxopenid,
+        c.wxheadimg,c.wxnickname
+        FROM uc_user_extend a JOIN uc_user c ON c.id=a.userId JOIN uc_city b ON a.city=b.cityId
+        <where>
+            1=1
+            <if test="start != null">and c.createTime &gt;=#{start}</if>
+            <if test="end != null">and c.createTime &lt;=#{end} </if>
+            <if test="city != null">and b.city=#{city} </if>
+            <if test="tagName !=null">
+                <foreach collection="tagName" index="index" item="tname">
+                    AND  EXISTS (SELECT 1 FROM uc_subject_tag d JOIN uc_tag e ON d.tagId=e.id WHERE c.id=d.subjectId AND e.tagName=#{tname})
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="bindDzsb" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_dzsb
+        <where>
+            STATUS='1'
+            <if test="start != null">and createTime &gt;=#{start}</if>
+            <if test="end != null">and createTime &lt;#{end} </if>
+        </where>
+    </select>
+
+    <select id="bindHngs" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_hngs
+        <where>
+            STATUS='1'
+            <if test="start != null">and createTime &gt;=#{start}</if>
+            <if test="end != null">and createTime &lt;#{end} </if>
+        </where>
+    </select>
+
+    <select id="bindHnds" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_hnds
+        <where>
+            STATUS='1'
+            <if test="start != null">and createTime &gt;=#{start}</if>
+            <if test="end != null">and createTime &lt;#{end} </if>
+        </where>
+    </select>
+
+    <select id="bindDzsbInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_dzsb
+        <where>
+            STATUS='1'
+            <if test="start != null">AND createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+        </where>
+    </select>
+
+    <select id="bindHngsInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_hngs
+        <where>
+            STATUS='1'
+            <if test="start != null">AND createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+        </where>
+    </select>
+    <select id="bindHndsInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_hnds
+        <where>
+            STATUS='1'
+            <if test="start != null">AND createTime &gt;= #{start}</if>
+            <if test="end != null">and createTime &lt; #{end}</if>
+        </where>
+    </select>
+    <select id="bindDzsbLogin" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_dzsb
+        <where>
+            STATUS='1'
+            <if test="start != null">and lastLoginTime &gt;=#{start}</if>
+            <if test="end != null">and lastLoginTime &lt;#{end} </if>
+        </where>
+    </select>
+    <select id="bindHngsLogin" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_hngs
+        <where>
+            STATUS='1'
+            <if test="start != null">and lastUpdate &gt;=#{start}</if>
+            <if test="end != null">and lastUpdate &lt;#{end} </if>
+        </where>
+    </select>
+    <select id="bindHndsLogin" parameterType="java.util.Date" resultType="java.lang.Integer">
+        SELECT count(1) FROM uc_user_hnds
+        <where>
+            STATUS='1'
+            <if test="start != null">and lastUpdate &gt;=#{start}</if>
+            <if test="end != null">and lastUpdate &lt;#{end} </if>
+        </where>
+    </select>
+    <select id="bindDzsbLoginInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_dzsb
+        <where>
+            STATUS='1'
+            <if test="start != null">AND lastLoginTime &gt;= #{start}</if>
+            <if test="end != null">and lastLoginTime &lt; #{end}</if>
+        </where>
+    </select>
+
+    <select id="bindHngsLoginInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_hngs
+        <where>
+            STATUS='1'
+            <if test="start != null">AND lastUpdate &gt;= #{start}</if>
+            <if test="end != null">and lastUpdate &lt; #{end}</if>
+        </where>
+    </select>
+    <select id="bindHndsLoginInfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.BindCountInfo">
+        SELECT nsrsbh,nsrmc,swjgdm,swjgmc FROM uc_user_hnds
+        <where>
+            STATUS='1'
+            <if test="start != null">AND lastUpdate &gt;= #{start}</if>
+            <if test="end != null">and lastUpdate &lt; #{end}</if>
+        </where>
+    </select>
+    <select id="compreFactorsCountry" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.RigionStatisBO">
+        SELECT count(c.id)
+        FROM uc_user_extend a JOIN uc_user c ON c.id=a.userId JOIN uc_province b ON a.province=b.provinceId
+            JOIN uc_subject_tag d JOIN uc_tag e ON c.id=d.subjectId AND d.tagId=e.id
+        <where>
+            <if test="start != null">and c.createTime &gt;=#{start}</if>
+            <if test="end != null">and c.createTime &lt;=#{end} </if>
+        </where>
+        GROUP BY a.province
+    </select>
+    <select id="pointAnalysis" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.PointAnalysisBO">
+        SELECT SUM(income) sumIncome,SUM(outgo) sumOutgo FROM uc_upoints_log
+        <where>
+            <if test="start != null">and createTime &gt;=#{start}</if>
+            <if test="end != null">and createTime &lt;#{end} </if>
+        </where>
+    </select>
+    <select id="pointRuleAnalysis" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.PointRuleAnalysisBO">
+        SELECT concat(#{start},'～',#{end}) timeInterval,a.ruleId ruleId,b.name ruleName,COUNT(a.ruleId),SUM(a.income) sumRuleIncome,SUM(a.outgo) sumRuleOutgo FROM uc_upoints_log a JOIN uc_upoints_rule b ON a.ruleId=b.id
+        <where>
+            <if test="start != null">and a.createTime &gt;=#{start}</if>
+            <if test="end != null">and a.createTime &lt;#{end} </if>
+        </where>
+        GROUP BY a.ruleId
+    </select>
+
+    <select id="pointAnalysisRuleinfo" parameterType="java.util.Date" resultType="com.abc12366.uc.model.bo.PointRuleinfoBO">
+        SELECT b.nickname,c.name ruleName,a.income,a.outgo,a.createTime FROM uc_upoints_log a JOIN uc_user b JOIN uc_upoints_rule c ON a.userId=b.id AND a.ruleId=c.id
+        <where>
+            a.ruleId=#{ruleId}
+            <if test="start != null">and a.createTime &gt;=#{start}</if>
+            <if test="end != null">and a.createTime &lt;#{end} </if>
+        </where>
+    </select>
+    <select id="userVipAllInfo" resultType="com.abc12366.uc.model.User">
+        select c.id, c.username, c.phone, c.regMail, c.regIP, c.salt, c.nickname,
+        c.status,c.createTime, c.lastUpdate,c.userPicturePath, c.maxUserPicturePath, c.midUserPicturePath,
+        c.minUserPicturePath, c.points, c.exp,c.vipLevel,c.usernameModifiedTimes,c.vipExpireDate,c.wxopenid,
+        c.wxheadimg,c.wxnickname
+        FROM uc_user c
+        <where>
+            c.vipLevel =#{vipCode}
+        </where>
+    </select>
+    <select id="userVipIncreaseInfo" parameterType="java.lang.Object" resultType="com.abc12366.uc.model.User">
+        select c.id, c.username, c.phone, c.regMail, c.regIP, c.salt, c.nickname,
+        c.status,c.createTime, c.lastUpdate,c.userPicturePath, c.maxUserPicturePath, c.midUserPicturePath,
+        c.minUserPicturePath, c.points, c.exp,c.vipLevel,c.usernameModifiedTimes,c.vipExpireDate,c.wxopenid,
+        c.wxheadimg,c.wxnickname
+        FROM uc_uvip_log a JOIN uc_user c ON c.id=a.userId
+        <where>
+            1=1
+            <if test="start != null">and a.createTime &gt;=#{start}</if>
+            <if test="end != null">and a.createTime &lt;#{end} </if>
+            <if test="vipCode != null">and a.levelId =#{vipCode} </if>
+        </where>
+    </select>
+</mapper>

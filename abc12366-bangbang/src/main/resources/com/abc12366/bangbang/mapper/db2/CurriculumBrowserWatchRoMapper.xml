@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumBrowserWatchRoMapper">
+
+    <select id="selectCntToday" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from bb_curriculum_browser_watch WHERE date = CURDATE() and curriculum_id = #{curriculumId}
+    </select>
+
+
+    <select id="selectTodayNum" resultType="com.abc12366.bangbang.model.curriculum.CurriculumBrowserWatch">
+        select SUM(browseNum) AS browseNum, SUM(watchNum) AS watchNum from bb_curriculum_browser_watch WHERE date = CURDATE()
+    </select>
+
+
+    <select id="selectCurrentMonthNum" resultType="com.abc12366.bangbang.model.curriculum.CurriculumBrowserWatch">
+        SELECT SUM(browseNum) AS browseNum, SUM(watchNum) AS watchNum
+        FROM bb_curriculum_browser_watch WHERE
+        DATE_FORMAT(DATE,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListBo"
+            parameterType="java.util.HashMap">
+        SELECT
+        t1.curriculumId ,t1.title, t2.classifyName classify,t1.status, t.browseNum, t.watchNum, t.date as updateTime
+        FROM bb_curriculum_browser_watch t
+        LEFT JOIN bb_curriculum t1  ON t.curriculum_id = t1.curriculumId
+        LEFT JOIN bb_curriculum_classify t2 ON t1.classify = t2.classifyId
+        <if test="date != null and date != ''">
+            WHERE t.date = #{date}
+        </if>
+        ORDER BY t.date DESC
+    </select>
+
+
+    <select id="selectMonthList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumListBo"
+            parameterType="java.util.HashMap">
+
+        SELECT t.curriculum_id as curriculumId, SUM(t.browseNum) AS browseNum, SUM(t.watchNum) AS watchNum,
+        t.DATE updateTime ,t1.title, t2.classifyName classify,t1.status
+        FROM bb_curriculum_browser_watch t
+
+        LEFT JOIN bb_curriculum t1  ON t.curriculum_id = t1.curriculumId
+        LEFT JOIN bb_curriculum_classify t2 ON t1.classify = t2.classifyId
+        WHERE 1 = 1
+        <if test="month != null and month != ''">
+              and DATE_FORMAT(t.DATE,'%Y-%m') = #{month}
+        </if>
+        and t1.title is not null
+        GROUP BY  DATE_FORMAT(t.DATE,'%Y-%m') , t.curriculum_id
+        ORDER BY  DATE_FORMAT(t.DATE,'%Y-%m')  desc
+    </select>
+
+</mapper>

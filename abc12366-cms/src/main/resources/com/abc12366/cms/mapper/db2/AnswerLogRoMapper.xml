@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.AnswerLogRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, questionId, userId, weixinId, accessTerminal, ipAddress, startTime, endTime
+    </sql>
+
+    <resultMap id="answerLogBOResultMap" type="com.abc12366.cms.model.questionnaire.bo.AnswerLogBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="questionId" property="questionId" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="weixinId" property="weixinId" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="accessTerminal" property="accessTerminal" jdbcType="VARCHAR"/>
+        <result column="ipAddress" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="startTime" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="endTime" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="avgTimeLong" property="avgTimeLong" jdbcType="INTEGER"/>
+        <collection property="answerList" ofType="com.abc12366.cms.model.questionnaire.Answer" column="id"
+                    select="getAnswer"></collection>
+    </resultMap>
+
+    <resultMap type="com.abc12366.cms.model.questionnaire.Answer" id="oneAnswer">
+        <result property="answerLogId" column="answerLogId"/>
+        <result property="subjectsId" column="subjectsId"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.questionnaire.AnswerLog"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_answer_log
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAnswer" resultType="com.abc12366.cms.model.questionnaire.Answer" parameterType="java.lang.String">
+        SELECT
+        answerLogId, subjectsId, content
+        FROM cms_paper_answer
+        WHERE answerLogId = #{answerLogId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOne" resultMap="answerLogBOResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_answer_log
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 查询所有 -->
+    <select id="selectList" resultMap="answerLogBOResultMap"
+            parameterType="com.abc12366.cms.model.questionnaire.bo.AnswerLogBO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_answer_log
+        <where>
+            1 = 1
+            <if test=" questionId != null and questionId != '' ">
+                and questionId = #{questionId}
+            </if>
+            <if test="startDate != null">
+                <![CDATA[
+              and date_format(endTime, '%Y%m%d') >= date_format(#{startDate}, '%Y%m%d')
+                ]]>
+            </if>
+            <if test="endDate != null">
+                <![CDATA[
+              and date_format(startTime, '%Y%m%d') <= date_format(#{endDate}, '%Y%m%d')
+              ]]>
+            </if>
+        </where>
+        ORDER BY startTime
+    </select>
+
+    <!-- 查询问卷答题平均时间 -->
+    <select id="selectAvgTime" resultMap="answerLogBOResultMap" parameterType="java.lang.String">
+        SELECT
+        cl.questionId,
+        avg(total) AS avgTimeLong
+        FROM
+        (
+        SELECT
+        *, UNIX_TIMESTAMP(endTime) - UNIX_TIMESTAMP(startTime) AS total
+        FROM
+        cms_paper_answer_log
+        ) AS cl where questionId = #{questionId}
+        GROUP BY
+        cl.questionId
+    </select>
+    <!--SELECT
+    cl.questionId,
+    count(cl.userId),
+    count(cl.total),
+    avg(total) AS avgTime
+    FROM
+    (
+    SELECT
+    *, UNIX_TIMESTAMP(endTime) - UNIX_TIMESTAMP(startTime) AS total
+    FROM
+    cms_paper_answer_log
+    ) AS cl where questionId = #{questionId}
+    GROUP BY
+    cl.questionId-->
+
+    <!-- 查询（浏览统计按时间） -->
+    <select id="selectlltj" resultType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(startTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="accessTerminal != null and accessTerminal != ''">
+            AND accessTerminal = #{accessTerminal}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(startTime)
+    </select>
+
+    <!-- 查询（浏览统计总数按时间） -->
+    <select id="selectlltjs" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+    </select>
+
+    <!-- 查询（浏览统计总数） -->
+    <select id="selectlltjsbysj" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+    </select>
+
+    <!-- 查询（浏览统计总数） -->
+    <select id="selectldtcnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="weixinId != null and weixinId != ''">
+            AND weixinId = #{weixinId}
+        </if>
+    </select>
+
+    <resultMap id="AnswerLogtjListBoMap" type="com.abc12366.cms.model.bo.AnswerLogtjListBo">
+        <association property="llcnt" column="{questionId=questionId,startTime=startTime,endTime=endTime}" select="selectlltjs"/>
+        <association property="llcnts" column="{questionId=questionId,startTime=startTime,endTime=endTime}" select="selectlltjsbysj"/>
+        <collection property="list" ofType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" column="{questionId=questionId,startTime=startTime,endTime=endTime}"
+                    select="getAnswerLogRolltjBo"></collection>
+        <collection property="pclist" ofType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" column="{questionId=questionId,startTime=startTime,endTime=endTime}"
+                    select="getAnswerLogRolltjBoPC"></collection>
+        <collection property="mobileWeblist" ofType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" column="{questionId=questionId,startTime=startTime,endTime=endTime}"
+                    select="getAnswerLogRolltjBoMB"></collection>
+    </resultMap>
+    <select id="selectAnswerLogRolltjBo" resultMap="AnswerLogtjListBoMap" parameterType="java.util.Map">
+        SELECT questionId,#{startTime} as startTime,#{endTime} as endTime FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(startTime)
+    </select>
+    <!-- 浏览统计（全部）-->
+    <select id="getAnswerLogRolltjBo" resultType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(startTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE 1=1
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(startTime)
+    </select>
+    <!-- 浏览统计（PC）-->
+    <select id="getAnswerLogRolltjBoPC" resultType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(startTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE accessTerminal = 'PC'
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(startTime)
+    </select>
+    <!-- 浏览统计（手机）-->
+    <select id="getAnswerLogRolltjBoMB" resultType="com.abc12366.cms.model.bo.AnswerLogRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(startTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_paper_answer_log
+        WHERE accessTerminal = 'MobileWeb'
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(startTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(startTime)
+    </select>
+
+</mapper>

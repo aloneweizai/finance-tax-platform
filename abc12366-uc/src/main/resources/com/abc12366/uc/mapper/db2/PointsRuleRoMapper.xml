@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.PointsRuleRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.PointsRuleBO" parameterType="java.util.Map">
+        select id, name, code, points, description, type, status, createTime, lastUpdate,period,degree
+        from uc_upoints_rule
+        <where>
+            <if test="name!=null">name=#{name}</if>
+            <if test="code!=null">and code=#{code}</if>
+            <if test="type!=null">and type=#{type}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.PointsRuleBO" parameterType="java.lang.String">
+        select id, name, code, points, description, type, status, createTime, lastUpdate,period,degree
+        from uc_upoints_rule
+        where id=#{id}
+    </select>
+
+    <select id="selectValidOne" resultType="com.abc12366.uc.model.bo.PointsRuleBO" parameterType="java.lang.String">
+        select id, name, code, points, description, type, status, createTime, lastUpdate,period,degree
+        from uc_upoints_rule
+        where id=#{id}
+        and status=1
+    </select>
+
+    <select id="selectByCode" resultType="com.abc12366.uc.model.bo.PointsRuleBO" parameterType="java.lang.String">
+        select id, name, code, points, description, type, status, createTime, lastUpdate,period,degree
+        from uc_upoints_rule
+        where code=#{code}
+    </select>
+
+    <select id="selectValidOneByCode" resultType="com.abc12366.uc.model.bo.PointsRuleBO" parameterType="java.lang.String">
+        select id, name, code, points, description, type, status, createTime, lastUpdate,period,degree
+        from uc_upoints_rule
+        where code=#{ruleCode}
+        and status='1'
+    </select>
+</mapper>

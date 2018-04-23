@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.DzsbTimeMapper">
+
+    <update id="update" parameterType="com.abc12366.uc.model.job.DzsbTime">
+        update uc_dzsbxx_time
+        set lasttime = #{lasttime}
+        where ywlx = #{ywlx}
+    </update>
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.job.DzsbTime">
+        INSERT INTO uc_dzsbxx_time (lasttime,ywlx)
+        VALUES
+        (#{lasttime}, #{ywlx})
+    </insert>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.LotteryActivityMapper">
+<insert id="insert" parameterType="com.abc12366.uc.model.LotteryActivity">
+insert into uc_lottery_activity(
+id,name,types,description,count,label,userLevel,url,startTime,endTime,status,templateId,createTime,timeStock,timeCount,timeDay,luckTime
+,userLotteryMax,userLotteryMaxDay,getlotteyDay,userFreeCount
+)values(
+#{id},#{name},#{types},#{description},#{count},#{label},#{userLevel},#{url},#{startTime},#{endTime},#{status},#{templateId},#{createTime}
+,#{timeStock},#{timeCount},#{timeDay},#{luckTime}
+,#{userLotteryMax},#{userLotteryMaxDay},#{getlotteyDay},#{userFreeCount})
+</insert>
+<update id="update" parameterType="com.abc12366.uc.model.LotteryActivity">
+update  uc_lottery_activity 
+<set>
+<if test="name!=null">name=#{name},</if>
+<if test="types!=null">types=#{types},</if>
+<if test="description!=null">description=#{description},</if>
+<if test="count!=null">count=#{count},</if>
+<if test="label!=null">label=#{label},</if>
+<if test="userLevel!=null">userLevel=#{userLevel},</if>
+<if test="url!=null">url=#{url},</if>
+<if test="startTime!=null">startTime=#{startTime},</if>
+<if test="endTime!=null">endTime=#{endTime},</if>
+<if test="status!=null">status=#{status},</if>
+<if test="templateId!=null">templateId=#{templateId},</if>
+
+    <if test="userLotteryMax!=null">userLotteryMax=#{userLotteryMax},</if>
+    <if test="userLotteryMaxDay!=null">userLotteryMaxDay=#{userLotteryMaxDay},</if>
+    <if test="getlotteyDay!=null">getlotteyDay=#{getlotteyDay},</if>
+    <if test="userFreeCount!=null">userFreeCount=#{userFreeCount},</if>
+
+    <if test="timeStock!=null">timeStock=#{timeStock},</if>
+    <if test="timeCount!=null">timeCount=#{timeCount},</if>
+    <if test="timeDay!=null">timeDay=#{timeDay},</if>
+    <if test="luckTime!=null">luckTime=#{luckTime}</if>
+</set>
+where id=#{id}
+</update>
+<delete id="delete" parameterType="java.lang.String">
+delete from uc_lottery_activity 
+where id=#{id}
+</delete>
+</mapper>

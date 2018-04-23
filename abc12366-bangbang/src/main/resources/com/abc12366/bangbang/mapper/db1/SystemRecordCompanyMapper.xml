@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.SystemRecordCompanyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_system_record_company
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.SystemRecordCompany">
+		 INSERT INTO bb_system_record_company
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="amount != null">
+				 amount,
+			</if>
+			<if test="menu != null">
+				 menu,
+			</if>
+			<if test="nsrsbh != null">
+				 nsrsbh,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="amount!=null">
+				 #{amount},
+			</if>
+			<if test="menu!=null">
+				 #{menu},
+			</if>
+			<if test="nsrsbh!=null">
+				 #{nsrsbh},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.bangbang.model.SystemRecordCompany">
+		 UPDATE bb_system_record_company
+ 		 <set> 
+			<if test="amount != null">
+				 amount = #{amount},
+			</if>
+			<if test="menu != null">
+				 menu = #{menu},
+			</if>
+			<if test="nsrsbh != null">
+				 nsrsbh = #{nsrsbh},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentRecordMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_record
+        WHERE contentRecordId = #{contentRecordId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentRecord">
+        INSERT INTO cms_content_record
+        (contentRecordId,contentId,userId,operateTime,operateType)
+        VALUES
+        (#{contentRecordId},#{contentId},#{userId},#{operateTime},#{operateType})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentRecord">
+        INSERT INTO cms_content_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentRecordId != null">
+                contentRecordId,
+            </if>
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="operateTime != null">
+                operateTime,
+            </if>
+            <if test="operateType != null">
+                operateType,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentRecordId!=null">
+                #{contentRecordId},
+            </if>
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="operateTime!=null">
+                #{operateTime},
+            </if>
+            <if test="operateType!=null">
+                #{operateType},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentRecord">
+        UPDATE cms_content_record
+        <set>
+            <if test="contentId != null">
+                contentId = #{contentId},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="operateTime != null">
+                operateTime = #{operateTime},
+            </if>
+            <if test="operateType != null">
+                operateType = #{operateType},
+            </if>
+
+        </set>
+        WHERE contentRecordId = #{contentRecordId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentRecord">
+        UPDATE cms_content_record
+        SET
+        contentId = #{contentId},
+        userId = #{userId},
+        operateTime = #{operateTime},
+        operateType = #{operateType}
+        WHERE contentRecordId = #{contentRecordId}
+    </update>
+
+</mapper>

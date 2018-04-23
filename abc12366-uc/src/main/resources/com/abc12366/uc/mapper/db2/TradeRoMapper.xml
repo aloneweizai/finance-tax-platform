@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TradeRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		tradeNo,	orderNo,	createTime,	lastUpdate
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectById" resultType="com.abc12366.uc.model.order.Trade" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM uc_trade
+		WHERE tradeNo = #{tradeNo}
+	</select>
+
+	<select id="selectOrderNo" resultType="com.abc12366.uc.model.order.Trade" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM uc_trade
+		WHERE orderNo = #{orderNo}
+	</select>
+
+	<select id="selectList" resultType="com.abc12366.uc.model.order.Trade" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM uc_trade
+		WHERE orderNo = #{orderNo}
+	</select>
+
+</mapper>

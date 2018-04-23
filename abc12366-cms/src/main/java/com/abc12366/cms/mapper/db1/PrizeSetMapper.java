@@ -1,0 +1,29 @@
+package com.abc12366.cms.mapper.db1;
+
+import com.abc12366.cms.model.questionnaire.PrizeSet;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * PrizeSetMapper数据库操作接口类
+ **/
+
+public interface PrizeSetMapper {
+
+
+    /**
+     * 删除（根据主键ID删除）
+     **/
+    int deleteByPrimaryKey(@Param("id") String id);
+
+    /**
+     * 添加
+     **/
+    int insert(PrizeSet record);
+
+
+    /**
+     * 修改（根据主键ID修改）
+     **/
+    int update(PrizeSet record);
+
+}

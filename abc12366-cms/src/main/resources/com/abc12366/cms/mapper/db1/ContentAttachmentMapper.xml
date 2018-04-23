@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.ContentAttachmentMapper">
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_content_attachment
+        WHERE contentId = #{contentId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.ContentAttachment">
+        INSERT INTO cms_content_attachment
+        (contentId,priority,attachmentPath,attachmentName,filename,downloadCount)
+        VALUES
+        (#{contentId},#{priority},#{attachmentPath},#{attachmentName},#{filename},#{downloadCount})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.ContentAttachment">
+        INSERT INTO cms_content_attachment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null">
+                contentId,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="attachmentPath != null">
+                attachmentPath,
+            </if>
+            <if test="attachmentName != null">
+                attachmentName,
+            </if>
+            <if test="filename != null">
+                filename,
+            </if>
+            <if test="downloadCount != null">
+                downloadCount,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="attachmentPath!=null">
+                #{attachmentPath},
+            </if>
+            <if test="attachmentName!=null">
+                #{attachmentName},
+            </if>
+            <if test="filename!=null">
+                #{filename},
+            </if>
+            <if test="downloadCount!=null">
+                #{downloadCount},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.ContentAttachment">
+        UPDATE cms_content_attachment
+        <set>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="attachmentPath != null">
+                attachmentPath = #{attachmentPath},
+            </if>
+            <if test="attachmentName != null">
+                attachmentName = #{attachmentName},
+            </if>
+            <if test="filename != null">
+                filename = #{filename},
+            </if>
+            <if test="downloadCount != null">
+                downloadCount = #{downloadCount},
+            </if>
+
+        </set>
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.ContentAttachment">
+        UPDATE cms_content_attachment
+        SET
+        priority = #{priority},
+        attachmentPath = #{attachmentPath},
+        attachmentName = #{attachmentName},
+        filename = #{filename},
+        downloadCount = #{downloadCount}
+        WHERE contentId = #{contentId}
+    </update>
+
+</mapper>

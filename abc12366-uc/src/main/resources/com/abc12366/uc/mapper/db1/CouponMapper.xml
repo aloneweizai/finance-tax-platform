@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.CouponMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.order.Coupon">
+        INSERT INTO uc_coupon (id, couponName, couponMode, couponType, param1,
+        param2,param3, amountType, validType, validStartTime, validEndTime,
+        validDays, description, status, createTime, lastUpdate,
+        categoryIds)
+        VALUES (#{id}, #{couponName}, #{couponMode}, #{couponType}, #{param1},
+        #{param2},#{param3}, #{amountType}, #{validType}, #{validStartTime}, #{validEndTime},
+        #{validDays}, #{description}, #{status}, #{createTime}, #{lastUpdate},
+        #{categoryIds})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.order.Coupon">
+        update uc_coupon
+        <set>
+            <if test="couponName != null">couponName = #{couponName},</if>
+            <if test="couponMode != null">couponMode = #{couponMode},</if>
+            <if test="couponType != null">couponType = #{couponType},</if>
+            <if test="param1 != null">param1 = #{param1},</if>
+
+            <if test="param2 != null">param2 = #{param2},</if>
+            <if test="param3 != null">param3 = #{param3},</if>
+            <if test="amountType != null">amountType = #{amountType},</if>
+            <if test="validType != null">validType = #{validType},</if>
+            <if test="validStartTime != null">validStartTime = #{validStartTime},</if>
+            <if test="validEndTime != null">validEndTime = #{validEndTime},</if>
+
+            <if test="validDays != null">validDays = #{validDays},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="categoryIds != null">categoryIds = #{categoryIds},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="insertActivity" parameterType="com.abc12366.uc.model.order.CouponActivity">
+        INSERT INTO uc_coupon_activity
+        (id, activityName, activityLink, couponId, activityStartTime,
+              activityEndTime, couponNum, `limit`, limitNum, getType,
+              valid, validApi, target, areaOper, areaIds,
+              tagOper, tagIds, regTimeOper, regStartTime, regEndTime,
+              vips, userIds, description, imageUrl, status,
+              createTime, lastUpdate)
+        VALUES (#{id}, #{activityName}, #{activityLink}, #{couponId}, #{activityStartTime},
+              #{activityEndTime}, #{couponNum}, #{limit}, #{limitNum}, #{getType},
+              #{valid}, #{validApi}, #{target}, #{areaOper}, #{areaIds},
+              #{tagOper}, #{tagIds}, #{regTimeOper}, #{regStartTime}, #{regEndTime},
+              #{vips}, #{userIds}, #{description}, #{imageUrl}, #{status},
+              #{createTime}, #{lastUpdate})
+    </insert>
+
+    <update id="updateActivity" parameterType="com.abc12366.uc.model.order.CouponActivity">
+        update uc_coupon_activity
+        <set>
+            <if test="activityName != null">activityName = #{activityName},</if>
+            <if test="activityLink != null">activityLink = #{activityLink},</if>
+            <if test="couponId != null">couponId = #{couponId},</if>
+            <if test="activityStartTime != null">activityStartTime = #{activityStartTime},</if>
+
+            <if test="activityEndTime != null">activityEndTime = #{activityEndTime},</if>
+            <if test="couponNum != null">couponNum = #{couponNum},</if>
+            <if test="limit != null">`limit` = #{limit},</if>
+            <if test="limitNum != null">limitNum = #{limitNum},</if>
+            <if test="getType != null">getType = #{getType},</if>
+
+            <if test="valid != null">valid = #{valid},</if>
+            <if test="validApi != null">validApi = #{validApi},</if>
+            <if test="target != null">target = #{target},</if>
+            <if test="areaOper != null">areaOper = #{areaOper},</if>
+            <if test="areaIds != null">areaIds = #{areaIds},</if>
+
+            <if test="tagOper != null">tagOper = #{tagOper},</if>
+            <if test="tagIds != null">tagIds = #{tagIds},</if>
+            <if test="regTimeOper != null">regTimeOper = #{regTimeOper},</if>
+            <if test="regStartTime != null">regStartTime = #{regStartTime},</if>
+            <if test="regEndTime != null">regEndTime = #{regEndTime},</if>
+
+            <if test="vips != null">vips = #{vips},</if>
+            <if test="userIds != null">userIds = #{userIds},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">imageUrl = #{imageUrl},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="insertUserCoupon" parameterType="com.abc12366.uc.model.order.CouponUser">
+        INSERT INTO uc_coupon_user (id, userId, activityId, couponId, couponName,
+        couponMode, couponType, param1, param2, amountType,
+        validStartTime, validEndTime, description, status, createTime,
+        lastUpdate, orderNo, categoryIds,amountAfter)
+        VALUES (#{id}, #{userId}, #{activityId}, #{couponId}, #{couponName},
+        #{couponMode}, #{couponType}, #{param1}, #{param2}, #{amountType},
+        #{validStartTime}, #{validEndTime}, #{description}, #{status}, #{createTime},
+        #{lastUpdate}, #{orderNo}, #{categoryIds},#{amountAfter})
+    </insert>
+
+    <update id="updateUserCoupon" parameterType="com.abc12366.uc.model.order.CouponUser">
+        update uc_coupon_user
+        <set>
+          <if test="status != null">status = #{status},</if>
+          <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+          <if test="orderNo != null">orderNo = #{orderNo},</if>
+          <if test="amountAfter != null">amountAfter = #{amountAfter},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="batchUpdateUserCoupon" parameterType="java.util.Map">
+        update uc_coupon_user
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="orderNo != null">orderNo = #{orderNo},</if>
+            <if test="amountAfter != null">amountAfter = #{amountAfter},</if>
+        </set>
+        where id = #{id}
+        <!--<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+    </update>
+</mapper>

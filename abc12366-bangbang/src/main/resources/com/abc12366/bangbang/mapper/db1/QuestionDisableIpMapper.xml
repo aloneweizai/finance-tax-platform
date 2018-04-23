@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionDisableIpMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_disable_ip
+		 WHERE id = #{id}
+	</delete>
+
+	<!--删除：根据主键IP删除-->
+	<delete id="deleteByIP" parameterType="java.lang.String">
+		DELETE FROM bb_question_disable_ip
+		WHERE ip = #{ip}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionDisableIp">
+		 INSERT INTO bb_question_disable_ip
+ 		(id,ip,reason,activeTime,updateAdmin,updateTime) 
+		 VALUES 
+ 		(#{id},#{ip},#{reason},#{activeTime},#{updateAdmin},now())
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionDisableIp">
+		 INSERT INTO bb_question_disable_ip
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="ip != null">
+				 ip,
+			</if>
+			<if test="reason != null">
+				 reason,
+			</if>
+			<if test="activeTime != null">
+				 activeTime,
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin,
+			</if>
+				 updateTime
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="ip!=null">
+				 #{ip},
+			</if>
+			<if test="reason!=null">
+				 #{reason},
+			</if>
+			<if test="activeTime!=null">
+				 #{activeTime},
+			</if>
+			<if test="updateAdmin!=null">
+				 #{updateAdmin},
+			</if>
+				 now()
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionDisableIp">
+		 UPDATE bb_question_disable_ip
+ 		 <set> 
+			<if test="ip != null">
+				 ip = #{ip},
+			</if>
+			<if test="reason != null">
+				 reason = #{reason},
+			</if>
+			<if test="activeTime != null">
+				 activeTime = #{activeTime},
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin = #{updateAdmin},
+			</if>
+				 updateTime = now()
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionDisableIp">
+		 UPDATE bb_question_disable_ip
+		 SET 
+			 ip = #{ip},
+			 reason = #{reason},
+			 activeTime = #{activeTime},
+			 updateAdmin = #{updateAdmin},
+			 updateTime = now()
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

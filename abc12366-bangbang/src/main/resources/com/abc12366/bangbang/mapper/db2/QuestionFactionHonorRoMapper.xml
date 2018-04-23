@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionHonorRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	factionId,	honor,	honorTime,	answerNum,	discussNum,	adoptNum,	splendidNum,	createTime,	updateTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionHonor" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_honor
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询上月邦派排名 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionPhBo" parameterType="java.lang.String">
+        SELECT h.factionId,f.factionName,f.factionImg,h.honor FROM
+            bb_question_faction_honor h left join bb_question_faction f on h.factionId = f.factionId
+            where h.honorTime = #{honorTime} order by honor desc
+    </select>
+
+    <!-- 查询邦派累计排名 -->
+    <select id="selectljList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionPhBo" parameterType="java.lang.String">
+        SELECT h.factionId,f.factionName,f.factionImg,sum(h.honor) honor FROM
+            bb_question_faction_honor h left join bb_question_faction f on h.factionId = f.factionId
+            where 1=1 group by factionId order by honor desc
+    </select>
+
+</mapper>

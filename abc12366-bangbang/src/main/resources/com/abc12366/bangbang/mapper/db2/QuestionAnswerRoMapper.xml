@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionAnswerRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	parentId,	questionId,factionId,commentNum,likeNum,trampleNum,reportNum,	userId,	answerUserId,ip,	answer,	status,	createTime,	lastUpdate,	isAccept
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.bo.QuestionAnswerBo" parameterType="java.lang.String">
+		 SELECT
+             a.id,	parentId,	questionId,factionId,commentNum,likeNum,trampleNum,reportNum,	a.userId,u.userPicturePath,u.nickname,	answerUserId,ip,	answer,shortAnswer,answerImage,	a.status,	a.createTime,	a.lastUpdate,	isAccept
+		 FROM bb_question_answer a left join bb_user u on a.userId = u.id
+		 WHERE a.id = #{id}
+	</select>
+
+    <!-- 问题回复列表查询 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionAnswerBo" parameterType="java.util.Map">
+        SELECT
+        a.id,	parentId,	questionId,commentNum,likeNum,trampleNum,reportNum,	a.userId,u.userPicturePath,u.nickname,
+        u1.nickname answerNickname,
+        answerUserId,a.ip,	answer,shortAnswer,answerImage,	a.status,	a.createTime,	a.lastUpdate,	isAccept,
+        (SELECT count(likeId) FROM bb_question_like where id = a.id and likeType = '1' and userId = #{userId}) isLike,
+        (SELECT count(likeId) FROM bb_question_like where id = a.id and likeType = '2' and userId = #{userId}) isTrample
+        FROM bb_question_answer a left join bb_user u on a.userId = u.id
+        left join bb_user u1 on a.answerUserId = u1.id
+        WHERE a.status = '0'
+        <if test="questionId != null and questionId != ''">
+            AND questionId = #{questionId}
+        </if>
+        <if test="isAccept != null and isAccept != ''">
+            AND isAccept = #{isAccept}
+        </if>
+        order by a.isAccept desc,a.createTime DESC
+    </select>
+
+    <!-- 最新回答 -->
+    <select id="selectListNew" resultType="com.abc12366.bangbang.model.question.bo.QuestionAnswerBo" parameterType="java.util.Map">
+        SELECT
+        a.id,	parentId,	questionId,q.collectNum,q.answerNum,a.commentNum,a.likeNum,a.trampleNum,	a.userId,u.userPicturePath,u.nickname,
+        u1.nickname answerNickname,
+        answerUserId,a.ip,	shortAnswer,answerImage,	a.status,	a.createTime,	a.lastUpdate,	isAccept,
+        q.title questionTitle
+        FROM bb_question_answer a LEFT JOIN bb_question q on a.questionId = q.id
+        left join bb_user u on a.userId = u.id
+        left join bb_user u1 on a.answerUserId = u1.id
+        WHERE a.status = '0'
+        ORDER BY a.createTime DESC
+    </select>
+
+
+    <!-- 查找邦派ID -->
+    <select id="selectfactionId" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT factionId FROM bb_question_faction_classify where factionId in(SELECT factionId FROM bb_question_faction_member where userId = #{userId})
+          and classifyId = (SELECT classifyCode FROM bb_question where id = #{questionId}) limit 1
+    </select>
+
+
+    <!-- 我的回答 -->
+    <select id="selectMyAnswerList" resultType="com.abc12366.bangbang.model.question.bo.QuestionAnswerBo" parameterType="java.util.Map">
+        SELECT
+        a.id,	parentId,	questionId,	a.userId,u.userPicturePath,u.nickname,title questionTitle,q.browseNum,
+        u1.nickname answerNickname,
+        answerUserId,a.ip,	shortAnswer,answer,answerImage,	a.status,	a.createTime,	a.lastUpdate,	isAccept,
+        a.likeNum,a.commentNum,a.trampleNum,a.reportNum,
+        q.browseNum,q.answerNum
+        FROM bb_question_answer a left join bb_question q on a.questionId = q.id left join bb_user u on a.userId = u.id
+        left join bb_user u1 on a.answerUserId = u1.id
+        WHERE 1=1
+        <if test="isTip != null and isTip != ''">
+            and a.reportNum > 0
+        </if>
+        <if test="isAccept != null and isAccept != ''">
+            AND isAccept = #{isAccept}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND a.userId = #{userId}
+        </if>
+        order by a.createTime desc
+    </select>
+
+    <!-- 查询回复数 -->
+    <select id="selectAnswerCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(id)
+        FROM bb_question_answer
+        WHERE status = '0' and questionId = #{questionId}
+    </select>
+
+    <!-- 查询是否回复过 -->
+    <select id="selectMyAnswerCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(id)
+        FROM bb_question_answer
+        WHERE questionId = #{questionId} AND userId = #{userId}
+    </select>
+
+    <!-- 查询是否自己回答的 -->
+    <select id="selectIsMyAnswer" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(id)
+        FROM bb_question_answer
+        WHERE id = #{id} AND userId = #{userId}
+    </select>
+
+    <!-- 查询问题是否采纳过 -->
+    <select id="selectAcceptCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(id)
+        FROM bb_question_answer
+        WHERE questionId = #{questionId} AND isAccept = 1
+    </select>
+
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.TemplateMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_template
+        WHERE templateId = #{templateId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Template">
+        INSERT INTO cms_template
+        (templateId,templateName,parentPath,templatePath,isFolder,templateProperty,templateType,siteId,priority,state,versions,createTime,updateTime)
+        VALUES
+        (#{templateId},#{templateName},#{parentPath},#{templatePath},#{isFolder},#{templateProperty},#{templateType},#{siteId},#{priority},#{state},#{versions},#{createTime},#{updateTime})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Template">
+        INSERT INTO cms_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">
+                templateId,
+            </if>
+            <if test="templateName != null">
+                templateName,
+            </if>
+            <if test="parentPath != null">
+                parentPath,
+            </if>
+            <if test="templatePath != null">
+                templatePath,
+            </if>
+            <if test="isFolder != null">
+                isFolder,
+            </if>
+            <if test="templateProperty != null">
+                templateProperty,
+            </if>
+            <if test="templateType != null">
+                templateType,
+            </if>
+            <if test="siteId != null">
+                siteId,
+            </if>
+            <if test="priority != null">
+                priority,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="versions != null">
+                versions,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateId!=null">
+                #{templateId},
+            </if>
+            <if test="templateName!=null">
+                #{templateName},
+            </if>
+            <if test="parentPath!=null">
+                #{parentPath},
+            </if>
+            <if test="templatePath!=null">
+                #{templatePath},
+            </if>
+            <if test="isFolder!=null">
+                #{isFolder},
+            </if>
+            <if test="templateProperty!=null">
+                #{templateProperty},
+            </if>
+            <if test="templateType!=null">
+                #{templateType},
+            </if>
+            <if test="siteId!=null">
+                #{siteId},
+            </if>
+            <if test="priority!=null">
+                #{priority},
+            </if>
+            <if test="state!=null">
+                #{state},
+            </if>
+            <if test="versions!=null">
+                #{versions},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+           <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Template">
+        UPDATE cms_template
+        <set>
+            <if test="templateName != null">
+                templateName = #{templateName},
+            </if>
+            <if test="parentPath != null">
+                parentPath = #{parentPath},
+            </if>
+            <if test="templatePath != null">
+                templatePath = #{templatePath},
+            </if>
+            <if test="isFolder != null">
+                isFolder = #{isFolder},
+            </if>
+            <if test="templateProperty != null">
+                templateProperty = #{templateProperty},
+            </if>
+            <if test="templateType != null">
+                templateType = #{templateType},
+            </if>
+            <if test="siteId != null">
+                siteId = #{siteId},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="versions != null">
+                versions = #{versions},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+
+        </set>
+        WHERE templateId = #{templateId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Template">
+        UPDATE cms_template
+        SET
+        templateName = #{templateName},
+        parentPath = #{parentPath},
+        templatePath = #{templatePath},
+        isFolder = #{isFolder},
+        templateProperty = #{templateProperty},
+        templateType = #{templateType},
+        siteId = #{siteId},
+        priority = #{priority},
+        state = #{state},
+        versions = #{versions},
+        createTime = #{createTime},
+        updateTime = #{updateTime}
+        WHERE templateId = #{templateId}
+    </update>
+
+</mapper>

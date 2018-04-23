@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db2.UpyunRoMapper">
+
+    <sql id="Base_Column">
+        id,title,sign,type,content,status,reason,createTime,synchronizeTime,templateId,
+        ownerId,ownerName,ownerIndustry,ownerMarketing
+    </sql>
+    <select id="selectList" resultType="com.abc12366.message.model.UpyunTemplate" parameterType="java.util.Map">
+        select <include refid="Base_Column"/>
+        from msg_upyun_template
+        WHERE 1=1
+        <if test="status!=null and status!=''">AND status = #{status}</if>
+    </select>
+</mapper>

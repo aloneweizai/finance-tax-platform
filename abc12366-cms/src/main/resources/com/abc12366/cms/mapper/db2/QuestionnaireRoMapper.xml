@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.QuestionnaireRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, title, simpleDesc, endDesc,status, createUser, createTime, updateTime, updateUser, recoveryRate, accessRate,
+        sceneCode,skinUrl, tradeCode
+    </sql>
+
+    <resultMap id="questionBOResultMap" type="com.abc12366.cms.model.questionnaire.bo.QuestionnaireBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="simpleDesc" property="simpleDesc" jdbcType="VARCHAR"/>
+        <result column="endDesc" property="endDesc" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="createUser" property="createUser" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="updateUser" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="recoveryRate" property="recoveryRate" jdbcType="INTEGER"/>
+        <result column="accessRate" property="accessRate" jdbcType="INTEGER"/>
+        <result column="sceneCode" property="sceneCode" jdbcType="VARCHAR"/>
+        <result column="skinUrl" property="skinUrl" jdbcType="VARCHAR"/>
+        <result column="tradeCode" property="tradeCode" jdbcType="VARCHAR"/>
+        <result column="accessNum" property="accessNum" jdbcType="DOUBLE"/>
+        <association property="questionnaireParam" javaType="com.abc12366.cms.model.questionnaire.QuestionnaireParam">
+            <id column="questionId" property="questionId" jdbcType="VARCHAR"/>
+            <result column="isDisplayNumber" property="isDisplayNumber" jdbcType="INTEGER"/>
+            <result column="isBackspace" property="isBackspace" jdbcType="INTEGER"/>
+            <result column="isDisplayResults" property="isDisplayResults" jdbcType="INTEGER"/>
+            <result column="recoveryEndTime" property="recoveryEndTime" jdbcType="TIMESTAMP"/>
+            <result column="isLoginAuth" property="isLoginAuth" jdbcType="INTEGER"/>
+            <result column="isAnswerOnce" property="isAnswerOnce" jdbcType="INTEGER"/>
+            <result column="isWxOnce" property="isWxOnce" jdbcType="INTEGER"/>
+            <result column="isUserRange" property="isUserRange" jdbcType="INTEGER"/>
+            <result column="isAnswerRemind" property="isAnswerRemind" jdbcType="INTEGER"/>
+            <result column="isPrize" property="isPrize" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.questionnaire.Questionnaire"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_paper_questionnaire
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectOne" resultMap="questionBOResultMap" parameterType="java.lang.String">
+        SELECT
+        q.id, q.title, q.simpleDesc, q.endDesc, q.status, q.createUser, q.createTime, q.updateTime, q.updateUser, q.recoveryRate,
+        q.accessRate, q.sceneCode, q.skinUrl,q.tradeCode,
+        p.questionId, p.isDisplayNumber, p.isBackspace, p.isDisplayResults, p.recoveryEndTime, p.isLoginAuth,
+        p.isAnswerOnce, p.isWxOnce, p.isUserRange, p.isAnswerRemind, p.isPrize
+        FROM cms_paper_questionnaire q
+        LEFT JOIN cms_paper_questionnaire_param p on q.id = p.questionId
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultMap="questionBOResultMap" parameterType="java.lang.String">
+        SELECT
+        q.id, q.title, q.simpleDesc, q.endDesc, q.status, q.createUser, q.createTime, q.updateTime, q.updateUser, (SELECT
+        COUNT(a.id) recoveryRate FROM cms_paper_answer_log a
+        WHERE q.id=a.questionId) recoveryRate, q.accessRate, q.sceneCode, q.skinUrl,q.tradeCode,
+        p.questionId, p.isDisplayNumber, p.isBackspace, p.isDisplayResults, p.recoveryEndTime, p.isLoginAuth,
+        p.isAnswerOnce, p.isWxOnce, p.isUserRange, p.isAnswerRemind, p.isPrize
+        FROM cms_paper_questionnaire q
+        LEFT JOIN cms_paper_questionnaire_param p on q.id = p.questionId
+        order by q.updateTime desc
+    </select>
+
+    <select id="selectAccessNum" resultMap="questionBOResultMap" parameterType="java.lang.String">
+        SELECT
+        an.questionId as id,
+        an.alog as recoveryRate,
+        ac.acount as accessRate,
+        an.alog/ac.acount as accessNum
+        FROM
+        (
+            SELECT
+            questionId,COUNT(id) as alog
+            FROM
+            cms_paper_answer_log
+            GROUP BY questionId
+        ) AS an LEFT JOIN (
+            SELECT
+            questionId,COUNT(id) as acount
+            FROM
+            cms_paper_access_log
+            GROUP BY questionId
+        ) AS ac on ac.questionId = an.questionId
+        WHERE
+        an.questionId = #{questionId}
+    </select>
+
+
+</mapper>

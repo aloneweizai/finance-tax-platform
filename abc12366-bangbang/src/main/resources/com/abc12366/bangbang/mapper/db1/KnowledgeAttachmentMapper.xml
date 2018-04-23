@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeAttachmentMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByKnowledgeId" parameterType="java.lang.String">
+		 DELETE FROM bb_knowledge_attachment
+		 WHERE knowledgeId = #{id}
+	</delete>
+
+	<!--删除：根据主键ID批量删除-->
+	<delete id="deleteByKnowledgeIds" parameterType="java.util.List">
+		DELETE FROM bb_knowledge_attachment
+		WHERE knowledgeId IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO bb_knowledge_attachment
+		(id,knowledgeId,fileName,filePath,sort)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},#{item.knowledgeId},#{item.fileName},#{item.filePath},#{item.sort})
+		</foreach>
+	</insert>
+
+</mapper>

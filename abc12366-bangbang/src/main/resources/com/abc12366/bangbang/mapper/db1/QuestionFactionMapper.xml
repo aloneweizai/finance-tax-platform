@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction
+		 WHERE factionId = #{factionId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFaction">
+		 INSERT INTO bb_question_faction
+ 		(factionId,factionName,factionImg,classifyCode,tag,minGrade,intro,auto,inviteLink,createTime,updateTime,userId,state,announcement,peopleLimit,factionGrade) 
+		 VALUES 
+ 		(#{factionId},#{factionName},#{factionImg},#{classifyCode},#{tag},#{minGrade},#{intro},#{auto},#{inviteLink},#{createTime},#{updateTime},#{userId},#{state},#{announcement},#{peopleLimit},#{factionGrade}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFaction">
+		 INSERT INTO bb_question_faction
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="factionName != null">
+				 factionName,
+			</if>
+			<if test="factionImg != null">
+				 factionImg,
+			</if>
+			<if test="classifyCode != null">
+				 classifyCode,
+			</if>
+			<if test="tag != null">
+				 tag,
+			</if>
+			<if test="minGrade != null">
+				 minGrade,
+			</if>
+			<if test="intro != null">
+				 intro,
+			</if>
+			<if test="auto != null">
+				 auto,
+			</if>
+			<if test="inviteLink != null">
+				 inviteLink,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="state != null">
+				 state,
+			</if>
+			<if test="announcement != null">
+				 announcement,
+			</if>
+			<if test="peopleLimit != null">
+				 peopleLimit,
+			</if>
+			<if test="factionGrade != null">
+				 factionGrade,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="factionName!=null">
+				 #{factionName},
+			</if>
+			<if test="factionImg!=null">
+				 #{factionImg},
+			</if>
+			<if test="classifyCode!=null">
+				 #{classifyCode},
+			</if>
+			<if test="tag!=null">
+				 #{tag},
+			</if>
+			<if test="minGrade!=null">
+				 #{minGrade},
+			</if>
+			<if test="intro!=null">
+				 #{intro},
+			</if>
+			<if test="auto!=null">
+				 #{auto},
+			</if>
+			<if test="inviteLink!=null">
+				 #{inviteLink},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="state!=null">
+				 #{state},
+			</if>
+			<if test="announcement!=null">
+				 #{announcement},
+			</if>
+			<if test="peopleLimit!=null">
+				 #{peopleLimit},
+			</if>
+			<if test="factionGrade!=null">
+				 #{factionGrade},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFaction">
+		 UPDATE bb_question_faction
+ 		 <set> 
+			<if test="factionName != null">
+				 factionName = #{factionName},
+			</if>
+			<if test="factionImg != null">
+				 factionImg = #{factionImg},
+			</if>
+			<if test="classifyCode != null">
+				 classifyCode = #{classifyCode},
+			</if>
+			<if test="tag != null">
+				 tag = #{tag},
+			</if>
+			<if test="minGrade != null">
+				 minGrade = #{minGrade},
+			</if>
+			<if test="intro != null">
+				 intro = #{intro},
+			</if>
+			<if test="auto != null">
+				 auto = #{auto},
+			</if>
+			<if test="inviteLink != null">
+				 inviteLink = #{inviteLink},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="state != null">
+				 state = #{state},
+			</if>
+			<if test="announcement != null">
+				 announcement = #{announcement},
+			</if>
+			<if test="peopleLimit != null">
+				 peopleLimit = #{peopleLimit},
+			</if>
+			<if test="factionGrade != null">
+				 factionGrade = #{factionGrade},
+			</if>
+
+ 		 </set>
+		 WHERE factionId = #{factionId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFaction">
+		 UPDATE bb_question_faction
+		 SET 
+			 factionName = #{factionName},
+			 factionImg = #{factionImg},
+			 classifyCode = #{classifyCode},
+			 tag = #{tag},
+			 minGrade = #{minGrade},
+			 intro = #{intro},
+			 auto = #{auto},
+			 inviteLink = #{inviteLink},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime},
+			 userId = #{userId},
+			 state = #{state},
+			 announcement = #{announcement},
+			 peopleLimit = #{peopleLimit},
+			 factionGrade = #{factionGrade}
+		 WHERE factionId = #{factionId}
+	</update>
+
+	<update id="updateAwardPoint">
+		UPDATE bb_question_faction SET awardPoint = IFNULL(awardPoint,0) + #{awardPoint}
+		where  factionId = #{factionId}
+	</update>
+
+	<update id="decreaseAwardPoint">
+		UPDATE bb_question_faction SET awardPoint = awardPoint - #{awardPoint}
+		WHERE  factionId = #{factionId}
+	</update>
+
+
+</mapper>

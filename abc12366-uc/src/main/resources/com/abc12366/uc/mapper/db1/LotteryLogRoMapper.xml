@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.LotteryLogMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.LotteryLog">
+insert into uc_lottery_log(
+id,activityId,lotteryId,createTime,lotteryName,isluck,state,userId,upoint,ip,remake,addressId
+,address,sendName,phone,activityStartTime,activityEndTime,activityName,lotteryLevel,lotterySend
+ ,kuaidiGS ,  kuaididanhao, sendRemake  ,sendRemake2,endlqDate
+)values(
+#{id},#{activityId},#{lotteryId},#{createTime},#{lotteryName},#{isluck},#{state},#{userId},#{upoint},#{ip},#{remake},#{addressId}
+,#{address},#{sendName},#{phone},#{activityStartTime},#{activityEndTime},#{activityName},#{lotteryLevel},#{lotterySend}
+,#{kuaidiGS},#{kuaididanhao},#{sendRemake},#{sendRemake2} ,#{endlqDate})
+</insert>
+    <update id="update" parameterType="com.abc12366.uc.model.LotteryLog">
+        update uc_lottery_log
+        <set>
+            <if test="address!=null">address=#{address},</if>
+            <if test="sendName!=null">sendName=#{sendName},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="activityId!=null">activityId=#{activityId},</if>
+            <if test="endlqDate!=null">endlqDate=#{endlqDate},</if>
+            <if test="lotteryId!=null">lotteryId=#{lotteryId},</if>
+            <if test="createTime!=null">createTime=#{createTime},</if>
+            <if test="lotteryName!=null">lotteryName=#{lotteryName},</if>
+            <if test="isluck!=null">isluck=#{isluck},</if>
+            <if test="state!=null">state=#{state},</if>
+            <if test="userId!=null">userId=#{userId},</if>
+            <if test="upoint!=null">upoint=#{upoint},</if>
+            <if test="ip!=null">ip=#{ip},</if>
+            <if test="addressId!=null">addressId=#{addressId},</if>
+            <if test="kuaidiGS!=null">kuaidiGS=#{kuaidiGS},</if>
+            <if test="kuaididanhao!=null">kuaididanhao=#{kuaididanhao},</if>
+            <if test="sendRemake!=null">sendRemake=#{sendRemake},</if>
+            <if test="sendRemake2!=null">sendRemake2=#{sendRemake2},</if>
+            <if test="remake!=null">remake=#{remake}</if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+delete from uc_lottery_log 
+where id=#{id}
+</delete>
+</mapper>

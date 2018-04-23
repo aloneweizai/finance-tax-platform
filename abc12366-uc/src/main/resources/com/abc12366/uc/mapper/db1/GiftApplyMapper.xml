@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.GiftApplyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.String">
+		 DELETE FROM uc_gift_apply
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.uc.model.gift.GiftApply">
+		 INSERT INTO uc_gift_apply
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="applyId != null">
+				 applyId,
+			</if>
+			<if test="giftId != null">
+				 giftId,
+			</if>
+			<if test="giftName != null">
+				 giftName,
+			</if>
+			<if test="giftAmount != null">
+				 giftAmount,
+			</if>
+			<if test="giftNum != null">
+				giftNum,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="applyId!=null">
+				 #{applyId},
+			</if>
+			<if test="giftId!=null">
+				 #{giftId},
+			</if>
+			<if test="giftName!=null">
+				 #{giftName},
+			</if>
+			<if test="giftAmount!=null">
+				 #{giftAmount},
+			</if>
+			<if test="giftNum!=null">
+				 #{giftNum},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.uc.model.gift.GiftApply">
+		 UPDATE uc_gift_apply
+ 		 <set>
+			<if test="applyId != null">
+				 applyId = #{applyId},
+			</if>
+			<if test="giftId != null">
+				 giftId = #{giftId},
+			</if>
+			<if test="giftName != null">
+				 giftName = #{giftName},
+			</if>
+			<if test="giftAmount != null">
+				 giftAmount = #{giftAmount},
+			</if>
+			<if test="giftNum != null">
+				giftNum = #{giftNum},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

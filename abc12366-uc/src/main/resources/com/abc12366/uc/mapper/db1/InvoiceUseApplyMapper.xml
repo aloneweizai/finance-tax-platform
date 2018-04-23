@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.InvoiceUseApplyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM uc_invoice_use_apply
+		WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.uc.model.invoice.InvoiceUseApply">
+		INSERT INTO uc_invoice_use_apply
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				id,
+			</if>
+			<if test="applyUser != null">
+				applyUser,
+			</if>
+			<if test="applyTime != null">
+				applyTime,
+			</if>
+			<if test="issueStatus != null">
+				issueStatus,
+			</if>
+			<if test="examineStatus != null">
+				examineStatus,
+			</if>
+			<if test="distributeUser != null">
+				distributeUser,
+			</if>
+			<if test="distributeTime != null">
+				distributeTime,
+			</if>
+			<if test="signUser != null">
+				signUser,
+			</if>
+			<if test="signTime != null">
+				signTime,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="applyUser!=null">
+				#{applyUser},
+			</if>
+			<if test="applyTime!=null">
+				#{applyTime},
+			</if>
+			<if test="issueStatus!=null">
+				#{issueStatus},
+			</if>
+			<if test="examineStatus!=null">
+				#{examineStatus},
+			</if>
+			<if test="distributeUser!=null">
+				#{distributeUser},
+			</if>
+			<if test="distributeTime!=null">
+				#{distributeTime},
+			</if>
+			<if test="signUser!=null">
+				#{signUser},
+			</if>
+			<if test="signTime!=null">
+				#{signTime},
+			</if>
+			<if test="remark!=null">
+				#{remark},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.uc.model.invoice.InvoiceUseApply">
+		UPDATE uc_invoice_use_apply
+		<set>
+			<if test="applyUser != null">
+				applyUser = #{applyUser},
+			</if>
+			<if test="applyTime != null">
+				applyTime = #{applyTime},
+			</if>
+			<if test="issueStatus != null">
+				issueStatus = #{issueStatus},
+			</if>
+			<if test="examineStatus != null">
+				examineStatus = #{examineStatus},
+			</if>
+			<if test="distributeUser != null">
+				distributeUser = #{distributeUser},
+			</if>
+			<if test="distributeTime != null">
+				distributeTime = #{distributeTime},
+			</if>
+			<if test="signUser != null">
+				signUser = #{signUser},
+			</if>
+			<if test="signTime != null">
+				signTime = #{signTime},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

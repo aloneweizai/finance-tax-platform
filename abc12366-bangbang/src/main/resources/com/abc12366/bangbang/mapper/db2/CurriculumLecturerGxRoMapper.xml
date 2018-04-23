@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumLecturerGxRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 curriculumId,lecturerId,lecturerName,	lecturerPicture
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx" parameterType="java.lang.String">
+		 SELECT
+             curriculumId,lecturerId
+		 FROM bb_curriculum_lecturer_gx
+		 WHERE lecturerId = #{lecturerId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.CurriculumLecturerGx" parameterType="java.lang.String">
+        SELECT
+            a.curriculumId,a.lecturerId,b.lecturerName,(select lecturerPicture from  bb_user where id = b.userId ) 	lecturerPicture
+        FROM bb_curriculum_lecturer_gx a LEFT JOIN bb_curriculum_lecturer b on a.lecturerId = b.lecturerId
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectLecturerCnt" resultType="java.lang.Integer"
+            parameterType="java.lang.String">
+        SELECT
+          count(c.curriculumId)
+        FROM bb_curriculum c,bb_curriculum_lecturer_gx l where l.curriculumId = c.curriculumId
+        <if test="lecturerId != null and lecturerId != ''">
+            AND l.lecturerId = #{lecturerId}
+        </if>
+    </select>
+
+
+</mapper>

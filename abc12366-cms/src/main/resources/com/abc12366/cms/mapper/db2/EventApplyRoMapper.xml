@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.EventApplyRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        applyId, eventId, source, name, tel, email, applytime, status, userid,bz
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.EventApply" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_event_apply
+        WHERE applyId = #{applyId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.EventApplyBo" parameterType="java.util.Map">
+        SELECT
+        a.applyId, a.eventId, a.source, u.nickname name,u.phone  tel, u.regMail email, a.applytime, a.status, a.userid,a.bz
+        FROM cms_event_apply a left join cms_user u on a.userid = u.id
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND u.nickname like CONCAT('%',#{name},'%')
+        </if>
+        <if test="tel != null and tel != ''">
+            AND u.phone like CONCAT('%',#{tel},'%')
+        </if>
+        <if test="email != null and email != ''">
+            AND u.regMail like CONCAT('%',#{email},'%')
+        </if>
+        <if test="status != null and status != ''">
+            AND a.status = #{status}
+        </if>
+        <if test="eventId != null and eventId != ''">
+            AND a.eventId = #{eventId}
+        </if>
+    </select>
+
+    <!-- 查询（报名统计） -->
+    <select id="selectbmtj" resultType="com.abc12366.cms.model.bo.EventbmtjBo" parameterType="java.util.Map">
+        SELECT title,peoppleNum,cnt1,cnt2,ROUND(cnt1/peoppleNum,2) bl FROM (SELECT title,peoppleNum,(SELECT
+        COUNT(applyId) FROM cms_event_apply a WHERE a.eventId = t.eventId) cnt1,
+        (SELECT COUNT(applyId) FROM cms_event_apply b WHERE b.eventId = t.eventId AND b.status = '1') cnt2 FROM
+        cms_event t where t.eventId = #{eventId}) tt
+    </select>
+
+    <!-- 查询（浏览统计） -->
+    <select id="selectlltj" resultType="com.abc12366.cms.model.bo.EventlltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(browsetime, '%Y%m%d') llsj,COUNT(recordId) cnt FROM cms_event_record
+        WHERE 1=1
+        <if test="source != null and source != ''">
+            AND source = #{source}
+        </if>
+        <if test="eventId != null and eventId != ''">
+            AND eventId = #{eventId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y%m%d') &gt;= DATE_FORMAT(#{startTime}, '%Y%m%d')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y%m%d') &lt;= DATE_FORMAT(#{endTime}, '%Y%m%d')
+        </if>
+        GROUP BY DAY(browsetime) order by browsetime
+    </select>
+
+    <!-- 查询（浏览统计） -->
+    <select id="selectlltjyue" resultType="com.abc12366.cms.model.bo.EventlltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(browsetime, '%Y%m') llsj,COUNT(recordId) cnt FROM cms_event_record
+        WHERE 1=1
+        <if test="source != null and source != ''">
+            AND source = #{source}
+        </if>
+        <if test="eventId != null and eventId != ''">
+            AND eventId = #{eventId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y%m') &gt;= DATE_FORMAT(#{startTime}, '%Y%m')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y%m') &lt;= DATE_FORMAT(#{endTime}, '%Y%m')
+        </if>
+        GROUP BY DATE_FORMAT(browsetime, '%Y%m') order by browsetime
+    </select>
+
+    <!-- 查询（浏览统计） -->
+    <select id="selectlltjnian" resultType="com.abc12366.cms.model.bo.EventlltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(browsetime, '%Y') llsj,COUNT(recordId) cnt FROM cms_event_record
+        WHERE 1=1
+        <if test="source != null and source != ''">
+            AND source = #{source}
+        </if>
+        <if test="eventId != null and eventId != ''">
+            AND eventId = #{eventId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y') &gt;= DATE_FORMAT(#{startTime}, '%Y')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND DATE_FORMAT(browsetime, '%Y') &lt;= DATE_FORMAT(#{endTime}, '%Y')
+        </if>
+        GROUP BY DATE_FORMAT(browsetime, '%Y') order by browsetime
+    </select>
+
+</mapper>

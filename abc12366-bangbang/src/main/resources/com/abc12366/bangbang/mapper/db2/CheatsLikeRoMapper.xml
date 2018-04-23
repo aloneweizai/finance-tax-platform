@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CheatsLikeRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	id,	likeTarget,factionId,	userId,	likeTime,	cheatsId,	likeType
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.CheatsLike" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_cheats_like
+		 WHERE likeId = #{likeId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByList" resultType="com.abc12366.bangbang.model.question.CheatsLike" parameterType="java.lang.String">
+        SELECT
+            id,	id,	likeTarget,	userId,	likeTime,	cheatsId,	likeType
+        FROM bb_cheats_like
+        WHERE 1=1
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectExist" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(id)
+        FROM bb_cheats_like
+        WHERE id = #{id} and userId = #{userId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectLikeCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(likeId)
+        FROM bb_cheats_like
+        WHERE likeType = 1 and id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectTrampleCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(likeId)
+        FROM bb_cheats_like
+        WHERE likeType = 2 and id = #{id}
+    </select>
+
+</mapper>

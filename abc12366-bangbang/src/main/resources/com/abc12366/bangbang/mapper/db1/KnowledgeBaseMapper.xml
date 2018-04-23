@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeBaseMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_base
+        WHERE id = #{id}
+    </delete>
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="java.util.List">
+        DELETE FROM bb_knowledge_base
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.KnowledgeBase">
+        INSERT INTO bb_knowledge_base
+        (id,categoryCode,type,recommend,subject,content,status,activeTime,source,isOpen,pv,usefulVotes,uselessVotes,shareNum,createTime,updateTime,createUser,updateUser)
+        VALUES
+        (#{id},#{categoryCode},#{type},#{recommend},#{subject},#{content},#{status},#{activeTime},#{source},#{isOpen},#{pv},#{usefulVotes},#{uselessVotes},#{shareNum},now(),now(),#{createUser},#{updateUser})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.bangbang.model.KnowledgeBase">
+        INSERT INTO bb_knowledge_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="categoryCode != null">
+                categoryCode,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="recommend != null">
+                recommend,
+            </if>
+            <if test="subject != null">
+                subject,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="activeTime != null">
+                activeTime,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="isOpen != null">
+                isOpen,
+            </if>
+            <if test="pv != null">
+                pv,
+            </if>
+            <if test="usefulVotes != null">
+                usefulVotes,
+            </if>
+            <if test="uselessVotes != null">
+                uselessVotes,
+            </if>
+            <if test="shareNum != null">
+                shareNum,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="updateUser != null">
+                updateUser,
+            </if>
+            createTime,updateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="categoryCode!=null">
+                #{categoryCode},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="recommend!=null">
+                #{recommend},
+            </if>
+            <if test="subject!=null">
+                #{subject},
+            </if>
+            <if test="content!=null">
+                #{content},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="activeTime!=null">
+                #{activeTime},
+            </if>
+            <if test="source!=null">
+                #{source},
+            </if>
+            <if test="isOpen!=null">
+                #{isOpen},
+            </if>
+            <if test="pv!=null">
+                #{pv},
+            </if>
+            <if test="usefulVotes!=null">
+                #{usefulVotes},
+            </if>
+            <if test="uselessVotes!=null">
+                #{uselessVotes},
+            </if>
+            <if test="shareNum!=null">
+                #{shareNum},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="updateUser!=null">
+                #{updateUser},
+            </if>
+            now(),now()
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.KnowledgeBase">
+        UPDATE bb_knowledge_base
+        <set>
+            <if test="categoryCode != null">
+                categoryCode = #{categoryCode},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="recommend != null">
+                recommend = #{recommend},
+            </if>
+            <if test="subject != null">
+                subject = #{subject},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            activeTime = #{activeTime},
+            <if test="source != null">
+                source = #{source},
+            </if>
+            <if test="isOpen != null">
+                isOpen = #{isOpen},
+            </if>
+            <if test="pv != null">
+                pv = #{pv},
+            </if>
+            <if test="usefulVotes != null">
+                usefulVotes = #{usefulVotes},
+            </if>
+            <if test="uselessVotes != null">
+                uselessVotes = #{uselessVotes},
+            </if>
+            <if test="shareNum != null">
+                shareNum = #{shareNum},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            updateTime = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.KnowledgeBase">
+        UPDATE bb_knowledge_base
+        SET
+        categoryCode = #{categoryCode},
+        type = #{type},
+        recommend = #{recommend},
+        subject = #{subject},
+        content = #{content},
+        status = #{status},
+        activeTime = #{activeTime},
+        source = #{source},
+        isOpen = #{isOpen},
+        pv = #{pv},
+        usefulVotes = #{usefulVotes},
+        uselessVotes = #{uselessVotes},
+        shareNum = #{shareNum},
+        updateTime = now(),
+        createUser = #{createUser},
+        updateUser = #{updateUser}
+        WHERE id = #{id}
+    </update>
+    <update id="updateStatusByPKs">
+        UPDATE bb_knowledge_base SET STATUS = #{status}
+        WHERE id IN
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 修改  知识是否有用 -->
+    <update id="addUsefulVoteByPK" parameterType="java.lang.String">
+      UPDATE bb_knowledge_base SET usefulVotes = usefulVotes + 1 WHERE id = #{id}
+    </update>
+    <update id="addUselessVoteByPK" parameterType="java.lang.String">
+        UPDATE bb_knowledge_base SET uselessVotes = uselessVotes + 1 WHERE id = #{id}
+    </update>
+    <!-- 新增浏览量 -->
+    <update id="addPVByPK">
+      UPDATE bb_knowledge_base SET pv = pv + 1 WHERE id = #{id}
+    </update>
+
+    <update id="updateCategoryCode">
+        UPDATE bb_knowledge_base SET categoryCode = #{newCode}  WHERE categoryCode = #{oldCode}
+    </update>
+
+</mapper>

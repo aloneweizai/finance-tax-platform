@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumOrderMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_order
+		 WHERE orderId = #{orderId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumOrder">
+		 INSERT INTO bb_curriculum_order
+ 		(orderId,curriculumId,userId,goodsId,nickname,username,memberGrade,orderName,orderPrice,orderIntegral,isIntegral,orderTime,phone,visitIP,visitSite,orderStatus)
+		 VALUES 
+ 		(#{orderId},#{curriculumId},#{userId},#{goodsId},#{nickname},#{username},#{memberGrade},#{orderName},#{orderPrice},#{orderIntegral},#{isIntegral},#{orderTime},#{phone},#{visitIP},#{visitSite},#{orderStatus})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumOrder">
+		 INSERT INTO bb_curriculum_order
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="orderId != null">
+				 orderId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+             <if test="goodsId != null">
+                 goodsId,
+             </if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade,
+			</if>
+			<if test="orderName != null">
+				 orderName,
+			</if>
+			<if test="orderPrice != null">
+				 orderPrice,
+			</if>
+             <if test="orderIntegral != null">
+                 orderIntegral,
+             </if>
+			<if test="isIntegral != null">
+				 isIntegral,
+			</if>
+			<if test="orderTime != null">
+				 orderTime,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="visitIP != null">
+				 visitIP,
+			</if>
+			<if test="visitSite != null">
+				 visitSite,
+			</if>
+			<if test="orderStatus != null">
+				 orderStatus,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="orderId!=null">
+				 #{orderId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+             <if test="goodsId!=null">
+                 #{goodsId},
+             </if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="memberGrade!=null">
+				 #{memberGrade},
+			</if>
+			<if test="orderName!=null">
+				 #{orderName},
+			</if>
+			<if test="orderPrice!=null">
+				 #{orderPrice},
+			</if>
+             <if test="orderIntegral!=null">
+                 #{orderIntegral},
+             </if>
+			<if test="isIntegral!=null">
+				 #{isIntegral},
+			</if>
+			<if test="orderTime!=null">
+				 #{orderTime},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="visitIP!=null">
+				 #{visitIP},
+			</if>
+			<if test="visitSite!=null">
+				 #{visitSite},
+			</if>
+			<if test="orderStatus!=null">
+				 #{orderStatus},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumOrder">
+		 UPDATE bb_curriculum_order
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+             <if test="goodsId != null">
+                 goodsId = #{goodsId},
+             </if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade = #{memberGrade},
+			</if>
+			<if test="orderName != null">
+				 orderName = #{orderName},
+			</if>
+			<if test="orderPrice != null">
+				 orderPrice = #{orderPrice},
+			</if>
+             <if test="orderIntegral != null">
+                 orderIntegral = #{orderIntegral},
+             </if>
+			<if test="isIntegral != null">
+				 isIntegral = #{isIntegral},
+			</if>
+			<if test="orderTime != null">
+				 orderTime = #{orderTime},
+			</if>
+			<if test="phone != null">
+				 phone = #{phone},
+			</if>
+			<if test="visitIP != null">
+				 visitIP = #{visitIP},
+			</if>
+			<if test="visitSite != null">
+				 visitSite = #{visitSite},
+			</if>
+			<if test="orderStatus != null">
+				 orderStatus = #{orderStatus},
+			</if>
+
+ 		 </set>
+		 WHERE orderId = #{orderId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumOrder">
+		 UPDATE bb_curriculum_order
+		 SET 
+			 curriculumId = #{curriculumId},
+			 userId = #{userId},
+			 goodsId = #{goodsId},
+			 nickname = #{nickname},
+			 username = #{username},
+			 memberGrade = #{memberGrade},
+			 orderName = #{orderName},
+			 orderPrice = #{orderPrice},
+			 orderIntegral = #{orderIntegral},
+			 isIntegral = #{isIntegral},
+			 orderTime = #{orderTime},
+			 phone = #{phone},
+			 visitIP = #{visitIP},
+			 visitSite = #{visitSite},
+			 orderStatus = #{orderStatus}
+		 WHERE orderId = #{orderId}
+	</update>
+
+</mapper>

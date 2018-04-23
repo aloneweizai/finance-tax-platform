@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionHeadmanMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	name,	phone,	applyReason,	createTime,	userId, factionId,classifyCode,	status,	updateTime,	updateAdmin
+	</sql>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_headman
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionHeadman">
+		 INSERT INTO bb_question_headman
+ 		(id,name,phone,introduce,applyReason,createTime,userId,factionId,classifyCode,status,updateTime,updateAdmin)
+		 VALUES 
+ 		(#{id},#{name},#{phone},#{introduce},#{applyReason},now(),#{userId},#{factionId},#{classifyCode},#{status},now(),#{updateAdmin})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionHeadman">
+		 INSERT INTO bb_question_headman
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="name != null">
+				 name,
+			</if>
+			<if test="phone != null">
+				 phone,
+			</if>
+			<if test="applyReason != null">
+				 applyReason,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="classifyCode != null">
+				classifyCode,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin,
+			</if>
+			 createTime,updateTime
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="name!=null">
+				 #{name},
+			</if>
+			<if test="phone!=null">
+				 #{phone},
+			</if>
+			<if test="applyReason!=null">
+				 #{applyReason},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="classifyCode!=null">
+			 	 #{classifyCode},
+		 	</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="updateAdmin!=null">
+				 #{updateAdmin},
+			</if>
+			now(),now()
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionHeadman">
+		 UPDATE bb_question_headman
+ 		 <set> 
+			<if test="name != null">
+				 name = #{name},
+			</if>
+			<if test="phone != null">
+				 phone = #{phone},
+			</if>
+			<if test="applyReason != null">
+				 applyReason = #{applyReason},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="factionId != null">
+				factionId = #{factionId},
+			</if>
+			<if test="classifyCode != null">
+				classifyCode = #{classifyCode},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="updateAdmin != null">
+				 updateAdmin = #{updateAdmin},
+			</if>
+			updateTime = now()
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionHeadman">
+		 UPDATE bb_question_headman
+		 SET 
+			 name = #{name},
+			 phone = #{phone},
+			 applyReason = #{applyReason},
+			 userId = #{userId},
+			 factionId = #{factionId},
+			 classifyCode = #{classifyCode},
+			 status = #{status},
+			 updateTime = now(),
+			 updateAdmin = #{updateAdmin}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

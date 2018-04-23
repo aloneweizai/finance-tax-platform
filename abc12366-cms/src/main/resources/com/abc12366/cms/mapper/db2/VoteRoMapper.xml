@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.VoteRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, startTime, endTime, login, channel, status, createTime, lastUpdate,
+        quickVote,
+        privacyVote,
+        privacyPassword,
+        dayVote,
+        showResult,
+        startIntro,
+        endIntro,
+        access,
+        header,
+        footer,
+        url,
+        status,
+        validateCode,
+        hiddenResult
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.cms.model.Vote" parameterType="com.abc12366.cms.model.Vote">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_vote
+        <where>
+            <if test="name != null">name like CONCAT('%',#{name},'%')</if>
+        </where>
+        ORDER by lastUpdate DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.cms.model.Vote" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_vote
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectResultList" resultType="com.abc12366.cms.model.VoteResult" parameterType="com.abc12366.cms.model.VoteResult" >
+        SELECT id,voteId,subjectId,itemId,userId,openId,ip,userAgent
+        FROM cms_vote_result
+        <where>
+            <if test="voteId != null">voteId = #{voteId}</if>
+            <if test="subjectId != null">and subjectId = #{subjectId}</if>
+            <if test="itemId != null">and itemId = #{itemId}</if>
+            <if test="ip != null">and ip = #{ip}</if>
+        </where>
+    </select>
+
+    <select id="selectResultCount" parameterType="com.abc12366.cms.model.VoteResult" resultType="java.lang.Integer">
+        SELECT count(DISTINCT ip) FROM cms_vote_result
+        <where>
+            <if test="voteId != null">voteId = #{voteId}</if>
+            <if test="subjectId != null">and subjectId = #{subjectId}</if>
+            <if test="itemId != null">and itemId = #{itemId}</if>
+        </where>
+    </select>
+
+    <select id="selectHistoryCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(DISTINCT ip) FROM cms_vote_history
+        where voteId = #{voteId}
+    </select>
+
+    <select id="statBrowser" parameterType="java.lang.String" resultType="com.abc12366.cms.model.bo.VoteStatBrowserBO">
+        SELECT userAgent, count(id) as num FROM cms_vote_result
+        WHERE voteId = #{voteId}
+        GROUP BY userAgent
+    </select>
+
+    <select id="statIpArea" parameterType="java.lang.String" resultType="com.abc12366.cms.model.bo.VoteStatAreaBO">
+        SELECT city, cityId, count(ip) as num FROM cms_vote_ip_area
+        WHERE voteId = #{voteId}
+        AND countryId = 'CN'
+    </select>
+
+
+    <!-- 查询（浏览统计按时间） -->
+    <select id="selectlltj" resultType="com.abc12366.cms.model.bo.VoteRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(createTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_vote_history
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+        <if test="source != null and source != ''">
+            AND source = #{source}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(createTime)
+    </select>
+
+    <!-- 查询（浏览统计总数按时间） -->
+    <select id="selectlltjs" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_vote_history
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &lt;= #{endTime}
+        </if>
+    </select>
+
+    <!-- 查询（浏览统计总数） -->
+    <select id="selectlltjsbysj" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_vote_history
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+    </select>
+
+    <!-- 查询（投票统计按时间） -->
+    <select id="selecttptjbysj" resultType="com.abc12366.cms.model.bo.VoteRolltjBo" parameterType="java.util.Map">
+        SELECT DATE_FORMAT(createTime, '%Y%m%d') tj,COUNT(id) cnt FROM cms_vote_result
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND UNIX_TIMESTAMP(createTime) &lt;= #{endTime}
+        </if>
+        GROUP BY DAY(createTime)
+    </select>
+
+    <!-- 查询（投票统计总数） -->
+    <select id="selecttptjs" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(id) cnt FROM cms_vote_result
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+    </select>
+
+    <!-- 查询（投票统计） -->
+    <select id="selecttptj" resultType="com.abc12366.cms.model.bo.VoteRotptjBo" parameterType="java.util.Map">
+        SELECT itemId id,(SELECT item FROM cms_subject_item WHERE id = itemId) tj,
+        (SELECT STATUS FROM cms_subject_item WHERE id = itemId) bz,COUNT(id) cnt FROM cms_vote_result
+        WHERE 1=1
+        <if test="voteId != null and voteId != ''">
+            AND voteId = #{voteId}
+        </if>
+        GROUP BY itemId ORDER BY cnt DESC
+    </select>
+
+</mapper>

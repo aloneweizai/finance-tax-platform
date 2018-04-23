@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.LotteryMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.Lottery">
+insert into uc_lottery(noluck,
+id,activityId,level,stock,count,timeStock,timeCount,limits,name,description,image,cost,types,startTime,endTime,luck,createTime,status,send,timeDay
+)values(#{noluck},
+#{id},#{activityId},#{level},#{stock},#{count},#{timeStock},#{timeCount},#{limits},#{name},#{description},#{image},#{cost},#{types},#{startTime},#{endTime},#{luck},#{createTime},#{status},#{send},#{timeDay})
+</insert>
+    <update id="update" parameterType="com.abc12366.uc.model.Lottery">
+        update uc_lottery
+        <set>
+            <if test="activityId!=null">activityId=#{activityId},</if>
+            <if test="noluck!=null">noluck=#{noluck},</if>
+            <if test="level!=null">level=#{level},</if>
+            <if test="stock!=null">stock=#{stock},</if>
+            <if test="count!=null">count=#{count},</if>
+            <if test="timeStock!=null">timeStock=#{timeStock},</if>
+            <if test="timeCount!=null">timeCount=#{timeCount},</if>
+            <if test="limits!=null">limits=#{limits},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="description!=null">description=#{description},</if>
+            <if test="image!=null">image=#{image},</if>
+            <if test="cost!=null">cost=#{cost},</if>
+            <if test="types!=null">types=#{types},</if>
+            <if test="startTime!=null">startTime=#{startTime},</if>
+            <if test="endTime!=null">endTime=#{endTime},</if>
+            <if test="luck!=null">luck=#{luck},</if>
+            <if test="createTime!=null">createTime=#{createTime},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="send!=null">send=#{send},</if>
+            <if test="timeDay!=null">timeDay=#{timeDay}</if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+delete from uc_lottery 
+where id=#{id}
+</delete>
+</mapper>

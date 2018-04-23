@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.AdminOperationRoMapper">
+    <select id="selectList" parameterType="java.util.Map" resultType="com.abc12366.uc.model.bo.AdminModifyUphoneLogList">
+        SELECT a.id, a.userId,b.nickname,b.userPicturePath, a.adminId, c.nickname adminNickname,a.oldPhone, a.newPhone, a.createTime, a.reason,a.oldUsername,a.newUsername
+        FROM uc_admin_modify_phone_log a JOIN uc_user b JOIN uc_admin c ON a.userId= b.id AND c.id=a.adminId
+        <where>
+            <if test="userId != null and userId != ''"> a.userId=#{userId}</if>
+        </where>
+        order by a.createTime desc
+    </select>
+</mapper>

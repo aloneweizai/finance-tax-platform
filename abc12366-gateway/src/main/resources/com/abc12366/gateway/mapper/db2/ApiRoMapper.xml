@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.ApiRoMapper">
+
+    <!-- 通用BO查询结果列-->
+    <sql id="Base_BO_Column_List">
+        i.id, i.name, i.uri, i.method, i.version, i.dictId, i.authentication, i.status, i.createTime,
+        i.lastUpdate,d.fieldKey as dictName
+    </sql>
+
+    <resultMap id="apiMap" type="com.abc12366.gateway.model.bo.ApiBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="uri" property="uri" jdbcType="VARCHAR"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="dictId" property="dictId" jdbcType="VARCHAR"/>
+        <result column="dictName" property="dictName" jdbcType="VARCHAR"/>
+        <result column="authentication" property="authentication" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        <result column="appName" property="appName" jdbcType="VARCHAR"/>
+        <result column="appId" property="appId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectList" resultMap="apiMap" parameterType="com.abc12366.gateway.model.Api">
+        select
+        <include refid="Base_BO_Column_List"/>
+        from gw_api i
+        LEFT JOIN gw_view_sys_dict d ON d.id = i.dictId
+        <where>
+            1 = 1
+            <if test="name != null and name != ''">and i.name LIKE CONCAT('%',#{name},'%')</if>
+            <if test="uri != null and uri != '' ">and i.uri LIKE CONCAT('%',#{uri},'%')</if>
+            <if test="status != null">AND i.status = #{status}</if>
+            <if test="dictId != null and dictId != ''">AND i.dictId = #{dictId}</if>
+        </where>
+        order by i.name,i.lastUpdate asc
+    </select>
+
+    <select id="selectBySettingList" resultMap="apiMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_BO_Column_List"/>
+        FROM
+        gw_api i
+        LEFT JOIN gw_view_sys_dict d ON d.id = i.dictId
+        WHERE
+        (select count(1) as num from gw_app_setting sp where i.id = sp.apiId and sp.appId = #{appId}) = 0
+        and i.status = true
+    </select>
+
+    <select id="selectOne" resultMap="apiMap" parameterType="com.abc12366.gateway.model.Api">
+        select
+        <include refid="Base_BO_Column_List"/>
+        from gw_api i
+        LEFT JOIN gw_view_sys_dict d ON d.id = i.dictId WHERE i.id = #{id}
+    </select>
+
+    <select id="selectByUriAndVersion" resultMap="apiMap" parameterType="com.abc12366.gateway.model.Api">
+        select
+        <include refid="Base_BO_Column_List"/>
+        from gw_api i
+        LEFT JOIN gw_view_sys_dict d ON d.id = i.dictId WHERE i.uri = #{uri}
+        and i.method = #{method} and i.version = #{version}
+    </select>
+
+</mapper>

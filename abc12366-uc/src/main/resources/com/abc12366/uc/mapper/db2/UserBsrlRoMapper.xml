@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserBsrlRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 calId,	sbyf,	sbrq,	xgsj,	description
+	</sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.UserBsrl" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_bsrl
+        WHERE calId = #{calId}
+    </select>
+    <!-- 查询列表 -->
+    <select id="selectList" resultType="com.abc12366.uc.model.UserBsrl" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_bsrl
+        <where>
+            1 = 1
+            <if test=" sbyf != null and sbyf != '' ">
+                and sbyf = #{sbyf}
+            </if>
+            <if test=" sbnf != null and sbnf != '' ">
+                <![CDATA[
+                and sbyf  LIKE CONCAT(#{sbnf},'%')
+                ]]>
+            </if>
+            <if test="startTime != null">
+                <![CDATA[
+                  and date_format(xgsj, '%Y-%m-%d') >= date_format(#{startTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                  and date_format(xgsj, '%Y-%m-%d') <= date_format(#{endTime}, '%Y-%m-%d')
+                ]]>
+            </if>
+        </where>
+        order by sbyf asc
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectById" resultType="com.abc12366.uc.model.bo.UserBsrlBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_bsrl
+        WHERE calId = #{calId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectBySbyf" resultType="com.abc12366.uc.model.bo.UserBsrlBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_bsrl
+        WHERE sbyf = #{sbyf}
+    </select>
+
+</mapper>

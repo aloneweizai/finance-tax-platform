@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.DeliveryMethodMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM uc_delivery_method
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 添加 -->
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.order.DeliveryMethod">
+        INSERT INTO uc_delivery_method
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="firstWeight != null">
+                firstWeight,
+            </if>
+            <if test="firstWeightFee != null">
+                firstWeightFee,
+            </if>
+            <if test="addedWeight != null">
+                addedWeight,
+            </if>
+            <if test="addedWeightFee != null">
+                addedWeightFee,
+            </if>
+            <if test="isInsured != null">
+                isInsured,
+            </if>
+            <if test="rate != null">
+                rate,
+            </if>
+            <if test="minInsuredFee != null">
+                minInsuredFee,
+            </if>
+            <if test="areaFeeType != null">
+                areaFeeType,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="firstWeight!=null">
+                #{firstWeight},
+            </if>
+            <if test="firstWeightFee!=null">
+                #{firstWeightFee},
+            </if>
+            <if test="addedWeight!=null">
+                #{addedWeight},
+            </if>
+            <if test="addedWeightFee!=null">
+                #{addedWeightFee},
+            </if>
+            <if test="isInsured!=null">
+                #{isInsured},
+            </if>
+            <if test="rate!=null">
+                #{rate},
+            </if>
+            <if test="minInsuredFee!=null">
+                #{minInsuredFee},
+            </if>
+            <if test="areaFeeType!=null">
+                #{areaFeeType},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.order.DeliveryMethod">
+        UPDATE uc_delivery_method
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="firstWeight != null">
+                firstWeight = #{firstWeight},
+            </if>
+            <if test="firstWeightFee != null">
+                firstWeightFee = #{firstWeightFee},
+            </if>
+            <if test="addedWeight != null">
+                addedWeight = #{addedWeight},
+            </if>
+            <if test="addedWeightFee != null">
+                addedWeightFee = #{addedWeightFee},
+            </if>
+            <if test="isInsured != null">
+                isInsured = #{isInsured},
+            </if>
+            <if test="rate != null">
+                rate = #{rate},
+            </if>
+            <if test="minInsuredFee != null">
+                minInsuredFee = #{minInsuredFee},
+            </if>
+            <if test="areaFeeType != null">
+                areaFeeType = #{areaFeeType},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

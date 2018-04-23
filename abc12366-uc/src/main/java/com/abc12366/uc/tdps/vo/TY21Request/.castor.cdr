@@ -1,0 +1,8 @@
+#Fri Aug 11 14:43:19 CST 2017
+com.abc12366.uc.tdps.vo.TY21Request.SLZSXX=com.abc12366.uc.tdps.vo.TY21Request.descriptors.SLZSXXDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.MXXX=com.abc12366.uc.tdps.vo.TY21Request.descriptors.MXXXDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.T_REQUEST=com.abc12366.uc.tdps.vo.TY21Request.descriptors.T_REQUESTDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.NSRJBXX=com.abc12366.uc.tdps.vo.TY21Request.descriptors.NSRJBXXDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.REQUEST=com.abc12366.uc.tdps.vo.TY21Request.descriptors.REQUESTDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.SWJGZSXX=com.abc12366.uc.tdps.vo.TY21Request.descriptors.SWJGZSXXDescriptor
+com.abc12366.uc.tdps.vo.TY21Request.Rqfw=com.abc12366.uc.tdps.vo.TY21Request.descriptors.RqfwDescriptor

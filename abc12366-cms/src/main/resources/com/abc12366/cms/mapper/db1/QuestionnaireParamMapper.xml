@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.QuestionnaireParamMapper">
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_paper_questionnaire_param
+        WHERE questionId = #{questionId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.QuestionnaireParam">
+        INSERT INTO cms_paper_questionnaire_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">
+                questionId,
+            </if>
+            <if test="isDisplayNumber != null">
+                isDisplayNumber,
+            </if>
+            <if test="isBackspace != null">
+                isBackspace,
+            </if>
+            <if test="isDisplayResults != null">
+                isDisplayResults,
+            </if>
+            <if test="recoveryEndTime != null">
+                recoveryEndTime,
+            </if>
+            <if test="isLoginAuth != null">
+                isLoginAuth,
+            </if>
+            <if test="isAnswerOnce != null">
+                isAnswerOnce,
+            </if>
+            <if test="isWxOnce != null">
+                isWxOnce,
+            </if>
+            <if test="isUserRange != null">
+                isUserRange,
+            </if>
+            <if test="isAnswerRemind != null">
+                isAnswerRemind,
+            </if>
+            <if test="isPrize != null">
+                isPrize,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionId!=null">
+                #{questionId},
+            </if>
+            <if test="isDisplayNumber!=null">
+                #{isDisplayNumber},
+            </if>
+            <if test="isBackspace!=null">
+                #{isBackspace},
+            </if>
+            <if test="isDisplayResults!=null">
+                #{isDisplayResults},
+            </if>
+            <if test="recoveryEndTime!=null">
+                #{recoveryEndTime},
+            </if>
+            <if test="isLoginAuth!=null">
+                #{isLoginAuth},
+            </if>
+            <if test="isAnswerOnce!=null">
+                #{isAnswerOnce},
+            </if>
+            <if test="isWxOnce != null">
+                #{isWxOnce},
+            </if>
+            <if test="isUserRange!=null">
+                #{isUserRange},
+            </if>
+            <if test="isAnswerRemind!=null">
+                #{isAnswerRemind},
+            </if>
+            <if test="isPrize!=null">
+                #{isPrize},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.QuestionnaireParam">
+        UPDATE cms_paper_questionnaire_param
+        <set>
+            <if test="isDisplayNumber != null">
+                isDisplayNumber = #{isDisplayNumber},
+            </if>
+            <if test="isBackspace != null">
+                isBackspace = #{isBackspace},
+            </if>
+            <if test="isDisplayResults != null">
+                isDisplayResults = #{isDisplayResults},
+            </if>
+            recoveryEndTime = #{recoveryEndTime},
+            <if test="isLoginAuth != null">
+                isLoginAuth = #{isLoginAuth},
+            </if>
+            <if test="isAnswerOnce != null">
+                isAnswerOnce = #{isAnswerOnce},
+            </if>
+            <if test="isWxOnce != null">
+                isWxOnce = #{isWxOnce},
+            </if>
+            <if test="isUserRange != null">
+                isUserRange = #{isUserRange},
+            </if>
+            <if test="isAnswerRemind != null">
+                isAnswerRemind = #{isAnswerRemind},
+            </if>
+            <if test="isPrize != null">
+                isPrize = #{isPrize},
+            </if>
+
+        </set>
+        WHERE questionId = #{questionId}
+    </update>
+
+</mapper>

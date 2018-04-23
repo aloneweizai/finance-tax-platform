@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.LoginInfoMapper">
+
+    <resultMap id="loginInfoMap" type="com.abc12366.uc.model.admin.bo.LoginInfoBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="appId" property="appId" jdbcType="VARCHAR"/>
+        <result column="token" property="token" jdbcType="VARCHAR"/>
+        <result column="lastResetTokenTime" property="lastResetTokenTime" jdbcType="TIMESTAMP"/>
+        <association property="admin" javaType="com.abc12366.uc.model.admin.Admin">
+            <id column="uId" property="id" jdbcType="VARCHAR"/>
+            <result column="username" property="username" jdbcType="VARCHAR"/>
+            <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+            <result column="status" property="status" jdbcType="TINYINT"/>
+            <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+            <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, userId, appId, token, lastResetTokenTime
+    </sql>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByUserId" parameterType="java.lang.String">
+        DELETE FROM uc_login_info
+        WHERE userId = #{userId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.LoginInfo">
+        INSERT INTO uc_login_info
+        (id,userId,appId,token,lastResetTokenTime)
+        VALUES
+        (#{id},#{userId},#{appId},#{token},#{lastResetTokenTime})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.uc.model.admin.LoginInfo">
+        INSERT INTO uc_login_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="appId != null">
+                appId,
+            </if>
+            <if test="token != null">
+                token,
+            </if>
+            <if test="lastResetTokenTime != null">
+                lastResetTokenTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="appId!=null">
+                #{appId},
+            </if>
+            <if test="token!=null">
+                #{token},
+            </if>
+            <if test="lastResetTokenTime!=null">
+                #{lastResetTokenTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.admin.LoginInfo">
+        UPDATE uc_login_info
+        <set>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="appId != null">
+                appId = #{appId},
+            </if>
+            <if test="token != null">
+                token = #{token},
+            </if>
+            <if test="lastResetTokenTime != null">
+                lastResetTokenTime = #{lastResetTokenTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.uc.model.admin.LoginInfo">
+        UPDATE uc_login_info
+        SET
+        userId = #{userId},
+        appId = #{appId},
+        token = #{token},
+        lastResetTokenTime = #{lastResetTokenTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectInfoByToken" resultType="com.abc12366.uc.model.admin.LoginInfo"
+            parameterType="com.abc12366.uc.model.admin.LoginInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_login_info
+        <where>
+            1=1
+            <if test="token != null and token!=''">
+                and token = #{token}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectLoginInfoByToken" resultMap="loginInfoMap" parameterType="java.lang.String">
+        SELECT
+        i.id, i.userId, i.appId, i.token, i.lastResetTokenTime,
+        u.id as uId, u.username, u.password, u.nickname, u.status, u.createTime, u.lastUpdate
+        FROM uc_login_info i
+        LEFT JOIN uc_admin u ON u.id = i.userId
+        WHERE i.token = #{token}
+    </select>
+</mapper>

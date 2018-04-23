@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.TradeLogMapper">
+
+    <sql id="Base_Column_List">
+        tradeNo, amount, tradeStatus, tradeTime, payMethod, createTime, lastUpdate, compareStatus, compareTime,tradeType,aliTrandeNo
+    </sql>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM uc_trade_log
+        WHERE tradeNo = #{tradeNo}
+    </delete>
+    
+    <insert id="insertTradeLog" parameterType="com.abc12366.uc.model.order.TradeLog">
+        INSERT INTO uc_trade_log (<include refid="Base_Column_List"/>)
+        VALUES (#{tradeNo},#{amount},#{tradeStatus},#{tradeTime},#{payMethod},#{createTime},#{lastUpdate},#{compareStatus},#{compareTime},#{tradeType},#{aliTrandeNo})
+    </insert>
+    
+    
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.order.TradeLog">
+        INSERT INTO uc_trade_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeNo != null">
+                tradeNo,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="tradeStatus != null">
+                tradeStatus,
+            </if>
+            <if test="tradeTime != null">
+                tradeTime,
+            </if>
+            <if test="payMethod != null">
+                payMethod,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="compareStatus != null">
+                compareStatus,
+            </if>
+            <if test="compareTime != null">
+                compareTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeNo!=null">
+                #{tradeNo},
+            </if>
+            <if test="amount!=null">
+                #{amount},
+            </if>
+            <if test="tradeStatus!=null">
+                #{tradeStatus},
+            </if>
+            <if test="tradeTime!=null">
+                #{tradeTime},
+            </if>
+            <if test="payMethod!=null">
+                #{payMethod},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="compareStatus!=null">
+                #{compareStatus},
+            </if>
+            <if test="compareTime!=null">
+                #{compareTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.order.TradeLog">
+        UPDATE uc_trade_log
+        <set>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="aliTrandeNo != null">
+                aliTrandeNo = #{aliTrandeNo},
+            </if>
+            <if test="tradeType != null">
+                tradeType = #{tradeType},
+            </if>
+            <if test="tradeStatus != null">
+                tradeStatus = #{tradeStatus},
+            </if>
+            <if test="tradeTime != null">
+                tradeTime = #{tradeTime},
+            </if>
+            <if test="payMethod != null">
+                payMethod = #{payMethod},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="compareStatus != null">
+                compareStatus = #{compareStatus},
+            </if>
+            <if test="compareTime != null">
+                compareTime = #{compareTime},
+            </if>
+
+        </set>
+        WHERE tradeNo = #{tradeNo}
+    </update>
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.VipPrivilegeLevelRoMapper">
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO">
+        SELECT z.id,levelId,privilegeId,(select b.name from uc_uvip_privilege b where b.code=z.privilegeId) as privilegeName,
+           (select a.level from uc_uvip_level a where a.levelCode=z.levelId) as levelName,
+           z.val1,z.val2,z.val3,z.val4,z.description,z.status,z.lastUpdate,z.createTime
+        FROM uc_level_privilege z
+        where z.levelId=#{levelId}
+        group by z.privilegeId
+    </select>
+
+    <select id="selectListbyPrivlege" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO">
+        SELECT z.id,levelId,privilegeId,(select b.name from uc_uvip_privilege b where b.id=z.privilegeId) as privilegeName,
+        (select a.level from uc_uvip_level a where a.id=z.levelId) as levelName,
+        z.val1,z.val2,z.val3,z.val4,z.description,z.status,z.lastUpdate,z.createTime
+        FROM uc_level_privilege z
+        where z.privilegeId=#{privilegeId}
+        group by z.levelId
+    </select>
+
+    <select id="selectLevelIdPrivilegeId" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO"
+            parameterType="java.util.Map">
+        SELECT id,levelId,privilegeId,val1,val2,val3,val4,description,status,lastUpdate,createTime
+        from uc_level_privilege
+        <where>
+            <if test="levelId!=null">
+                levelId=#{levelId}
+            </if>
+            <if test="privilegeId!=null">
+                and privilegeId=#{privilegeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectListN" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO" parameterType="java.util.Map">
+        SELECT id,levelId,privilegeId,val1,val2,val3,val4,description,status,lastUpdate,createTime
+        from uc_level_privilege
+        <where>
+            <if test="levelId!=null">
+                levelId=#{levelId}
+            </if>
+            <if test="privilegeId!=null">
+                and privilegeId=#{privilegeId}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+        ORDER BY createTime ASC
+    </select>
+
+    <select id="selectOneN" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO" parameterType="java.lang.String">
+        SELECT id,levelId,privilegeId,val1,val2,val3,val4,description,status,lastUpdate,createTime
+        from uc_level_privilege
+        where id=#{id}
+    </select>
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.VipPrivilegeLevelBO" parameterType="java.lang.String">
+        SELECT id,levelId,privilegeId,val1,val2,val3,val4,description,status,lastUpdate,createTime
+        ,(select a.level from uc_uvip_level a where a.id=z.levelId) as levelName
+        ,(select b.name from uc_uvip_privilege b where b.id=z.privilegeId) as privilegeName
+        from uc_level_privilege z
+        where id=#{id}
+    </select>
+</mapper>

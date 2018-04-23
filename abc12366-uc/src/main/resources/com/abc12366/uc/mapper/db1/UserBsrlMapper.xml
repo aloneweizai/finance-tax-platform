@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.UserBsrlMapper">
+
+
+	<!--删除：根据主键ID删除-->
+	<delete id="delete" parameterType="java.lang.String">
+		 DELETE FROM uc_user_bsrl
+		 WHERE calId = #{calId}
+	</delete>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.abc12366.uc.model.UserBsrl">
+		 INSERT INTO uc_user_bsrl
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="calId != null">
+				 calId,
+			</if>
+			<if test="sbyf != null">
+				 sbyf,
+			</if>
+			<if test="sbrq != null">
+				 sbrq,
+			</if>
+			<if test="xgsj != null">
+				 xgsj,
+			</if>
+			<if test="description != null">
+				 description,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="calId!=null">
+				 #{calId},
+			</if>
+			<if test="sbyf!=null">
+				 #{sbyf},
+			</if>
+			<if test="sbrq!=null">
+				 #{sbrq},
+			</if>
+			<if test="xgsj!=null">
+				 #{xgsj},
+			</if>
+			<if test="description!=null">
+				 #{description},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="update" parameterType="com.abc12366.uc.model.UserBsrl">
+		 UPDATE uc_user_bsrl
+ 		 <set> 
+			<if test="sbyf != null">
+				 sbyf = #{sbyf},
+			</if>
+			<if test="sbrq != null">
+				 sbrq = #{sbrq},
+			</if>
+			<if test="xgsj != null">
+				 xgsj = #{xgsj},
+			</if>
+			<if test="description != null">
+				 description = #{description},
+			</if>
+
+ 		 </set>
+		 WHERE calId = #{calId}
+	</update>
+
+</mapper>

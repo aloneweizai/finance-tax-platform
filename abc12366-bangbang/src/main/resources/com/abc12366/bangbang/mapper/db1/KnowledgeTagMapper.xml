@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeTagMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, description, status, createTime, updateTime, createUser, updateUser, tagType
+    </sql>
+
+
+    <!-- 查询关联问题最多的标签名 -->
+    <select id="selectHotTag" resultType="java.lang.String" parameterType="java.lang.Integer">
+          SELECT name FROM bb_knowledge_tag WHERE id IN (
+            SELECT * FROM (
+              SELECT tagId FROM bb_knowledge_tag_rel GROUP BY tagId ORDER BY COUNT(1) DESC
+            )AS t
+          ) AND STATUS = TRUE LIMIT #{num}
+    </select>
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.KnowledgeTag" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_tag
+        WHERE id = #{id}
+    </select>
+    <!-- 查询（根据name查询） -->
+    <select id="selectByName" resultType="com.abc12366.bangbang.model.KnowledgeTag" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_tag
+        WHERE name = #{name}
+    </select>
+    <!-- 查询列表 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.KnowledgeTag" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_tag
+        WHERE 1 = 1
+        <if test="keywords != null and keywords!=''">
+            AND name LIKE CONCAT('%',#{keywords},'%')
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="tagType != null">
+            AND tagType LIKE CONCAT('%',#{tagType},'%')
+        </if>
+        ORDER BY updateTime DESC
+    </select>
+    <!-- 查询列表 -->
+    <select id="selectRelatedTags" resultType="com.abc12366.bangbang.model.KnowledgeTag" parameterType="java.lang.String">
+        SELECT t2.* FROM
+        bb_knowledge_tag_rel t1
+        JOIN bb_knowledge_tag t2 ON t1.tagId = t2.id
+        WHERE t1.knowledgeId = #{knowledgeId}
+    </select>
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_tag
+        WHERE id = #{id}
+    </delete>
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="java.util.List">
+        DELETE FROM bb_knowledge_tag
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.KnowledgeTag">
+        INSERT INTO bb_knowledge_tag
+        (id,name,description,status,createTime,updateTime,createUser,updateUser,tagType)
+        VALUES
+        (#{id},#{name},#{description},#{status},now(),now(),#{createUser},#{updateUser},#{tagType})
+    </insert>
+
+    <!-- 批量添加 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO bb_knowledge_tag
+        (id,name,description,status,createTime,updateTime,createUser,updateUser,tagType)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.description},#{item.status},now(),now(),#{item.createUser},#{item.updateUser},#{item.tagType})
+        </foreach>
+    </insert>
+
+    <!-- 批量update -->
+    <update id="batchUpdateTypeByName" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE bb_knowledge_tag SET tagType = CONCAT(tagType,';', #{item.tagType}) WHERE id = #{item.id}
+        </foreach>
+    </update>
+
+
+
+
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.bangbang.model.KnowledgeTag">
+        INSERT INTO bb_knowledge_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="updateUser != null">
+                updateUser,
+            </if>
+            createTime,
+            updateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="updateUser!=null">
+                #{updateUser},
+            </if>
+            now(),now()
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.KnowledgeTag">
+        UPDATE bb_knowledge_tag
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            <if test="tagType != null">
+                tagType = #{tagType},
+            </if>
+            updateTime = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.KnowledgeTag">
+        UPDATE bb_knowledge_tag
+        SET
+        name = #{name},
+        description = #{description},
+        status = #{status},
+        updateTime = now(),
+        updateUser = #{updateUser},
+        tagType = #{tagType}
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

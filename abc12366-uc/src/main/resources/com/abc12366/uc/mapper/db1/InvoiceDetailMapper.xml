@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.InvoiceDetailMapper">
+
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM uc_invoice_detail
+        WHERE id = #{id}
+    </delete>
+
+    <!--删除：根据主键InvoiceRepoId删除-->
+    <delete id="deleteByInvoiceRepoId" parameterType="java.lang.String">
+        DELETE FROM uc_invoice_detail
+        WHERE invoiceRepoId = #{invoiceRepoId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        INSERT INTO uc_invoice_detail
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null">
+                id,
+            </if>
+            <if test="invoiceNo != null">
+                invoiceNo,
+            </if>
+            <if test="invoiceCode != null">
+                invoiceCode,
+            </if>
+            <if test="property != null">
+                property,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="invoiceRepoId != null">
+                invoiceRepoId,
+            </if>
+            <if test="spUrl != null">
+                spUrl,
+            </if>
+            <if test="pdfUrl != null">
+                pdfUrl,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="invoiceNo!=null">
+                #{invoiceNo},
+            </if>
+            <if test="invoiceCode!=null">
+                #{invoiceCode},
+            </if>
+            <if test="property!=null">
+                #{property},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="remark!=null">
+                #{remark},
+            </if>
+            <if test="invoiceRepoId!=null">
+                #{invoiceRepoId},
+            </if>
+            <if test="spUrl!=null">
+                #{spUrl},
+            </if>
+            <if test="pdfUrl!=null">
+                #{pdfUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        UPDATE uc_invoice_detail
+        <set>
+            <if test="invoiceNo != null">
+                invoiceNo = #{invoiceNo},
+            </if>
+            <if test="invoiceCode != null">
+                invoiceCode = #{invoiceCode},
+            </if>
+            <if test="property != null">
+                property = #{property},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="invoiceRepoId != null">
+                invoiceRepoId = #{invoiceRepoId},
+            </if>
+            <if test="spUrl != null">
+                spUrl = #{spUrl},
+            </if>
+            <if test="pdfUrl != null">
+                pdfUrl = #{pdfUrl},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByRepoId" parameterType="com.abc12366.uc.model.invoice.InvoiceDetail">
+        UPDATE uc_invoice_detail
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+        </set>
+        WHERE invoiceRepoId = #{invoiceRepoId}
+    </update>
+
+    <update id="updateDZFP" parameterType="com.abc12366.uc.model.dzfp.Einvocie">
+        update uc_einvocie
+        <set>
+            <if test="TBSTATUS != null">TBSTATUS = #{TBSTATUS}</if>
+        </set>
+        where FPQQLSH=#{FPQQLSH}
+    </update>
+
+</mapper>

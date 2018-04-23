@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.AdminExtendMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByUserId" parameterType="java.lang.String">
+        DELETE FROM uc_admin_extend
+        WHERE userId = #{userId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insertSelective" parameterType="com.abc12366.uc.model.admin.AdminExtend">
+        INSERT INTO uc_admin_extend
+        (userId,orgId,job,phone,address,createTime,lastUpdate)
+        VALUES
+        (#{userId},#{orgId},#{job},#{phone},#{address},#{createTime},#{lastUpdate})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.uc.model.admin.AdminExtend">
+        INSERT INTO uc_admin_extend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="orgId != null">
+                orgId,
+            </if>
+            <if test="job != null">
+                job,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="orgId!=null">
+                #{orgId},
+            </if>
+            <if test="job!=null">
+                #{job},
+            </if>
+            <if test="phone!=null">
+                #{phone},
+            </if>
+            <if test="address!=null">
+                #{address},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateUserExtentBO" parameterType="com.abc12366.uc.model.admin.AdminExtend">
+        UPDATE uc_admin_extend
+        <set>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="orgId != null">
+                orgId = #{orgId},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+
+        </set>
+        WHERE userId = #{userId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.uc.model.admin.AdminExtend">
+        UPDATE uc_admin_extend
+        SET
+        orgId = #{orgId},
+        job = #{job},
+        phone = #{phone},
+        address = #{address},
+        createTime = #{createTime},
+        lastUpdate = #{lastUpdate}
+        WHERE userId = #{userId}
+    </update>
+
+</mapper>

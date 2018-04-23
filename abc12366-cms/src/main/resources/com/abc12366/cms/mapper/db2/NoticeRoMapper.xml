@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.NoticeRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, title, author, content, status, createTime, lastUpdate,count,comefrom,releaseTime
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.NoticeBO"
+            parameterType="com.abc12366.cms.model.bo.NoticeBO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_notice
+        <where>
+            1 = 1
+            <if test="title != null">and title like CONCAT('%',#{title},'%')</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectListForqt" resultType="com.abc12366.cms.model.bo.NoticeForqtBO"
+            parameterType="com.abc12366.cms.model.bo.NoticeForqtBO">
+        SELECT
+        id, title,releaseTime
+        FROM cms_notice
+        <where>
+            status = '1'
+            <if test="title != null">and title like CONCAT('%',#{title},'%')</if>
+        </where>
+        ORDER BY releaseTime DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.cms.model.bo.NoticeBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_notice
+        WHERE id = #{id}
+    </select>
+
+</mapper>

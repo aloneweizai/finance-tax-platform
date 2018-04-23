@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.WxMenuRoMapper">
+
+    <sql id="Base_Column_List">
+        id, parentId, sort, type, name, mkey as 'key', url, media_id, appid, pagepath, lastUpdate, createTime,wxStatus
+    </sql>
+
+    <select id="seletFisrt" resultType="com.abc12366.uc.model.weixin.bo.menu.Button">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxmenu where parentId is null ORDER BY sort ASC
+    </select>
+    
+    <select id="seletFisrtShow" resultType="com.abc12366.uc.model.weixin.bo.menu.Button">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxmenu where parentId is null and wxStatus = 1  ORDER BY sort ASC
+    </select>
+
+    <select id="seletSecShow" resultType="com.abc12366.uc.model.weixin.bo.menu.Button" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxmenu
+        where parentId= #{parentId} and wxStatus = 1
+        ORDER BY sort ASC
+    </select>
+
+    <select id="seletSec" resultType="com.abc12366.uc.model.weixin.bo.menu.Button" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxmenu
+        where parentId= #{parentId}
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.weixin.bo.menu.Button" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxmenu
+        where id= #{id}
+    </select>
+
+</mapper>

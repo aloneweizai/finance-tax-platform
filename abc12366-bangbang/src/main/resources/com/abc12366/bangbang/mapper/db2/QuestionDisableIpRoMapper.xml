@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionDisableIpRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,	ip,	reason,	activeTime,	updateAdmin,	updateTime
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionDisableIp" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bb_question_disable_ip
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionDisableIpBo">
+      SELECT * FROM (
+            SELECT tb.ip,
+            (
+            (SELECT COUNT(1) FROM bb_question WHERE ip = tb.ip AND (STATUS ='2' OR STATUS = '3')) + (SELECT COUNT(1) FROM bb_cheats WHERE ip = tb.ip AND (STATUS ='2' OR STATUS = '3'))
+            ) questionDisableCnt,
+            (SELECT COUNT(1) FROM bb_question_answer WHERE ip = tb.ip AND (STATUS ='2' OR STATUS = '3') ) answerDisableCnt,
+            (
+            (SELECT COUNT(1) FROM bb_question_comment WHERE ip = tb.ip AND (STATUS ='2' OR STATUS = '3'))  +  (SELECT COUNT(1) FROM bb_cheats_comment WHERE ip = tb.ip AND (STATUS ='2' OR STATUS = '3'))
+            ) commentDisableCnt ,
+            IF(t_disable_ip.ip IS NULL, FALSE, TRUE) isDisable
+            FROM
+            (SELECT DISTINCT(ip) FROM bb_question WHERE ip IS NOT NULL AND ip !=''
+              UNION
+             SELECT DISTINCT(ip) FROM bb_question_answer WHERE ip IS NOT NULL AND ip !=''
+              UNION
+             SELECT DISTINCT(ip) FROM bb_question_comment WHERE ip IS NOT NULL AND ip !=''
+              UNION
+             SELECT DISTINCT(ip) FROM bb_cheats WHERE ip IS NOT NULL AND ip !=''
+              UNION
+             SELECT DISTINCT(ip) FROM bb_cheats_comment WHERE ip IS NOT NULL AND ip !=''
+             ) AS tb
+            LEFT JOIN bb_question_disable_ip t_disable_ip ON tb.ip= t_disable_ip.ip AND t_disable_ip.activeTime > NOW()
+      ) temp
+      WHERE questionDisableCnt>0  OR answerDisableCnt>0 OR commentDisableCnt>0
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectIpCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(*)
+        FROM bb_question_disable_ip
+        WHERE <![CDATA[ activeTime > now()]]> and ip = #{ip}
+    </select>
+
+
+</mapper>

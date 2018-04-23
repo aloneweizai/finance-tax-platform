@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.EventRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        eventId, category, shape, title, province, city, address, picture, createtime, updatetime, begintime, endtime,
+        tag, summary, description, peoppleNum, isCheck, isUserGrade, userGrade, sponsorId,bmendtime, status
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Event" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_event
+        WHERE eventId = #{eventId}
+    </select>
+
+    <!-- 查询最新活动 -->
+    <select id="selecttopone" resultType="com.abc12366.cms.model.Event" parameterType="java.lang.String">
+        SELECT
+        eventId, category, shape, title,
+        (SELECT province FROM abc12366_uc.uc_province where provinceId = e.province) province,
+        (SELECT city FROM abc12366_uc.uc_city where cityId = e.city) city, address, picture, createtime, updatetime, begintime, endtime,
+        tag, summary, description, peoppleNum, isCheck, isUserGrade, userGrade, sponsorId,bmendtime, status
+        FROM cms_event e
+        where status = '2' and category = #{category}
+        ORDER BY updatetime DESC LIMIT 1
+    </select>
+
+    <!-- 查询（根据条件查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.EventListBo" parameterType="java.util.Map">
+        SELECT
+        eventId, category, shape, title, p.province province, c.city city, address, picture, createtime, updatetime, begintime, endtime,
+        tag, summary, description, peoppleNum, isCheck, isUserGrade, userGrade, sponsorId,bmendtime, status
+        FROM cms_event e left join abc12366_uc.uc_province p on e.province = p.provinceId
+        left join abc12366_uc.uc_city c on e.city = c.cityId
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="category != null and category != ''">
+            AND category = #{category}
+        </if>
+        <!--<if test="begintime!=null and begintime!=''">-->
+        <!--AND UNIX_TIMESTAMP(begintime) &gt;= #{begintime}-->
+        <!--</if>-->
+        <!--<if test="endtime!=null and endtime!=''">-->
+        <!--AND UNIX_TIMESTAMP(endtime) &lt;= #{endtime}-->
+        <!--</if>-->
+        <!--<if test="begintime != null">-->
+        <!--<![CDATA[-->
+        <!--and date_format(endTime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')-->
+        <!--]]>-->
+        <!--</if>-->
+        <!--<if test="endtime != null">-->
+        <!--<![CDATA[-->
+        <!--and date_format(begintime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')-->
+        <!--]]>-->
+        <!--</if>-->
+        <if test="begintime != null">
+            <![CDATA[
+              and date_format(begintime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endtime != null">
+            <![CDATA[
+              and date_format(endTime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')
+              ]]>
+        </if>
+        ORDER BY createtime DESC
+    </select>
+
+</mapper>

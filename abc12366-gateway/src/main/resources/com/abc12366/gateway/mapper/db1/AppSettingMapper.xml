@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.AppSettingMapper">
+
+    <update id="update" parameterType="com.abc12366.gateway.model.AppSetting">
+        UPDATE gw_app_setting
+        <set>
+            <if test="appId != null">
+                appId = #{appId},
+            </if>
+            <if test="apiId != null">
+                apiId = #{apiId},
+            </if>
+            <if test="timesPerMinute != null">
+                timesPerMinute = #{timesPerMinute},
+            </if>
+            <if test="timesPerHour != null">
+                timesPerHour = #{timesPerHour},
+            </if>
+            <if test="timesPerDay != null">
+                timesPerDay = #{timesPerDay},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate = #{lastUpdate},
+            </if>
+            <if test="isValidate != null">
+                isValidate = #{isValidate},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="com.abc12366.gateway.model.AppSetting">
+        INSERT INTO gw_app_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="appId != null">
+                appId,
+            </if>
+            <if test="apiId != null">
+                apiId,
+            </if>
+            <if test="timesPerMinute != null">
+                timesPerMinute,
+            </if>
+            <if test="timesPerHour != null">
+                timesPerHour,
+            </if>
+            <if test="timesPerDay != null">
+                timesPerDay,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="isValidate != null">
+                isValidate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="appId!=null">
+                #{appId},
+            </if>
+            <if test="apiId!=null">
+                #{apiId},
+            </if>
+            <if test="timesPerMinute!=null">
+                #{timesPerMinute},
+            </if>
+            <if test="timesPerHour!=null">
+                #{timesPerHour},
+            </if>
+            <if test="timesPerDay!=null">
+                #{timesPerDay},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="isValidate!=null">
+                #{isValidate},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO gw_app_setting (id, appId, apiId, timesPerMinute, timesPerHour,
+        timesPerDay, status, createTime,lastUpdate,isValidate) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.appId}, #{item.apiId}, #{item.timesPerMinute}, #{item.timesPerHour},
+            #{item.timesPerDay}, #{item.status}, #{item.createTime}, #{item.lastUpdate}, #{item.isValidate})
+        </foreach>
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM gw_app_setting
+        WHERE id = #{id}
+    </delete>
+    <delete id="deleteByAppId" parameterType="java.lang.String">
+        DELETE FROM gw_app_setting
+        WHERE appId = #{appId}
+    </delete>
+</mapper>

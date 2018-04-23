@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumOrderRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 orderId,	curriculumId,	userId,goodsId,	nickname,	username,	memberGrade,	orderName,	orderPrice,orderIntegral,	isIntegral,	orderTime,	phone,	visitIP,	visitSite,	orderStatus
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumOrder" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_order
+		 WHERE orderId = #{orderId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumOrderBo" parameterType="java.util.Map">
+        SELECT
+        orderId,	curriculumId,	o.userId,goodsId,	u.username,	u.nickname,	(select l.level from bb_uvip_level l WHERE o.memberGrade = l.levelCode) memberGrade,	orderName,	orderPrice,orderIntegral,	isIntegral,	orderTime,	o.phone,	visitIP,	visitSite,	orderStatus
+        FROM bb_curriculum_order o left join bb_user u on o.userId = u.id
+        WHERE 1=1
+        <if test="nickname != null and nickname != ''">
+            AND nickname like CONCAT('%',#{nickname},'%')
+        </if>
+        <if test="begintime != null">
+            <![CDATA[
+              and date_format(orderTime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endtime != null">
+            <![CDATA[
+              and date_format(orderTime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')
+              ]]>
+        </if>
+        <if test="orderStatus != null and orderStatus != ''">
+            AND orderStatus = #{orderStatus}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+</mapper>

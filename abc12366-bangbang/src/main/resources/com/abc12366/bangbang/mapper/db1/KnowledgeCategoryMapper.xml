@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeCategoryMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, code, parentCode, sort, createTime, updateTime, createUser, updateUser
+    </sql>
+
+    <!-- 查询all -->
+    <select id="selectAll" resultType="com.abc12366.bangbang.model.KnowledgeCategory">
+        SELECT
+        t1.*,t2.name as parentName
+        FROM bb_knowledge_category  t1
+        LEFT JOIN bb_knowledge_category  t2 ON t1.parentCode = t2.code
+        ORDER BY t1.SORT ASC;
+    </select>
+    <!-- 查询（根据CODE查询） -->
+    <select id="selectByCode" resultType="com.abc12366.bangbang.model.KnowledgeCategory" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_category
+        WHERE code = #{code}
+    </select>
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.KnowledgeCategory" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bb_knowledge_category
+        WHERE id = #{id}
+    </select>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM bb_knowledge_category
+        WHERE code LIKE CONCAT((select code from (SELECT code  FROM  bb_knowledge_category WHERE id = #{id}) t),'%')
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.bangbang.model.KnowledgeCategory">
+        INSERT INTO bb_knowledge_category
+        (id,name,code,parentCode,sort,createTime,updateTime,createUser,updateUser)
+        VALUES
+        (#{id},#{name},#{code},#{parentCode},#{sort},now(),now(),#{createUser},#{updateUser})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.bangbang.model.KnowledgeCategory">
+        INSERT INTO bb_knowledge_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="parentCode != null">
+                parentCode,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="updateUser != null">
+                updateUser,
+            </if>
+            createTime,
+            updateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="code!=null">
+                #{code},
+            </if>
+            <if test="parentCode!=null">
+                #{parentCode},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="updateUser!=null">
+                #{updateUser},
+            </if>
+            now(),now()
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.KnowledgeCategory">
+        UPDATE bb_knowledge_category
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="parentCode != null">
+                parentCode = #{parentCode},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            updateTime = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="batchUpdateSort" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator="" open="begin" close="end;">
+            update bb_knowledge_category set sort=#{item.sort} where id= #{item.id};
+        </foreach>
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.KnowledgeCategory">
+        UPDATE bb_knowledge_category
+        SET
+        name = #{name},
+        code = #{code},
+        parentCode = #{parentCode},
+        sort = #{sort},
+        updateTime = now(),
+        createUser = #{createUser},
+        updateUser = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,122 @@
+/*
+ * This class was automatically generated with 
+ * <a href="http://www.castor.org">Castor 1.3.1</a>, using an XML
+ * Schema.
+ * $Id$
+ */
+
+package com.abc12366.uc.jrxt.model.tiripPackage;
+
+/**
+ * Class IdentityType.
+ * 
+ * @version $Revision$ $Date$
+ */
+@SuppressWarnings("serial")
+public class IdentityType implements java.io.Serializable {
+
+
+      //--------------------------/
+     //- Class/Member Variables -/
+    //--------------------------/
+
+    /**
+     * ???????????????��??????????,???????????
+     */
+    private String _serviceId;
+
+    /**
+     * ??????????????????????????????????????????
+     */
+    private String _channelId;
+
+    /**
+     * ??????????????????
+     */
+    private String _password;
+
+
+      //----------------/
+     //- Constructors -/
+    //----------------/
+
+    public IdentityType() {
+        super();
+    }
+
+
+      //-----------/
+     //- Methods -/
+    //-----------/
+
+    /**
+     * Returns the value of field 'channelId'. The field
+     * 'channelId' has the following description:
+     * ??????????????????????????????????????????
+     *
+     * @return the value of field 'ChannelId'.
+     */
+    public String getChannelId(
+    ) {
+        return this._channelId;
+    }
+
+    /**
+     * Returns the value of field 'password'. The field 'password'
+     * has the following description: ??????????????????
+     *
+     * @return the value of field 'Password'.
+     */
+    public String getPassword(
+    ) {
+        return this._password;
+    }
+
+    /**
+     * Returns the value of field 'serviceId'. The field
+     * 'serviceId' has the following description:
+     * ???????????????��??????????,???????????
+     *
+     * @return the value of field 'ServiceId'.
+     */
+    public String getServiceId(
+    ) {
+        return this._serviceId;
+    }
+
+    /**
+     * Sets the value of field 'channelId'. The field 'channelId'
+     * has the following description:
+     * ??????????????????????????????????????????
+     *
+     * @param channelId the value of field 'channelId'.
+     */
+    public void setChannelId(
+            final String channelId) {
+        this._channelId = channelId;
+    }
+
+    /**
+     * Sets the value of field 'password'. The field 'password' has
+     * the following description: ??????????????????
+     *
+     * @param password the value of field 'password'.
+     */
+    public void setPassword(
+            final String password) {
+        this._password = password;
+    }
+
+    /**
+     * Sets the value of field 'serviceId'. The field 'serviceId'
+     * has the following description:
+     * ???????????????��??????????,???????????
+     *
+     * @param serviceId the value of field 'serviceId'.
+     */
+    public void setServiceId(
+            final String serviceId) {
+        this._serviceId = serviceId;
+    }
+
+}

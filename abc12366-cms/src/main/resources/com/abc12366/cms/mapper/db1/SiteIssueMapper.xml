@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.SiteIssueMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_site_issue
+        WHERE issueId = #{issueId}
+    </delete>
+
+    <!--删除：根据主键ID批量删除-->
+    <delete id="deleteList">
+        DELETE FROM cms_site_issue
+        WHERE issueId in
+        <foreach item="item" index="index" collection="issueIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.SiteIssue">
+        INSERT INTO cms_site_issue
+        (issueId,templateName,userId,userName,issueState,issueDate,versions,startDate,updateDate)
+        VALUES
+        (#{issueId},#{templateName},#{userId},#{userName},#{issueState},#{issueDate},#{versions},#{startDate},#{updateDate})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.SiteIssue">
+        INSERT INTO cms_site_issue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="issueId != null">
+                issueId,
+            </if>
+            <if test="templateName != null">
+                templateName,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+            <if test="userName != null">
+                userName,
+            </if>
+            <if test="issueState != null">
+                issueState,
+            </if>
+            <if test="issueDate != null">
+                issueDate,
+            </if>
+            <if test="versions != null">
+                versions,
+            </if>
+            <if test="startDate != null">
+                startDate,
+            </if>
+            <if test="updateDate != null">
+                updateDate,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="issueId!=null">
+                #{issueId},
+            </if>
+            <if test="templateName!=null">
+                #{templateName},
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="userName!=null">
+                #{userName},
+            </if>
+            <if test="issueState!=null">
+                #{issueState},
+            </if>
+            <if test="issueDate!=null">
+                #{issueDate},
+            </if>
+            <if test="versions!=null">
+                #{versions},
+            </if>
+            <if test="startDate!=null">
+                #{startDate},
+            </if>
+            <if test="updateDate!=null">
+                #{updateDate},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.SiteIssue">
+        UPDATE cms_site_issue
+        <set>
+            <if test="templateName != null">
+                templateName = #{templateName},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="userName != null">
+                userName = #{userName},
+            </if>
+            <if test="issueState != null">
+                issueState = #{issueState},
+            </if>
+            <if test="issueDate != null">
+                issueDate = #{issueDate},
+            </if>
+            <if test="versions != null">
+                versions = #{versions},
+            </if>
+            <if test="startDate != null">
+                startDate = #{startDate},
+            </if>
+            <if test="updateDate != null">
+                updateDate = #{updateDate},
+            </if>
+
+        </set>
+        WHERE issueId = #{issueId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.SiteIssue">
+        UPDATE cms_site_issue
+        SET
+        templateName = #{templateName},
+        userId = #{userId},
+        userName = #{userName},
+        issueState = #{issueState},
+        issueDate = #{issueDate},
+        versions = #{versions},
+        startDate = #{startDate},
+        updateDate = #{updateDate}
+        WHERE issueId = #{issueId}
+    </update>
+
+</mapper>

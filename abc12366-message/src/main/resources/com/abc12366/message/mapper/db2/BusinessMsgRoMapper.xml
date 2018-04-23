@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db2.BusinessMsgRoMapper">
+
+    <sql id="Base_Column">
+        id, userId, businessId, content, status, type, createTime, lastUpdate, url,busiType
+    </sql>
+
+    <select id="selectOne" resultType="com.abc12366.message.model.BusinessMessage">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM msg_business_message_${dateStr} 
+        WHERE id=#{id}
+    </select>
+
+    <!-- 只查询半年内的记录 -->
+    <select id="selectList" parameterType="com.abc12366.message.model.BusinessMessage"
+            resultType="com.abc12366.message.model.BusinessMessage">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM msg_business_message_${dateStr}
+        WHERE userId = #{userId}
+        <if test="type != null and type != ''">AND type = #{type}</if>
+        <if test="busiType != null and busiType != ''">AND busiType = #{busiType}</if>
+        <if test="status != null and status != ''">AND status = #{status}</if>
+        AND createTime > date_sub(now(), interval '181 0:0:0' day_second)
+        ORDER BY createTime DESC
+    </select>
+
+    <!-- 只查询最近30天内的记录 -->
+    <select id="selectUnreadList" parameterType="com.abc12366.message.model.BusinessMessage"
+            resultType="com.abc12366.message.model.BusinessMessage">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM msg_business_message_${dateStr}
+        WHERE userId = #{userId}
+        <if test="type != null and type != ''">AND type = #{type}</if>
+        <if test="busiType != null and busiType != ''">AND busiType = #{busiType}</if>
+        <if test="status != null and status != ''">AND status = #{status}</if>
+        AND createTime > date_sub(now(), interval '30 0:0:0' day_second)
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectListByUsername" parameterType="java.util.Map"
+            resultType="com.abc12366.message.model.bo.BusinessMessageAdmin">
+        SELECT
+        mbm.id, mbm.userId, mbm.businessId, mbm.content, mbm.status, mbm.type, mbm.createTime,
+        mbm.lastUpdate, mbm.url,mbm.busiType
+        FROM msg_business_message_${dateStr} mbm
+        <if test="username!=null and username!='' ">join msg_uc_user muu on mbm.userId=muu.id</if>
+        WHERE 1=1
+        <if test="username!=null and username!='' ">and muu.username = #{username}</if>
+        <if test="type!=null and type!='' ">AND mbm.type = #{type}</if>
+        <if test="busiType!=null and busiType!=''">AND mbm.busiType = #{busiType}</if>
+        <if test="status!=null and status!=''">AND mbm.status = #{status}</if>
+        <if test="startDate!=null">and <![CDATA[  mbm.createTime >= #{startDate}]]></if>
+        <if test="endDate!=null">and <![CDATA[  mbm.createTime < #{endDate}]]></if>
+        ORDER BY mbm.createTime DESC
+    </select>
+
+    <select id="selectUserById" parameterType="java.lang.String" resultType="com.abc12366.message.model.bo.UserSimple">
+        SELECT id,username,userPicturePath FROM msg_uc_user WHERE id=#{id}
+    </select>
+</mapper>

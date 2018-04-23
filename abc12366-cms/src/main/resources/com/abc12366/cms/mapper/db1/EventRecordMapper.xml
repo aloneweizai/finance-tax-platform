@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.EventRecordMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_event_record
+        WHERE recordId = #{recordId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.EventRecord">
+        INSERT INTO cms_event_record
+        (recordId,eventId,source,browsetime,ip)
+        VALUES
+        (#{recordId},#{eventId},#{source},#{browsetime},#{ip})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.EventRecord">
+        INSERT INTO cms_event_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">
+                recordId,
+            </if>
+            <if test="eventId != null">
+                eventId,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="browsetime != null">
+                browsetime,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId!=null">
+                #{recordId},
+            </if>
+            <if test="eventId!=null">
+                #{eventId},
+            </if>
+            <if test="source!=null">
+                #{source},
+            </if>
+            <if test="browsetime!=null">
+                #{browsetime},
+            </if>
+            <if test="ip!=null">
+                #{ip},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.EventRecord">
+        UPDATE cms_event_record
+        <set>
+            <if test="eventId != null">
+                eventId = #{eventId},
+            </if>
+            <if test="source != null">
+                source = #{source},
+            </if>
+            <if test="browsetime != null">
+                browsetime = #{browsetime},
+            </if>
+            <if test="ip != null">
+                ip = #{ip},
+            </if>
+
+        </set>
+        WHERE recordId = #{recordId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.EventRecord">
+        UPDATE cms_event_record
+        SET
+        eventId = #{eventId},
+        source = #{source},
+        browsetime = #{browsetime},
+        ip = #{ip}
+        WHERE recordId = #{recordId}
+    </update>
+
+</mapper>

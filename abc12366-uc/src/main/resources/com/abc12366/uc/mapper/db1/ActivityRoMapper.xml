@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.ActivityRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, description, startTime, endTime, ruleType, rule, amountType, amount,
+        probability, status, wishing, remark, num, times, createTime, lastUpdate, sort, giftPoints,
+        giftCoupon, activityId, minAmount, points
+    </sql>
+
+    <sql id="Base_RedEnvelop_List">
+        id, secret, createTime, activityId, startTime, endTime, amount, amountType, probability,
+        sendAmount, sendStatus, url, sendTime, receiveStatus, receiveTime, ip, openId, remark, billno, businessId,
+        minAmount, userId
+    </sql>
+
+    <sql id="Base_LotteryLog_List">
+        id, secret, activityId, openId, createTime
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.weixin.WxActivity"
+            parameterType="com.abc12366.uc.model.weixin.WxActivity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxactivity
+        <where>
+            <if test="name != null and name != ''">name LIKE CONCAT('%',#{name},'%')</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectSimpleList" resultType="com.abc12366.uc.model.weixin.bo.redpack.ActivityBO"
+            parameterType="com.abc12366.uc.model.weixin.bo.redpack.ActivityBO">
+        SELECT id, name, description FROM uc_wxactivity
+        where now() BETWEEN startTime AND endTime
+        and status = '1'
+        ORDER BY sort ASC, lastUpdate DESC limit 3
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.weixin.WxActivity"
+            parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxactivity
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectRedEnvelopList" resultType="com.abc12366.uc.model.weixin.WxRedEnvelop"
+            parameterType="com.abc12366.uc.model.weixin.WxRedEnvelop">
+        SELECT
+        r.id, r.secret, r.createTime, r.activityId, r.startTime, r.endTime, r.amount, r.amountType, r.probability,
+        r.sendAmount, r.sendStatus, r.url, r.sendTime, r.receiveStatus, r.receiveTime, r.ip, r.openId, r.remark,
+        a.name, r.billno, r.businessId, r.minAmount, r.userId
+        FROM uc_wxredenvelop r
+        LEFT JOIN uc_wxactivity a ON a.id = r.activityId
+        <where>
+            <if test="activityId != null and activityId != ''">and r.activityId = #{activityId}</if>
+            <choose>
+                <when test="receiveStatus != null and receiveStatus == 'UNUSED'">
+                    and receiveStatus IS NULL
+                </when>
+                <when test="receiveStatus != null and receiveStatus != '' and receiveStatus != 'UNUSED'">
+                    and receiveStatus = #{receiveStatus}
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="sendStatus != null and sendStatus == '3'.toString()">
+                    and sendStatus IS NULL
+                </when>
+                <when test="sendStatus != null and sendStatus != '' and sendStatus != '3'.toString()">
+                    and sendStatus = #{sendStatus}
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            <if test="openId != null and openId != ''">and openId = #{openId}</if>
+            <if test="secret != null and secret != ''">and secret = #{secret}</if>
+            <if test="businessId != null and businessId != ''">and businessId = #{businessId}</if>
+        </where>
+        ORDER BY r.createTime DESC
+    </select>
+
+    <select id="selectRedEnvelopOne" resultType="com.abc12366.uc.model.weixin.WxRedEnvelop"
+            parameterType="com.abc12366.uc.model.weixin.WxRedEnvelop">
+        SELECT
+        <include refid="Base_RedEnvelop_List"/>
+        FROM uc_wxredenvelop
+        <where>
+            <if test="id != null and id != ''">id = #{id}</if>
+            <if test="businessId != null and businessId != ''">and businessId = #{businessId}</if>
+            <if test="activityId != null and activityId != ''">and activityId = #{activityId}</if>
+        </where>
+    </select>
+
+    <!-- 未抽奖记录 -->
+    <select id="selectRedEnvelop" resultType="com.abc12366.uc.model.weixin.WxRedEnvelop"
+            parameterType="com.abc12366.uc.model.weixin.WxRedEnvelop">
+        SELECT
+        <include refid="Base_RedEnvelop_List"/>
+        FROM uc_wxredenvelop
+        <where>
+            receiveStatus is null and sendStatus is null
+            <if test="activityId != null and activityId != ''">and activityId = #{activityId}</if>
+            <if test="secret != null and secret != ''">and secret = #{secret}</if>
+        </where>
+    </select>
+
+    <!-- 查询某一活动已中奖数量 -->
+    <select id="queryRedEnvelopCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(id) FROM uc_wxredenvelop
+        WHERE
+        sendStatus is NOT NULL
+        and activityId = #{activityId}
+    </select>
+
+    <select id="selectSentReceivedCount" resultType="com.abc12366.uc.model.weixin.bo.redpack.SentReceived"
+            parameterType="java.lang.String">
+        SELECT activityId,
+            sum(case when sendStatus = '1' then 1 else 0 end) as 'sent',
+            sum(case when sendStatus = '1' then sendAmount else 0 end) as 'sentAmount',
+            sum(case when receiveStatus = 'RECEIVED' then 1 else 0 end) as 'received',
+            sum(case when receiveStatus = 'RECEIVED' then sendAmount else 0 end) as 'receivedAmount'
+        FROM uc_wxredenvelop
+        WHERE activityId = #{activityId}
+    </select>
+
+    <select id="selectLotteryLogList" parameterType="com.abc12366.uc.model.weixin.WxLotteryLog"
+            resultType="com.abc12366.uc.model.weixin.WxLotteryLog">
+        SELECT
+        <include refid="Base_LotteryLog_List"/>
+        FROM uc_wxlotterylog
+        <where>
+            <if test="activityId != null and activityId != ''">and activityId = #{activityId}</if>
+            <if test="openId != null and openId != ''">and openId = #{openId}</if>
+            <if test="createTime != null">and DATE_FORMAT(createTime, '%Y%m%d') = DATE_FORMAT(#{createTime}, '%Y%m%d')</if>
+        </where>
+    </select>
+</mapper>

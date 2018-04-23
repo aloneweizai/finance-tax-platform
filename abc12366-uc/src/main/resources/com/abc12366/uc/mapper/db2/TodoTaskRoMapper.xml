@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TodoTaskRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		 id,userId,sysTaskId, allCount, finishedCount, awardType, type,award, status,createTime,lastUpdate,skipUrl,ruleId,dateType,startTime,endTime
+	</sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.TodoTask" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_task_todo
+        WHERE userId = #{userId}
+        and type = #{type}
+        and createTime &gt;= (SELECT CURDATE())
+        and createTime &lt;(SELECT DATE_SUB(CURDATE(),INTERVAL -1 DAY))
+    </select>
+
+    <select id="selectTimeLimitedOneByUserIdAndSysTaskId" resultType="com.abc12366.uc.model.TodoTask" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_task_todo
+        WHERE userId = #{userId}
+        and sysTaskId = #{sysTaskId}
+        and startTime IS NOT NULL
+        and endTime IS NOT NULL
+        and <![CDATA[  startTime < (SELECT CURDATE())]]>
+        and <![CDATA[  endTime > (SELECT CURDATE())]]>
+    </select>
+
+    <select id="selectNormalTaskList" resultType="com.abc12366.uc.model.TodoTaskFront" parameterType="java.lang.String">
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.type = '2'
+        and b.status='1'
+        and a.dateType = 'D'
+        and a.createTime &gt;= (SELECT CURDATE())
+        and a.createTime &lt;(SELECT DATE_SUB(CURDATE(),INTERVAL -1 DAY))
+        UNION ALL
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.type = '2'
+        and b.status='1'
+        and a.dateType = 'M'
+        and a.createTime &gt;= (SELECT DATE_ADD(CURDATE(),INTERVAL -DAY(CURDATE())+1 DAY))
+        and a.createTime &lt;(SELECT DATE_ADD(CURDATE() - DAY(CURDATE()) + 1, INTERVAL 1 MONTH))
+        UNION ALL
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.type = '2'
+        and b.status='1'
+        and a.dateType = 'Y'
+        and a.createTime &gt;= (SELECT DATE_SUB(CURDATE(),INTERVAL DAYOFYEAR(NOW())-1 DAY))
+        and a.createTime &lt;(SELECT CONCAT(YEAR(NOW())+1,'-01-01'))
+    </select>
+
+    <select id="selectOnetimeTaskList" resultType="com.abc12366.uc.model.TodoTaskFront" parameterType="java.lang.String">
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.type = '1'
+        and b.status='1'
+        and a.dateType = 'O'
+    </select>
+
+    <select id="selectSpecialTaskList" resultType="com.abc12366.uc.model.TodoTaskFront" parameterType="java.lang.String">
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.status='1'
+        and a.type = '3'
+        and b.startTime &lt;(SELECT CURDATE())
+        and b.endTime &gt;=(SELECT DATE_SUB(CURDATE(),INTERVAL -1 DAY))
+    </select>
+
+    <select id="selectBangbangTaskList" resultType="com.abc12366.uc.model.TodoTaskFront" parameterType="java.lang.String">
+        SELECT
+        a.id,a.userId,a.sysTaskId, a.allCount, a.finishedCount, a.awardType, a.type,a.award, a.status,a.createTime,
+        a.lastUpdate,b.skipURL skipUrl,a.ruleId,a.dateType,a.startTime,a.endTime,b.name,b.remark,b.imageUrl,b.rule
+        FROM uc_user_task_todo a join uc_sys_task b on a.sysTaskId=b.id
+        WHERE a.userId = #{userId}
+        and b.status='1'
+        and a.type = '4'
+        and b.startTime &lt;(SELECT CURDATE())
+        and b.endTime &gt;=(SELECT DATE_SUB(CURDATE(),INTERVAL -1 DAY))
+    </select>
+</mapper>

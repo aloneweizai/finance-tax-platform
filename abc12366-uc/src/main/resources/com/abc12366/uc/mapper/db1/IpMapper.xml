@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.IpMapper">
+    <insert id="insert">
+        insert into uc_ip (id,ip,country,countryId,area,areaId,region,regionId,city,cityId,county,countyId,
+        isp,ispId,createTime,updateTime)
+        values
+        (#{id},#{ip},#{country},#{countryId},#{area},#{areaId},#{region},#{regionId},#{city},#{cityId},#{county},#{countyId},
+        #{isp},#{ispId},#{createTime},#{updateTime})
+    </insert>
+
+    <update id="update">
+        update uc_ip
+        <set>
+            <if test="country != null">country = #{country},</if>
+            <if test="countryId != null">countryId = #{countryId},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="areaId != null">areaId = #{areaId},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="regionId != null">regionId = #{regionId},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="cityId != null">cityId = #{cityId},</if>
+            <if test="county != null">county = #{county},</if>
+            <if test="countyId != null">countyId = #{countyId},</if>
+            <if test="isp != null">isp = #{isp},</if>
+            <if test="ispId != null">ispId = #{ispId},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+        </set>
+        where ip=#{ip}
+    </update>
+</mapper>

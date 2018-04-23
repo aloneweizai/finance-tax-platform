@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.SubjectsMapper">
+
+
+    <!--删除：根据主键id删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_paper_subjects
+        WHERE id = #{id}
+    </delete>
+
+    <!--删除：根据主键id和问卷id删除-->
+    <delete id="delete" parameterType="com.abc12366.cms.model.questionnaire.Subjects">
+        DELETE FROM cms_paper_subjects
+        WHERE id = #{id} AND questionId = #{questionId}
+    </delete>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insert" parameterType="com.abc12366.cms.model.questionnaire.Subjects">
+        INSERT INTO cms_paper_subjects
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="questionId != null">
+                questionId,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="simpleDesc != null">
+                simpleDesc,
+            </if>
+            <if test="isRequired != null">
+                isRequired,
+            </if>
+            <if test="optionType != null">
+                optionType,
+            </if>
+            <if test="isQuestion != null">
+                isQuestion,
+            </if>
+            <if test="pages != null">
+                pages,
+            </if>
+            <if test="picPath != null">
+                picPath,
+            </if>
+            <if test="picName != null">
+                picName,
+            </if>
+            <if test="randomOrder != null">
+                randomOrder,
+            </if>
+            <if test="displayMultiple != null">
+                displayMultiple,
+            </if>
+            <if test="mostOptional != null">
+                mostOptional,
+            </if>
+            <if test="number != null">
+                number,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="questionId!=null">
+                #{questionId},
+            </if>
+            <if test="title!=null">
+                #{title},
+            </if>
+            <if test="simpleDesc!=null">
+                #{simpleDesc},
+            </if>
+            <if test="isRequired!=null">
+                #{isRequired},
+            </if>
+            <if test="optionType!=null">
+                #{optionType},
+            </if>
+            <if test="isQuestion!=null">
+                #{isQuestion},
+            </if>
+            <if test="pages!=null">
+                #{pages},
+            </if>
+            <if test="picPath!=null">
+                #{picPath},
+            </if>
+            <if test="picName!=null">
+                #{picName},
+            </if>
+            <if test="randomOrder!=null">
+                #{randomOrder},
+            </if>
+            <if test="displayMultiple!=null">
+                #{displayMultiple},
+            </if>
+            <if test="mostOptional!=null">
+                #{mostOptional},
+            </if>
+            <if test="number!=null">
+                #{number},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="update" parameterType="com.abc12366.cms.model.questionnaire.Subjects">
+        UPDATE cms_paper_subjects
+        <set>
+            <if test="questionId != null">
+                questionId = #{questionId},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="simpleDesc != null">
+                simpleDesc = #{simpleDesc},
+            </if>
+            <if test="isRequired != null">
+                isRequired = #{isRequired},
+            </if>
+            <if test="optionType != null">
+                optionType = #{optionType},
+            </if>
+            <if test="isQuestion != null">
+                isQuestion = #{isQuestion},
+            </if>
+            <if test="pages != null">
+                pages = #{pages},
+            </if>
+            <if test="picPath != null">
+                picPath = #{picPath},
+            </if>
+            <if test="picName != null">
+                picName = #{picName},
+            </if>
+            <if test="randomOrder != null">
+                randomOrder = #{randomOrder},
+            </if>
+            <if test="displayMultiple != null">
+                displayMultiple = #{displayMultiple},
+            </if>
+            <if test="mostOptional != null">
+                mostOptional = #{mostOptional},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

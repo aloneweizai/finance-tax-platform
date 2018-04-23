@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.AdPageRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, name, url, link,style, sort, showName, status, createTime, lastUpdate,startTime,endTime
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.cms.model.bo.AdPageBO"
+            parameterType="com.abc12366.cms.model.bo.AdPageBO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,  (select count(*) from cms_adpage_log a where a.adPageId=z.id) as openCount
+        FROM cms_adpage z
+        <where>
+            <if test="name != null">name like CONCAT('%',#{name},'%')</if>
+        </where>
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.cms.model.bo.AdPageBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_adpage
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectListForqt" resultType="com.abc12366.cms.model.bo.AdPageBO"
+            parameterType="com.abc12366.cms.model.bo.AdPageBO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM cms_adpage
+        <where>
+            status is true
+                <![CDATA[
+                and date_format(now(), '%Y-%m-%d') >= date_format(startTime, '%Y-%m-%d')
+                ]]>
+                <![CDATA[
+                and date_format(endTime, '%Y-%m-%d') >= date_format(now(), '%Y-%m-%d')
+                ]]>
+            <if test="name != null">and name like CONCAT('%',#{name},'%')</if>
+        </where>
+        ORDER BY sort ASC
+    </select>
+</mapper>

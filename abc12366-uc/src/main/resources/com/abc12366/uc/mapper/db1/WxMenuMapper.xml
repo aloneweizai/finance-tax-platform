@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.WxMenuMapper">
+
+    <sql id="Base_Column_List">
+        id, parentId, sort, type, name, mkey,url, media_id, appid, pagepath, lastUpdate, createTime,wxStatus
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.weixin.bo.menu.Button">
+        INSERT INTO uc_wxmenu
+        (<include refid="Base_Column_List"/>)
+        VALUES (#{id}, #{parentId}, #{sort}, #{type}, #{name}, #{key},#{url}, #{media_id}, #{appid}, #{pagepath},
+        #{lastUpdate}, #{createTime}, #{wxStatus})
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.weixin.bo.menu.Button">
+        UPDATE uc_wxmenu
+        set parentId=#{parentId},sort=#{sort},type=#{type},name=#{name},mkey=#{key},url=#{url},
+        media_id=#{media_id},appid=#{appid},pagepath=#{pagepath},lastUpdate=#{lastUpdate},wxStatus=#{wxStatus}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM uc_wxmenu WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.WxGzhRoMapper">
+
+    <sql id="Base_Column_List">
+        id, gzhName, appid, secret, tokenStr, serverUrl, creatDate,lastupdate,userTokenUpdate,userToken,jsapi_ticket,jsapiTicketUpdate
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.weixin.bo.gzh.GzhInfo"
+            parameterType="com.abc12366.uc.model.weixin.bo.gzh.GzhInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxgzh
+        <where>
+            1 = 1
+            <if test="gzhName != null">and gzhName = #{gzhName}</if>
+            <if test="appid != null">and appid = #{appid}</if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.weixin.bo.gzh.GzhInfo" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_wxgzh
+        WHERE id = #{id}
+    </select>
+    
+    <select id="selectUserToken" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT userToken from uc_wxgzh where appid =  #{appid}
+    </select>
+    
+</mapper>

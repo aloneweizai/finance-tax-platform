@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db2.BlacklistRoMapper">
+    <select id="isBlacklist" resultType="com.abc12366.gateway.model.Blacklist">
+        SELECT id, userId, ip, startTime, endTime, remark, status, createTime, createUser
+        FROM gw_blacklist
+        <where>
+            <if test="ip != null">
+                ip = #{ip}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="now != null">
+                AND startTime <![CDATA[<]]> #{now} AND #{now} <![CDATA[<]]> endTime
+            </if>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.gateway.model.Blacklist">
+        SELECT id, userId, ip, startTime, endTime, remark, status, createTime, createUser
+        FROM gw_blacklist
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </select>
+    <select id="selectByIp" resultType="com.abc12366.gateway.model.Blacklist">
+        SELECT id, userId, ip, startTime, endTime, remark, status, createTime, createUser
+        FROM gw_blacklist
+        where ip = #{ip} and status = false
+    </select>
+
+    <select id="selectList" resultType="com.abc12366.gateway.model.Blacklist">
+        SELECT id, userId, ip, startTime, endTime, remark, status, createTime, createUser
+        FROM gw_blacklist
+    </select>
+</mapper>

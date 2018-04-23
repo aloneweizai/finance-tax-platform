@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionHeadmanClassifyRelMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	headmanId,	classifyId
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionHeadmanClassifyRel" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_headman_classify_rel
+		 WHERE id = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_headman_classify_rel
+		 WHERE id = #{id}
+	</delete>
+
+	<!--删除：根据headmanId删除-->
+	<delete id="deleteByHeadmanId" parameterType="java.lang.String">
+		DELETE FROM bb_question_headman_classify_rel
+		WHERE headmanId = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO bb_question_headman_classify_rel
+		(id,headmanId,classifyId)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},#{item.headmanId},#{item.classifyId})
+		</foreach>
+	</insert>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionHeadmanClassifyRel">
+		 INSERT INTO bb_question_headman_classify_rel
+ 		(id,headmanId,classifyId) 
+		 VALUES 
+ 		(#{id},#{headmanId},#{classifyId}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionHeadmanClassifyRel">
+		 INSERT INTO bb_question_headman_classify_rel
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="headmanId != null">
+				 headmanId,
+			</if>
+			<if test="classifyId != null">
+				 classifyId,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="headmanId!=null">
+				 #{headmanId},
+			</if>
+			<if test="classifyId!=null">
+				 #{classifyId},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionHeadmanClassifyRel">
+		 UPDATE bb_question_headman_classify_rel
+ 		 <set> 
+			<if test="headmanId != null">
+				 headmanId = #{headmanId},
+			</if>
+			<if test="classifyId != null">
+				 classifyId = #{classifyId},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionHeadmanClassifyRel">
+		 UPDATE bb_question_headman_classify_rel
+		 SET 
+			 headmanId = #{headmanId},
+			 classifyId = #{classifyId}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

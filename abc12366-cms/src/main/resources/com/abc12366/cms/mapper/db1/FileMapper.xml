@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.FileMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_file
+        WHERE filePath = #{filePath}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.File">
+        INSERT INTO cms_file
+        (filePath,fileName,fileIsvalid,contentId)
+        VALUES
+        (#{filePath},#{fileName},#{fileIsvalid},#{contentId})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.File">
+        INSERT INTO cms_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="filePath != null">
+                filePath,
+            </if>
+            <if test="fileName != null">
+                fileName,
+            </if>
+            <if test="fileIsvalid != null">
+                fileIsvalid,
+            </if>
+            <if test="contentId != null">
+                contentId,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="filePath!=null">
+                #{filePath},
+            </if>
+            <if test="fileName!=null">
+                #{fileName},
+            </if>
+            <if test="fileIsvalid!=null">
+                #{fileIsvalid},
+            </if>
+            <if test="contentId!=null">
+                #{contentId},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.File">
+        UPDATE cms_file
+        <set>
+            <if test="fileName != null">
+                fileName = #{fileName},
+            </if>
+            <if test="fileIsvalid != null">
+                fileIsvalid = #{fileIsvalid},
+            </if>
+            <if test="contentId != null">
+                contentId = #{contentId},
+            </if>
+
+        </set>
+        WHERE filePath = #{filePath}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.File">
+        UPDATE cms_file
+        SET
+        fileName = #{fileName},
+        fileIsvalid = #{fileIsvalid},
+        contentId = #{contentId}
+        WHERE filePath = #{filePath} and fileName = #{fileName}
+    </update>
+
+    <!-- 更新文件为1无效状态-->
+    <update id="updateByContentId" parameterType="java.lang.String">
+        UPDATE cms_file
+        SET
+        fileIsvalid = 1,
+        contentId = 'DELETE'
+        WHERE contentId = #{contentId}
+    </update>
+
+    <!--删除：根据contentId删除-->
+    <delete id="deleteByContentId" parameterType="java.lang.String">
+        DELETE FROM cms_file
+        WHERE contentId = #{contentId}
+    </delete>
+
+</mapper>

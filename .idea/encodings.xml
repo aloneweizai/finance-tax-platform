@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-bangbang" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-cms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-cms/src/main/java/com/abc12366/cms/web/NoticeController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-gateway" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-message" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/abc12366-uc" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

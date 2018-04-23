@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumStudyMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_study
+		 WHERE studyId = #{studyId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumStudy">
+		 INSERT INTO bb_curriculum_study
+ 		(studyId,curriculumId,coursewareId,userId,username,nickname,memberGrade,studyTime,studyDuration,coursewareDuration,visitIP,visitSite) 
+		 VALUES 
+ 		(#{studyId},#{curriculumId},#{coursewareId},#{userId},#{username},#{nickname},#{memberGrade},#{studyTime},#{studyDuration},#{coursewareDuration},#{visitIP},#{visitSite}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumStudy">
+		 INSERT INTO bb_curriculum_study
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="studyId != null">
+				 studyId,
+			</if>
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="coursewareId != null">
+				 coursewareId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade,
+			</if>
+			<if test="studyTime != null">
+				 studyTime,
+			</if>
+			<if test="studyDuration != null">
+				 studyDuration,
+			</if>
+			<if test="coursewareDuration != null">
+				 coursewareDuration,
+			</if>
+			<if test="visitIP != null">
+				 visitIP,
+			</if>
+			<if test="visitSite != null">
+				 visitSite,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="studyId!=null">
+				 #{studyId},
+			</if>
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="coursewareId!=null">
+				 #{coursewareId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="memberGrade!=null">
+				 #{memberGrade},
+			</if>
+			<if test="studyTime!=null">
+				 #{studyTime},
+			</if>
+			<if test="studyDuration!=null">
+				 #{studyDuration},
+			</if>
+			<if test="coursewareDuration!=null">
+				 #{coursewareDuration},
+			</if>
+			<if test="visitIP!=null">
+				 #{visitIP},
+			</if>
+			<if test="visitSite!=null">
+				 #{visitSite},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumStudy">
+		 UPDATE bb_curriculum_study
+ 		 <set> 
+			<if test="curriculumId != null">
+				 curriculumId = #{curriculumId},
+			</if>
+			<if test="coursewareId != null">
+				 coursewareId = #{coursewareId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade = #{memberGrade},
+			</if>
+			<if test="studyTime != null">
+				 studyTime = #{studyTime},
+			</if>
+			<if test="studyDuration != null">
+				 studyDuration = #{studyDuration},
+			</if>
+			<if test="coursewareDuration != null">
+				 coursewareDuration = #{coursewareDuration},
+			</if>
+			<if test="visitIP != null">
+				 visitIP = #{visitIP},
+			</if>
+			<if test="visitSite != null">
+				 visitSite = #{visitSite},
+			</if>
+
+ 		 </set>
+		 WHERE studyId = #{studyId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumStudy">
+		 UPDATE bb_curriculum_study
+		 SET 
+			 curriculumId = #{curriculumId},
+			 coursewareId = #{coursewareId},
+			 userId = #{userId},
+			 username = #{username},
+			 nickname = #{nickname},
+			 memberGrade = #{memberGrade},
+			 studyTime = #{studyTime},
+			 studyDuration = #{studyDuration},
+			 coursewareDuration = #{coursewareDuration},
+			 visitIP = #{visitIP},
+			 visitSite = #{visitSite}
+		 WHERE studyId = #{studyId}
+	</update>
+
+</mapper>

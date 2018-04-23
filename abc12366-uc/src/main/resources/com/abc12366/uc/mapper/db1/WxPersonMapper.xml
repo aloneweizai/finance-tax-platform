@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.WxPersonMapper">
+
+    <sql id="Base_Column_List">
+        subscribe, openid, nickname, sex, language, city, province, country,
+        headimgurl,subscribe_time,remark,groupid,unionid,lastupdate,userid
+    </sql>
+
+    <insert id="savePerson" parameterType="com.abc12366.uc.model.weixin.bo.person.WxPerson">
+        INSERT INTO uc_wxuser(<include refid="Base_Column_List"/>)
+        VALUES (#{subscribe}, #{openid}, #{nickname}, #{sex}, #{language}, #{city}, #{province}, #{country},
+        #{headimgurl}, #{subscribe_time}, #{remark}, #{groupid}, #{unionid},#{lastupdate},#{userid})
+    </insert>
+
+    <update id="updatePerson" parameterType="com.abc12366.uc.model.weixin.bo.person.WxPerson">
+        UPDATE uc_wxuser
+        <set>
+            <if test="subscribe != null">subscribe = #{subscribe},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="headimgurl != null">headimgurl = #{headimgurl}</if>
+            <if test="subscribe_time != null">subscribe_time = #{subscribe_time}</if>
+            <if test="remark != null">remark = #{remark}</if>
+            <if test="groupid != null">groupid = #{groupid}</if>
+            <if test="lastupdate != null">lastupdate = #{lastupdate}</if>
+            <if test="userid != null">userid = #{userid}</if>
+        </set>
+        where openid=#{openid}
+    </update>
+
+</mapper>

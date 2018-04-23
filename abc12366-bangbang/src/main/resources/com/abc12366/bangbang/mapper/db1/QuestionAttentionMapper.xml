@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionAttentionMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_attention
+		 WHERE attentionId = #{attentionId}
+	</delete>
+
+    <!--删除：根据主键ID删除-->
+    <delete id="delete" parameterType="java.util.Map">
+        DELETE FROM bb_question_attention
+        WHERE attentionUserId = #{attentionUserId} and userId = #{userId}
+    </delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionAttention">
+		 INSERT INTO bb_question_attention
+ 		(attentionId,attentionUserId,userId,isRead,attentionTime)
+		 VALUES 
+ 		(#{attentionId},#{attentionUserId},#{userId},#{isRead},#{attentionTime})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionAttention">
+		 INSERT INTO bb_question_attention
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="attentionId != null">
+				 attentionId,
+			</if>
+			<if test="attentionUserId != null">
+				 attentionUserId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="attentionTime != null">
+				 attentionTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="attentionId!=null">
+				 #{attentionId},
+			</if>
+			<if test="attentionUserId!=null">
+				 #{attentionUserId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="attentionTime!=null">
+				 #{attentionTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionAttention">
+		 UPDATE bb_question_attention
+ 		 <set> 
+			<if test="attentionUserId != null">
+				 attentionUserId = #{attentionUserId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="attentionTime != null">
+				 attentionTime = #{attentionTime},
+			</if>
+
+ 		 </set>
+		 WHERE attentionId = #{attentionId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionAttention">
+		 UPDATE bb_question_attention
+		 SET 
+			 attentionUserId = #{attentionUserId},
+			 userId = #{userId},
+			 attentionTime = #{attentionTime}
+		 WHERE attentionId = #{attentionId}
+	</update>
+
+    <!-- 修 改 为已读-->
+    <update id="updateIsRead" parameterType="java.lang.String">
+        UPDATE bb_question_attention SET isRead = 1 WHERE attentionId = #{attentionId}
+    </update>
+
+</mapper>

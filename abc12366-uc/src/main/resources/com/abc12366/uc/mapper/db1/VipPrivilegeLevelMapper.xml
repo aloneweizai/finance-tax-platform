@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.VipPrivilegeLevelMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.VipPrivilegeLevel">
+        insert into uc_level_privilege(id,levelId,privilegeId,val1,val2,val3,val4,description,status,lastUpdate,createTime)
+        values(#{id},#{levelId},#{privilegeId},#{val1},#{val2},#{val3},#{val4},#{description},#{status},#{lastUpdate},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.abc12366.uc.model.VipPrivilegeLevel">
+        update uc_level_privilege
+        <set>
+            <if test="levelId!=null">levelId=#{levelId},</if>
+            <if test="privilegeId!=null">privilegeId=#{privilegeId},</if>
+            <if test="val1!=null">val1=#{val1},</if>
+            <if test="val2!=null">val1=#{val2},</if>
+            <if test="val3!=null">val1=#{val3},</if>
+            <if test="val4!=null">val1=#{val4},</if>
+            <if test="description!=null">description=#{description},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="lastUpdate!=null">lastUpdate=#{lastUpdate}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_level_privilege
+        where id=#{id}
+    </delete>
+    <delete id="deleteByPrivilege" parameterType="java.lang.String">
+        delete from uc_level_privilege
+        where privilegeId=#{privilegeId}
+    </delete>
+    <delete id="deleteByLevel" parameterType="java.lang.String">
+        delete from uc_level_privilege
+        where levelId=#{levelId}
+    </delete>
+</mapper>

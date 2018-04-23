@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionSysBlockMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_sys_block
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionSysBlock">
+		 INSERT INTO bb_question_sys_block
+ 		(id,userId,classifyCode,status,sourceId,sourceType,createTime)
+		 VALUES 
+ 		(#{id},#{userId},#{classifyCode},#{status},#{sourceId},#{sourceType},now())
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionSysBlock">
+		 UPDATE bb_question_sys_block
+ 		 <set>
+			 <if test="status != null">
+				 status = #{status},
+			 </if>
+			 <if test="updateAdmin != null">
+				 updateAdmin = #{updateAdmin},
+			 </if>
+				 updateTime = now()
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

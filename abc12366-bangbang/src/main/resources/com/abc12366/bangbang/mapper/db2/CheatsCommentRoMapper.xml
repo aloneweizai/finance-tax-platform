@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CheatsCommentRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	cheatsId,	userId,	commentUserId,	commentTxt,	status,	createTime,	lastUpdate,	ip,	factionId,	likeNum,	trampleNum,	reportNum
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.bo.CheatsCommentBo" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_cheats_comment
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 秘籍回复评论列表查询 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.CheatsCommentBo" parameterType="java.util.Map">
+        SELECT
+        a.id,	cheatsId,	a.userId,	commentUserId,	commentTxt,	a.status,	a.createTime,	a.lastUpdate,	a.ip,	factionId,	likeNum,	trampleNum,	reportNum,
+        u.userPicturePath,u.nickname,
+        u1.nickname commentNickname,
+        (SELECT count(likeId) FROM bb_cheats_like where id = a.id and likeType = '1' and userId = #{userId}) isLike,
+        (SELECT count(likeId) FROM bb_cheats_like where id = a.id and likeType = '2' and userId = #{userId}) isTrample
+        FROM bb_cheats_comment a left join bb_user u on a.userId = u.id
+        left join bb_user u1 on a.commentUserId = u1.id
+        WHERE a.status = '0'
+        <if test="cheatsId != null and cheatsId != ''">
+            AND cheatsId = #{cheatsId}
+        </if>
+        order by a.createTime DESC
+    </select>
+
+    <!-- 我的评论 -->
+    <select id="selectMyCommentList" resultType="com.abc12366.bangbang.model.question.bo.CheatsCommentBo" parameterType="java.util.Map">
+        SELECT
+        a.id,	cheatsId,	a.userId,	commentUserId,	commentTxt,	a.status,	a.createTime,	a.lastUpdate,
+        u.userPicturePath,u.nickname,
+        u1.nickname commentNickname
+        FROM bb_cheats_comment a left join bb_cheats c on a.cheatsId = c.id left join bb_user u on a.userId = u.id
+        left join bb_user u1 on a.commentUserId = u1.id
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND a.userId = #{userId}
+        </if>
+        order by a.createTime desc
+    </select>
+
+    <!-- 查询评论数 -->
+    <select id="selectCommentCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(id)
+        FROM bb_cheats_comment
+        WHERE status = '0' and cheatsId = #{id}
+    </select>
+
+</mapper>

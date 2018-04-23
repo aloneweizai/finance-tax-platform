@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumMembergradeRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 curriculumId,	memberGrade
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_membergrade
+		 WHERE curriculumId = #{curriculumId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.CurriculumMembergrade" parameterType="java.lang.String">
+        SELECT
+            curriculumId,	memberGrade,l.level memberGradeName
+        FROM bb_curriculum_membergrade m LEFT JOIN bb_uvip_level l ON m.memberGrade = l.levelCode
+        WHERE curriculumId = #{curriculumId}
+    </select>
+
+
+</mapper>

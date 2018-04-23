@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.Curriculum">
+		 INSERT INTO bb_curriculum
+ 		(curriculumId,title,classify,goodsId,recommend,teachingMethod,trainTimeBegin,trainTimeEnd,isApply,applyTimeBegin,applyTimeEnd,applyPay,isSign,signTimeBegin,signTimeEnd,issueTime,peopleLimit,trainSite,cover,label,issueScope,isFree,costPrice,sellPrice,marketPrice,integralPrice,freeMember,lecturerId,lecturerName,lecturerPicture,curriculumidIntro,status,createrId,createrName,createrTime,updateTime)
+		 VALUES 
+ 		(#{curriculumId},#{title},#{classify},#{goodsId},#{recommend},#{teachingMethod},#{trainTimeBegin},#{trainTimeEnd},#{isApply},#{applyTimeBegin},#{applyTimeEnd},#{applyPay},#{isSign},#{signTimeBegin},#{signTimeEnd},#{issueTime},#{peopleLimit},#{trainSite},#{cover},#{label},#{issueScope},#{isFree},#{costPrice},#{sellPrice},#{marketPrice},#{integralPrice},#{freeMember},#{lecturerId},#{lecturerName},#{lecturerPicture},#{curriculumidIntro},#{status},#{createrId},#{createrName},#{createrTime},#{updateTime})
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.Curriculum">
+		 INSERT INTO bb_curriculum
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+             <if test="title != null">
+                 title,
+             </if>
+			<if test="classify != null">
+				 classify,
+			</if>
+             <if test="goodsId != null">
+                 goodsId,
+             </if>
+			<if test="recommend != null">
+				 recommend,
+			</if>
+			<if test="teachingMethod != null">
+				 teachingMethod,
+			</if>
+			<if test="trainTimeBegin != null">
+				 trainTimeBegin,
+			</if>
+			<if test="trainTimeEnd != null">
+				 trainTimeEnd,
+			</if>
+			<if test="isApply != null">
+				 isApply,
+			</if>
+			<if test="applyTimeBegin != null">
+				 applyTimeBegin,
+			</if>
+			<if test="applyTimeEnd != null">
+				 applyTimeEnd,
+			</if>
+			<if test="applyPay != null">
+				 applyPay,
+			</if>
+			<if test="isSign != null">
+				 isSign,
+			</if>
+			<if test="signTimeBegin != null">
+				 signTimeBegin,
+			</if>
+			<if test="signTimeEnd != null">
+				 signTimeEnd,
+			</if>
+			<if test="issueTime != null">
+				 issueTime,
+			</if>
+			<if test="peopleLimit != null">
+				 peopleLimit,
+			</if>
+			<if test="trainSite != null">
+				 trainSite,
+			</if>
+			<if test="cover != null">
+				 cover,
+			</if>
+			<if test="label != null">
+				 label,
+			</if>
+			<if test="issueScope != null">
+				 issueScope,
+			</if>
+			<if test="isFree != null">
+				 isFree,
+			</if>
+			<if test="costPrice != null">
+                costPrice,
+			</if>
+			<if test="sellPrice != null">
+                sellPrice,
+			</if>
+			<if test="marketPrice != null">
+                marketPrice,
+			</if>
+			<if test="integralPrice != null">
+                integralPrice,
+			</if>
+			<if test="freeMember != null">
+				 freeMember,
+			</if>
+			<if test="lecturerId != null">
+				 lecturerId,
+			</if>
+			<if test="lecturerName != null">
+				 lecturerName,
+			</if>
+			<if test="lecturerPicture != null">
+				 lecturerPicture,
+			</if>
+			<if test="curriculumidIntro != null">
+				 curriculumidIntro,
+			</if>
+			<if test="status != null">
+				 status,
+			</if>
+			<if test="createrId != null">
+				 createrId,
+			</if>
+			<if test="createrName != null">
+				 createrName,
+			</if>
+			<if test="createrTime != null">
+				 createrTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+             <if test="title!=null">
+                 #{title},
+             </if>
+			<if test="classify!=null">
+				 #{classify},
+			</if>
+             <if test="goodsId!=null">
+                 #{goodsId},
+             </if>
+			<if test="recommend!=null">
+				 #{recommend},
+			</if>
+			<if test="teachingMethod!=null">
+				 #{teachingMethod},
+			</if>
+			<if test="trainTimeBegin!=null">
+				 #{trainTimeBegin},
+			</if>
+			<if test="trainTimeEnd!=null">
+				 #{trainTimeEnd},
+			</if>
+			<if test="isApply!=null">
+				 #{isApply},
+			</if>
+			<if test="applyTimeBegin!=null">
+				 #{applyTimeBegin},
+			</if>
+			<if test="applyTimeEnd!=null">
+				 #{applyTimeEnd},
+			</if>
+			<if test="applyPay!=null">
+				 #{applyPay},
+			</if>
+			<if test="isSign!=null">
+				 #{isSign},
+			</if>
+			<if test="signTimeBegin!=null">
+				 #{signTimeBegin},
+			</if>
+			<if test="signTimeEnd!=null">
+				 #{signTimeEnd},
+			</if>
+			<if test="issueTime!=null">
+				 #{issueTime},
+			</if>
+			<if test="peopleLimit!=null">
+				 #{peopleLimit},
+			</if>
+			<if test="trainSite!=null">
+				 #{trainSite},
+			</if>
+			<if test="cover!=null">
+				 #{cover},
+			</if>
+			<if test="label!=null">
+				 #{label},
+			</if>
+			<if test="issueScope!=null">
+				 #{issueScope},
+			</if>
+			<if test="isFree!=null">
+				 #{isFree},
+			</if>
+			<if test="costPrice!=null">
+				 #{costPrice},
+			</if>
+			<if test="sellPrice!=null">
+				 #{sellPrice},
+			</if>
+			<if test="marketPrice!=null">
+				 #{marketPrice},
+			</if>
+			<if test="integralPrice!=null">
+				 #{integralPrice},
+			</if>
+			<if test="freeMember!=null">
+				 #{freeMember},
+			</if>
+			<if test="lecturerId!=null">
+				 #{lecturerId},
+			</if>
+			<if test="lecturerName!=null">
+				 #{lecturerName},
+			</if>
+			<if test="lecturerPicture!=null">
+				 #{lecturerPicture},
+			</if>
+			<if test="curriculumidIntro!=null">
+				 #{curriculumidIntro},
+			</if>
+			<if test="status!=null">
+				 #{status},
+			</if>
+			<if test="createrId!=null">
+				 #{createrId},
+			</if>
+			<if test="createrName!=null">
+				 #{createrName},
+			</if>
+			<if test="createrTime!=null">
+				 #{createrTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.Curriculum">
+		 UPDATE bb_curriculum
+ 		 <set>
+             <if test="title != null">
+                 title = #{title},
+             </if>
+			<if test="classify != null">
+				 classify = #{classify},
+			</if>
+             <if test="goodsId != null">
+                 goodsId = #{goodsId},
+             </if>
+			<if test="recommend != null">
+				 recommend = #{recommend},
+			</if>
+			<if test="teachingMethod != null">
+				 teachingMethod = #{teachingMethod},
+			</if>
+			<if test="trainTimeBegin != null">
+				 trainTimeBegin = #{trainTimeBegin},
+			</if>
+			<if test="trainTimeEnd != null">
+				 trainTimeEnd = #{trainTimeEnd},
+			</if>
+			<if test="isApply != null">
+				 isApply = #{isApply},
+			</if>
+			<if test="applyTimeBegin != null">
+				 applyTimeBegin = #{applyTimeBegin},
+			</if>
+			<if test="applyTimeEnd != null">
+				 applyTimeEnd = #{applyTimeEnd},
+			</if>
+			<if test="applyPay != null">
+				 applyPay = #{applyPay},
+			</if>
+			<if test="isSign != null">
+				 isSign = #{isSign},
+			</if>
+			<if test="signTimeBegin != null">
+				 signTimeBegin = #{signTimeBegin},
+			</if>
+			<if test="signTimeEnd != null">
+				 signTimeEnd = #{signTimeEnd},
+			</if>
+			<if test="issueTime != null">
+				 issueTime = #{issueTime},
+			</if>
+			<if test="peopleLimit != null">
+				 peopleLimit = #{peopleLimit},
+			</if>
+			<if test="trainSite != null">
+				 trainSite = #{trainSite},
+			</if>
+			<if test="cover != null">
+				 cover = #{cover},
+			</if>
+			<if test="label != null">
+				 label = #{label},
+			</if>
+			<if test="issueScope != null">
+				 issueScope = #{issueScope},
+			</if>
+			<if test="isFree != null">
+				 isFree = #{isFree},
+			</if>
+			<if test="costPrice != null">
+                costPrice = #{costPrice},
+			</if>
+			<if test="sellPrice != null">
+                sellPrice = #{sellPrice},
+			</if>
+			<if test="marketPrice != null">
+                marketPrice = #{marketPrice},
+			</if>
+			<if test="integralPrice != null">
+                integralPrice = #{integralPrice},
+			</if>
+			<if test="freeMember != null">
+				 freeMember = #{freeMember},
+			</if>
+			<if test="lecturerId != null">
+				 lecturerId = #{lecturerId},
+			</if>
+			<if test="lecturerName != null">
+				 lecturerName = #{lecturerName},
+			</if>
+			<if test="lecturerPicture != null">
+				 lecturerPicture = #{lecturerPicture},
+			</if>
+			<if test="curriculumidIntro != null">
+				 curriculumidIntro = #{curriculumidIntro},
+			</if>
+			<if test="status != null">
+				 status = #{status},
+			</if>
+			<if test="createrId != null">
+				 createrId = #{createrId},
+			</if>
+			<if test="createrName != null">
+				 createrName = #{createrName},
+			</if>
+			<if test="createrTime != null">
+				 createrTime = #{createrTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.Curriculum">
+		 UPDATE bb_curriculum
+		 SET title = #{title},
+			 classify = #{classify},
+			 goodsId = #{goodsId},
+			 recommend = #{recommend},
+			 teachingMethod = #{teachingMethod},
+			 trainTimeBegin = #{trainTimeBegin},
+			 trainTimeEnd = #{trainTimeEnd},
+			 isApply = #{isApply},
+			 applyTimeBegin = #{applyTimeBegin},
+			 applyTimeEnd = #{applyTimeEnd},
+			 applyPay = #{applyPay},
+			 isSign = #{isSign},
+			 signTimeBegin = #{signTimeBegin},
+			 signTimeEnd = #{signTimeEnd},
+			 issueTime = #{issueTime},
+			 peopleLimit = #{peopleLimit},
+			 trainSite = #{trainSite},
+			 cover = #{cover},
+			 label = #{label},
+			 issueScope = #{issueScope},
+			 isFree = #{isFree},
+			 costPrice = #{costPrice},
+			 sellPrice = #{sellPrice},
+			 marketPrice = #{marketPrice},
+			 integralPrice = #{integralPrice},
+			 freeMember = #{freeMember},
+			 lecturerId = #{lecturerId},
+			 lecturerName = #{lecturerName},
+			 lecturerPicture = #{lecturerPicture},
+			 curriculumidIntro = #{curriculumidIntro},
+			 status = #{status},
+			 createrId = #{createrId},
+			 createrName = #{createrName},
+			 createrTime = #{createrTime},
+			 updateTime = #{updateTime}
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+    <!-- 修 改-->
+    <update id="updateStatus" parameterType="com.abc12366.bangbang.model.curriculum.Curriculum">
+        UPDATE bb_curriculum
+        SET status = #{status},
+        updateTime = #{updateTime},
+        issueTime = #{issueTime}
+        WHERE curriculumId = #{curriculumId}
+    </update>
+
+    <!-- 修 改 浏览量-->
+    <update id="updateBrowsesDay" parameterType="java.lang.String">
+        UPDATE bb_curriculum
+        <set>
+            browseNum = browseNum + 1,
+        </set>
+        WHERE curriculumId = #{curriculumId}
+    </update>
+
+    <!-- 修 改 观看量-->
+    <update id="updateWatchsDay" parameterType="java.lang.String">
+        UPDATE bb_curriculum
+        <set>
+            watchNum = watchNum + 1,
+        </set>
+        WHERE curriculumId = #{curriculumId}
+    </update>
+
+</mapper>

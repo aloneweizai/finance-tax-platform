@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db2.SubscriptionRoMapper">
+    
+    <sql id="Base_Column">
+        id, type, busiType, hasWeb, webForce, hasWechat, wechatForce, hasMessage, messageForce, createTime, lastUpdate, remark
+    </sql>
+
+    <select id="selectList" parameterType="java.util.Map" resultType="com.abc12366.message.model.Subscriptions">
+        SELECT 
+        <include refid="Base_Column"/>
+        FROM msg_subscription_setting
+        where 1 = 1
+        <if test="type != null and type != ''">AND type = #{type}</if>
+        <if test="busiType != null and busiType != ''">AND busiType = #{busiType}</if>
+        ORDER BY createTime DESC
+    </select>
+    
+    <select id="selectOneSetting" parameterType="java.lang.String" resultType="com.abc12366.message.model.Subscriptions">
+        SELECT 
+        <include refid="Base_Column"/>
+        FROM msg_subscription_setting
+        where id = #{id}
+    </select>
+    
+    <select id="selectUserSubscriptionList" parameterType="java.util.Map" resultType="com.abc12366.message.model.UserSubscriptionInfo">
+        SELECT 
+        s.type, s.busiType, s.hasWeb, s.webForce, s.hasWechat, s.wechatForce, s.hasMessage, s.messageForce,s.remark,
+        u.userId, s.id as settingId, IFNULL(u.web,if(s.hasWeb = 1,1,0)) as web, IFNULL(u.wechat,if(s.hasWechat = 1,1,0)) as wechat, IFNULL(u.message,if(s.hasMessage = 1,1,0)) as message 
+        FROM msg_subscription_setting s LEFT JOIN 
+        ( select userId, settingId, web, wechat, message from msg_subscription_user where userId= #{userId} ) u 
+        on u.settingId = s.id
+        where 1 = 1
+        <if test="type != null and type != ''">AND s.type = #{type}</if>
+        <if test="busiType != null and busiType != ''">AND s.busiType = #{busiType}</if>
+        ORDER BY s.createTime DESC
+    </select>
+</mapper>

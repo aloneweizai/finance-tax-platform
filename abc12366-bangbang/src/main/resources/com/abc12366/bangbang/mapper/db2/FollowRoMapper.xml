@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.FollowRoMapper">
+    <select id="selectPeopleIFollow" resultType="com.abc12366.bangbang.model.bo.FollowUserBO"
+            parameterType="java.lang.String">
+        select bfu.id, bfu.userId, bfu.followedUserId, bfu.createTime, bfu.lastUpdate,
+        (select count(1) from bb_answer ba where ba.userId=bfu.followedUserId) answerCount,
+        (select count(1) from bb_ask bak where bak.userId=bfu.followedUserId) askCount,
+        (select count(1) from bb_follow_user bfuu where bfuu.followedUserId=bfu.followedUserId) followedCount
+        from bb_follow_user bfu
+        where bfu.userId=#{userId}
+        ORDER BY bfu.lastUpdate DESC
+    </select>
+    <select id="selectMyFollowerList" resultType="com.abc12366.bangbang.model.bo.FollowUserBO"
+            parameterType="java.lang.String">
+        select bfu.id, bfu.userId, bfu.followedUserId, bfu.createTime, bfu.lastUpdate
+        from bb_follow_user bfu
+        where bfu.followedUserId=#{userId}
+        ORDER BY lastUpdate DESC
+    </select>
+    <select id="selectFollowedCount" resultType="java.lang.String" parameterType="java.lang.String">
+        select count(1) from bb_follow_user bfu
+        where bfu.followedUserId=#{followedUserId}
+    </select>
+    <select id="selectExist" resultType="com.abc12366.bangbang.model.bo.FollowUserBO" parameterType="java.util.Map">
+        select id, userId, followedUserId, createTime, lastUpdate
+        from bb_follow_user
+        where userId=#{userId}
+        and followedUserId=#{followedUserId}
+    </select>
+    <select id="selectFollowerListByUserId" resultType="com.abc12366.bangbang.model.bo.MyFollowerListBO"
+            parameterType="java.lang.String">
+        select
+        (select bu.username followerName from bb_user bu where bu.id=bfu.userId) followerName,
+        (select count(1) followerAnswerCount from bb_answer ba where ba.userId=bfu.userId) followerAnswerCount,
+        (select count(1) followerAskCount from bb_ask bak where bak.userId=bfu.userId) followerAskCount,
+        (select count(1) followerFansCount from bb_follow_user bfus where bfus.followedUserId=bfu.userId)
+        followerFansCount,
+        (select minUserPicturePath from bb_user bu where bu.id=bfu.userId) userPicturePath,
+        bfu.userId followerUserId,
+        (select count(1) from bb_follow_user a where a.userId=bfu.followedUserId and a.followedUserId=bfu.userId)
+        isFollowed
+        from bb_follow_user bfu
+        where bfu.followedUserId=#{userId}
+    </select>
+    <select id="selectMyfollowByUserId" resultType="com.abc12366.bangbang.model.bo.MyFollowListBO"
+            parameterType="java.lang.String">
+        select
+        bfu.followedUserId followedUserId,
+        (select bu.username followName from bb_user bu where bu.id=bfu.followedUserId) followName,
+        (select count(1) answerCount from bb_answer ba where ba.userId=bfu.followedUserId) answerCount,
+        (select count(1) askCount from bb_ask bak where bak.userId=bfu.followedUserId) askCount,
+        (select count(1) fansCount from bb_follow_user bfus where bfus.followedUserId=bfu.followedUserId) fansCount,
+        (select minUserPicturePath from bb_user bu where bu.id=bfu.followedUserId) userPicturePath
+        from bb_follow_user bfu
+        where bfu.userId=#{userId}
+    </select>
+</mapper>

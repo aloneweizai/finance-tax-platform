@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QcUserRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+        id,userId,isRecommend,questionNum,likeNum,answerNum,commentNum,acceptNum,collectNum,attentionNum,fansNum,medalNum,createTime,lastUpdate
+	</sql>
+
+    <!-- 查询用户列表 -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QcBangUserBo" parameterType="java.lang.String">
+        SELECT
+        q.id,q.userId,q.isRecommend,questionNum,likeNum,answerNum,commentNum,acceptNum,collectNum,
+        attentionNum,fansNum,medalNum,q.createTime,q.lastUpdate,
+        u.nickname,u.userPicturePath,ue.tags
+        FROM bb_qc_user q left join bb_user u on q.userId = u.id
+        left join abc12366_uc.uc_user_extend ue on q.userId = ue.userId
+        WHERE 1=1
+    </select>
+
+    <!-- 查询用户最近回答的问题 -->
+    <select id="selectQuestionList" resultType="com.abc12366.bangbang.model.question.bo.QcTitleBo" parameterType="java.lang.String">
+        select a.questionId,a.id,q.title from bb_question_answer a left join bb_question q on a.questionId = q.id
+        where a.userId = #{userId} order by a.createTime limit 3
+    </select>
+
+</mapper>

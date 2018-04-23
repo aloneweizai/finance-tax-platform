@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.CurriculumApplyRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 applyId,	curriculumId,	userId,company,position,	nickname,	username,	applyTime,	phone,	signTime,	signIP,	signSite
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.curriculum.CurriculumApply" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_curriculum_apply
+		 WHERE applyId = #{applyId}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumApplyBo" parameterType="java.util.Map">
+        SELECT
+          applyId,	curriculumId,	a.userId,company,position,	a.username,	a.nickname,	applyTime,	a.phone,	signTime,	signIP,	signSite
+        FROM bb_curriculum_apply a
+        WHERE 1=1
+        <!--<if test="nickname != null and nickname != ''">
+            AND nickname like CONCAT('%',#{nickname},'%')
+        </if>-->
+        <if test="username != null and username != ''">
+            AND username like CONCAT('%',#{username},'%')
+        </if>
+        <if test="begintime != null">
+            <![CDATA[
+              and date_format(applyTime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endtime != null">
+            <![CDATA[
+              and date_format(applyTime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')
+              ]]>
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectCurrApply" resultType="com.abc12366.bangbang.model.curriculum.bo.CurriculumApplyBo" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bb_curriculum_apply
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+    <!-- 查询报名人数 -->
+    <select id="selectApplyCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+          count(applyId)
+        FROM bb_curriculum_apply
+        WHERE 1=1
+        <if test="userId != null and userId != ''">
+            AND userId = #{userId}
+        </if>
+        <if test="begintime != null">
+            <![CDATA[
+              and date_format(applyTime, '%Y%m%d') >= date_format(#{begintime}, '%Y%m%d')
+                ]]>
+        </if>
+        <if test="endtime != null">
+            <![CDATA[
+              and date_format(applyTime, '%Y%m%d') <= date_format(#{endtime}, '%Y%m%d')
+              ]]>
+        </if>
+        <if test="curriculumId != null and curriculumId != ''">
+            AND curriculumId = #{curriculumId}
+        </if>
+    </select>
+
+
+</mapper>

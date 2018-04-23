@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.NsrBindQueryRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.NsrBindQueryBO"
+            parameterType="com.abc12366.uc.model.bo.NsrBindQueryParamBO">
+        SELECT a.id,uu.username,uu.nickname,a.nsrsbh,a.nsrmc,a.swjgmc,a.status,a.createTime,a.lastUpdate, a.bindType
+        FROM (SELECT uud.id,
+            uud.userId,
+            uud.nsrsbh,
+            uud.nsrmc,
+            uud.swjgmc,
+            uud.status,
+            uud.createTime,
+            uud.lastUpdate,
+            'dzsb' bindType
+            FROM uc_user_dzsb uud
+            GROUP BY id
+            UNION ALL
+            SELECT uuh.id,
+            uuh.userId,
+            uuh.nsrsbh,
+            uuh.nsrmc,
+            uuh.swjgmc,
+            uuh.status,
+            uuh.createTime,
+            uuh.lastUpdate,
+            'hnds' bindType
+            FROM uc_user_hnds uuh
+            GROUP BY id
+            UNION ALL
+            SELECT uuh.id,
+            uuh.userId,
+            uuh.nsrsbh,
+            uuh.nsrmc,
+            uuh.swjgmc,
+            uuh.status,
+            uuh.createTime,
+            uuh.lastUpdate,
+            'hngs' bindType
+            FROM uc_user_hngs uuh
+            GROUP BY id
+            ) AS a LEFT JOIN uc_user AS uu
+            ON a.userId = uu.id
+        <where>
+            <if test="username!=null">
+                and uu.username=#{username}
+            </if>
+            <if test="nsrsbh!=null">
+                and a.nsrsbh=#{nsrsbh}
+            </if>
+            <if test="status!=null">
+                and a.status=#{status}
+            </if>
+        </where>
+        order by a.createTime desc
+    </select>
+
+    <select id="selectDzsbList" resultType="com.abc12366.uc.model.bo.NsrBindQueryBO"
+            parameterType="com.abc12366.uc.model.bo.NsrBindQueryParamBO">
+        SELECT id, userId, nsrsbh, nsrmc, swjgmc, status, createTime, lastUpdate, 'dzsb' bindType
+        FROM uc_user_dzsb
+        <where>
+            <if test="userId != null and userId != ''">
+                userId = #{userId}
+            </if>
+            <if test="nsrsbh != null and nsrsbh != ''">
+                and nsrsbh = #{nsrsbh}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectHngsList" resultType="com.abc12366.uc.model.bo.NsrBindQueryBO"
+            parameterType="com.abc12366.uc.model.bo.NsrBindQueryParamBO">
+        SELECT id, userId, nsrsbh, nsrmc, swjgmc, status, createTime, lastUpdate, 'hngs' bindType
+        FROM uc_user_hngs
+        <where>
+            <if test="userId != null and userId != ''">
+                userId = #{userId}
+            </if>
+            <if test="nsrsbh != null and nsrsbh != ''">
+                and nsrsbh = #{nsrsbh}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectHndsList" resultType="com.abc12366.uc.model.bo.NsrBindQueryBO"
+            parameterType="com.abc12366.uc.model.bo.NsrBindQueryParamBO">
+        SELECT id, userId, nsrsbh, nsrmc, swjgmc, status, createTime, lastUpdate, 'hnds' bindType
+        FROM uc_user_hnds
+        <where>
+            <if test="userId != null and userId != ''">
+                userId = #{userId}
+            </if>
+            <if test="nsrsbh != null and nsrsbh != ''">
+                and nsrsbh = #{nsrsbh}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectDzsb" resultType="com.abc12366.uc.model.bo.UserDzsbBO" parameterType="java.lang.String">
+        select id, userId, djxh, nsrsbh, nsrmc, shxydm, swjgMc, swjgDm, status, createTime, lastUpdate,
+        expireTime,expandExpireTime,frmc,frzjh,lastLoginTime,nsrlx,sfgtjzh,djrq
+        from uc_user_dzsb
+        where id=#{id}
+    </select>
+    <select id="selectHnds" resultType="com.abc12366.uc.model.bo.UserHndsBO" parameterType="java.lang.String">
+        select id,userId,username,subuser,nsrmc,nsrsbh,djxh,shxydm,swjgMc,swjgDm,status,createTime,lastUpdate
+        from uc_user_hnds
+        where id=#{id}
+    </select>
+    <select id="selectHngs" resultType="com.abc12366.uc.model.bo.UserHngsBO" parameterType="java.lang.String">
+        select id,userId,djxh,nsrsbh,nsrmc,shxydm,swjgMc,swjgDm,bsy,smrzzt,status,createTime,lastUpdate
+        from uc_user_hngs
+        where id=#{id}
+    </select>
+
+</mapper>

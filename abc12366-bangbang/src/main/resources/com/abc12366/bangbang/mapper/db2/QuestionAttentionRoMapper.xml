@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionAttentionRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 attentionId,	attentionUserId,	userId,	attentionTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionAttention" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_attention
+		 WHERE attentionId = #{attentionId}
+	</select>
+
+    <!-- 查询我关注的用户 -->
+    <select id="selectAttentionUserList" resultType="com.abc12366.bangbang.model.question.bo.QuestionAttentionBo" parameterType="java.lang.String">
+        SELECT
+            attentionId,	attentionUserId,	userId,	attentionTime,u.nickname,u.userPicturePath,
+            (SELECT count(id) FROM bb_question where userId = a.attentionUserId) questionNum,
+        (SELECT count(id) FROM bb_question_answer where parentId = '' and userId = a.attentionUserId) answerNum,
+        (SELECT count(attentionId) FROM bb_question_attention where attentionUserId = a.attentionUserId) attentionNum,
+        (SELECT count(attentionId) FROM bb_question_attention where userId = a.attentionUserId and attentionUserId = a.userId) isAttention
+        FROM bb_question_attention a left join bb_user u on a.attentionUserId = u.id
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- 查询关注我的用户 -->
+    <select id="selectUserList" resultType="com.abc12366.bangbang.model.question.bo.QuestionAttentionBo" parameterType="java.lang.String">
+        SELECT
+        attentionId,	attentionUserId,	userId,	attentionTime,u.nickname,u.userPicturePath,
+        (SELECT count(id) FROM bb_question where userId = a.userId) questionNum,
+        (SELECT count(id) FROM bb_question_answer where parentId = '' and userId = a.userId) answerNum,
+        (SELECT count(attentionId) FROM bb_question_attention where attentionUserId = a.userId) attentionNum,
+        (SELECT count(attentionId) FROM bb_question_attention where userId = a.attentionUserId and attentionUserId = a.userId) isAttention
+        FROM bb_question_attention a left join bb_user u on a.userId = u.id
+        WHERE attentionUserId = #{attentionUserId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectExist" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(attentionId)
+        FROM bb_question_attention
+        WHERE attentionUserId = #{attentionUserId} and userId = #{userId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectAttentionCnt" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count(attentionId)
+        FROM bb_question_attention
+        WHERE attentionUserId = #{attentionUserId}
+    </select>
+
+</mapper>

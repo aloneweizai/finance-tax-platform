@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.gateway.mapper.db1.UserTokenMapper">
+    <update id="updateLastTokenResetTime" parameterType="java.lang.String">
+        update abc12366_uc.uc_token
+        SET lastTokenResetTime = now()
+        where token=#{token}
+    </update>
+
+    <select id="isAuthentication" resultType="java.lang.String" parameterType="java.lang.String">
+        select userId
+        from abc12366_uc.uc_token
+        where lastTokenResetTime > #{lastTokenResetTime}
+        and token = #{token}
+    </select>
+
+    <select id="selectOneByToken" resultType="com.abc12366.gateway.model.bo.UCUserBO" parameterType="java.lang.String">
+        select uu.id, uu.username, uu.phone, uu.regMail, uu.regIP, uu.salt, uu.nickname, uu.status, uu.createTime,
+        uu.lastUpdate,
+        uu.userPicturePath, uu.maxUserPicturePath, uu.midUserPicturePath, uu.minUserPicturePath, uu.points, uu.exp,
+        uu.vipLevel,uu.usernameModifiedTimes,uu.vipExpireDate,
+        uu.wxopenid,uu.wxheadimg,uu.wxnickname,
+        (select uul.level from abc12366_uc.uc_uvip_level uul where uul.levelCode = uu.vipLevel limit 1) vipLevelName,
+        IFNULL(
+        (SELECT uul.name FROM abc12366_uc.uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.name FROM abc12366_uc.uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;= (SELECT MAX(uull.minValue) FROM abc12366_uc.uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) level,
+        IFNULL(
+        (SELECT uul.medal FROM abc12366_uc.uc_uexp_level uul WHERE uul.status='1' AND uu.exp &gt;= uul.minValue AND uu.exp &lt;= uul.maxValue LIMIT 1),
+        (SELECT uul.medal FROM abc12366_uc.uc_uexp_level uul WHERE uul.status='1' AND uul.minValue &gt;=(SELECT MAX(uull.minValue) FROM abc12366_uc.uc_uexp_level uull WHERE uull.status='1' LIMIT 1) AND uul.minValue &lt;=uu.exp)
+        ) levelName
+        from abc12366_uc.uc_user uu, abc12366_uc.uc_token ut
+        where uu.id=ut.userId
+        and ut.token=#{userToken}
+    </select>
+</mapper>

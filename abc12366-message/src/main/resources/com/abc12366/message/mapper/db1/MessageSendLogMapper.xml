@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.message.mapper.db1.MessageSendLogMapper">
+
+    <sql id="Base_Column">
+        id, sendchanel,phone, biztype, sendinfo, sendtime, sendstatus, failcode, failcause, logtime,bizId
+    </sql>
+
+    <insert id="insert" parameterType="com.abc12366.message.model.MessageSendLog">
+        INSERT INTO msg_message_send_log (<include refid="Base_Column"/>) VALUES
+        (#{id}, #{sendchanel}, #{phone}, #{biztype}, #{sendinfo}, #{sendtime}, #{sendstatus}, #{failcode}, #{failcause}, #{logtime}, #{bizId})
+    </insert>
+    <update id="update" parameterType="com.abc12366.message.model.MessageSendLog">
+        update msg_message_send_log
+        set sendstatus=#{sendstatus},
+            failcode=#{failcode},
+            logtime=#{logtime},
+            sendinfo=#{sendinfo}
+        where id=#{id}
+    </update>
+
+</mapper>

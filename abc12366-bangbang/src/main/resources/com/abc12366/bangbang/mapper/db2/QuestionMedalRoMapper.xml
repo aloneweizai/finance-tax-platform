@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionMedalRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	image,	name, type,	acquireCondition,	description,	status,	updateAdmin,	updateTime
+	</sql>
+
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionMedalBo" parameterType="java.util.Map">
+		SELECT t.*,(SELECT COUNT(1) FROM bb_question_medal_user WHERE medalId = t.id) AS ownerCnt
+		FROM bb_question_medal t
+		WHERE 1=1
+		<if test="name != null and name !=''">
+			AND t.name = #{name}
+		</if>
+	</select>
+
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionMedal" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_medal
+		 WHERE id = #{id}
+	</select>
+
+</mapper>

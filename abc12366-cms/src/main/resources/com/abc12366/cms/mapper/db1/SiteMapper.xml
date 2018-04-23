@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db1.SiteMapper">
+
+    <!--删除：根据主键ID删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM cms_site
+        WHERE siteId = #{siteId}
+    </delete>
+
+    <!-- 添加 -->
+    <insert id="insert" parameterType="com.abc12366.cms.model.Site">
+        INSERT INTO cms_site
+        (siteId,domain,sitePath,siteName,shortName,protocol,dynamicSuffix,staticSuffix,staticDir,isIndexToRoot,isStaticIndex,localeAdmin,localeFront,tplSolution,finalStep,afterCheck,isRelativePath,isRecycleOn,domainAlias,domainRedirect,tplIndex,keywords,description,siteLogo,siteLogoPath,copyrightExplain,recordNum,resourceSync,staticSync,staticIssue,shareCode,statisticsCode,siteStatus, statement)
+        VALUES
+        (#{siteId},#{domain},#{sitePath},#{siteName},#{shortName},#{protocol},#{dynamicSuffix},#{staticSuffix},#{staticDir},#{isIndexToRoot},#{isStaticIndex},#{localeAdmin},#{localeFront},#{tplSolution},#{finalStep},#{afterCheck},#{isRelativePath},#{isRecycleOn},#{domainAlias},#{domainRedirect},#{tplIndex},#{keywords},#{description},#{siteLogo},#{siteLogoPath},#{copyrightExplain},#{recordNum},#{resourceSync},#{staticSync},#{staticIssue},#{shareCode},#{statisticsCode},#{siteStatus},#{statement})
+    </insert>
+
+    <!-- 添加 （匹配有值的字段）-->
+    <insert id="insertSelective" parameterType="com.abc12366.cms.model.Site">
+        INSERT INTO cms_site
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="siteId != null">
+                siteId,
+            </if>
+            <if test="domain != null">
+                domain,
+            </if>
+            <if test="sitePath != null">
+                sitePath,
+            </if>
+            <if test="siteName != null">
+                siteName,
+            </if>
+            <if test="shortName != null">
+                shortName,
+            </if>
+            <if test="protocol != null">
+                protocol,
+            </if>
+            <if test="dynamicSuffix != null">
+                dynamicSuffix,
+            </if>
+            <if test="staticSuffix != null">
+                staticSuffix,
+            </if>
+            <if test="staticDir != null">
+                staticDir,
+            </if>
+            <if test="isIndexToRoot != null">
+                isIndexToRoot,
+            </if>
+            <if test="isStaticIndex != null">
+                isStaticIndex,
+            </if>
+            <if test="localeAdmin != null">
+                localeAdmin,
+            </if>
+            <if test="localeFront != null">
+                localeFront,
+            </if>
+            <if test="tplSolution != null">
+                tplSolution,
+            </if>
+            <if test="finalStep != null">
+                finalStep,
+            </if>
+            <if test="afterCheck != null">
+                afterCheck,
+            </if>
+            <if test="isRelativePath != null">
+                isRelativePath,
+            </if>
+            <if test="isRecycleOn != null">
+                isRecycleOn,
+            </if>
+            <if test="domainAlias != null">
+                domainAlias,
+            </if>
+            <if test="domainRedirect != null">
+                domainRedirect,
+            </if>
+            <if test="tplIndex != null">
+                tplIndex,
+            </if>
+            <if test="keywords != null">
+                keywords,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="siteLogo != null">
+                siteLogo,
+            </if>
+            <if test="siteLogoPath != null">
+                siteLogoPath,
+            </if>
+            <if test="copyrightExplain != null">
+                copyrightExplain,
+            </if>
+            <if test="recordNum != null">
+                recordNum,
+            </if>
+            <if test="resourceSync != null">
+                resourceSync,
+            </if>
+            <if test="staticSync != null">
+                staticSync,
+            </if>
+            <if test="staticIssue != null">
+                staticIssue,
+            </if>
+            <if test="shareCode != null">
+                shareCode,
+            </if>
+            <if test="statisticsCode != null">
+                statisticsCode,
+            </if>
+            <if test="siteStatus != null">
+                siteStatus,
+            </if>
+            <if test="statement != null">
+                statement,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="siteId!=null">
+                #{siteId},
+            </if>
+            <if test="domain!=null">
+                #{domain},
+            </if>
+            <if test="sitePath!=null">
+                #{sitePath},
+            </if>
+            <if test="siteName!=null">
+                #{siteName},
+            </if>
+            <if test="shortName!=null">
+                #{shortName},
+            </if>
+            <if test="protocol!=null">
+                #{protocol},
+            </if>
+            <if test="dynamicSuffix!=null">
+                #{dynamicSuffix},
+            </if>
+            <if test="staticSuffix!=null">
+                #{staticSuffix},
+            </if>
+            <if test="staticDir!=null">
+                #{staticDir},
+            </if>
+            <if test="isIndexToRoot!=null">
+                #{isIndexToRoot},
+            </if>
+            <if test="isStaticIndex!=null">
+                #{isStaticIndex},
+            </if>
+            <if test="localeAdmin!=null">
+                #{localeAdmin},
+            </if>
+            <if test="localeFront!=null">
+                #{localeFront},
+            </if>
+            <if test="tplSolution!=null">
+                #{tplSolution},
+            </if>
+            <if test="finalStep!=null">
+                #{finalStep},
+            </if>
+            <if test="afterCheck!=null">
+                #{afterCheck},
+            </if>
+            <if test="isRelativePath!=null">
+                #{isRelativePath},
+            </if>
+            <if test="isRecycleOn!=null">
+                #{isRecycleOn},
+            </if>
+            <if test="domainAlias!=null">
+                #{domainAlias},
+            </if>
+            <if test="domainRedirect!=null">
+                #{domainRedirect},
+            </if>
+            <if test="tplIndex!=null">
+                #{tplIndex},
+            </if>
+            <if test="keywords!=null">
+                #{keywords},
+            </if>
+            <if test="description!=null">
+                #{description},
+            </if>
+            <if test="siteLogo!=null">
+                #{siteLogo},
+            </if>
+            <if test="siteLogoPath!=null">
+                #{siteLogoPath},
+            </if>
+            <if test="copyrightExplain!=null">
+                #{copyrightExplain},
+            </if>
+            <if test="recordNum!=null">
+                #{recordNum},
+            </if>
+            <if test="resourceSync!=null">
+                #{resourceSync},
+            </if>
+            <if test="staticSync!=null">
+                #{staticSync},
+            </if>
+            <if test="staticIssue!=null">
+                #{staticIssue},
+            </if>
+            <if test="shareCode!=null">
+                #{shareCode},
+            </if>
+            <if test="statisticsCode!=null">
+                #{statisticsCode},
+            </if>
+            <if test="siteStatus!=null">
+                #{siteStatus},
+            </if>
+            <if test="statement!=null">
+                #{statement},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.abc12366.cms.model.Site">
+        UPDATE cms_site
+        <set>
+            <if test="domain != null">
+                domain = #{domain},
+            </if>
+            <if test="sitePath != null">
+                sitePath = #{sitePath},
+            </if>
+            <if test="siteName != null">
+                siteName = #{siteName},
+            </if>
+            <if test="shortName != null">
+                shortName = #{shortName},
+            </if>
+            <if test="protocol != null">
+                protocol = #{protocol},
+            </if>
+            <if test="dynamicSuffix != null">
+                dynamicSuffix = #{dynamicSuffix},
+            </if>
+            <if test="staticSuffix != null">
+                staticSuffix = #{staticSuffix},
+            </if>
+            <if test="staticDir != null">
+                staticDir = #{staticDir},
+            </if>
+            <if test="isIndexToRoot != null">
+                isIndexToRoot = #{isIndexToRoot},
+            </if>
+            <if test="isStaticIndex != null">
+                isStaticIndex = #{isStaticIndex},
+            </if>
+            <if test="localeAdmin != null">
+                localeAdmin = #{localeAdmin},
+            </if>
+            <if test="localeFront != null">
+                localeFront = #{localeFront},
+            </if>
+            <if test="tplSolution != null">
+                tplSolution = #{tplSolution},
+            </if>
+            <if test="finalStep != null">
+                finalStep = #{finalStep},
+            </if>
+            <if test="afterCheck != null">
+                afterCheck = #{afterCheck},
+            </if>
+            <if test="isRelativePath != null">
+                isRelativePath = #{isRelativePath},
+            </if>
+            <if test="isRecycleOn != null">
+                isRecycleOn = #{isRecycleOn},
+            </if>
+            <if test="domainAlias != null">
+                domainAlias = #{domainAlias},
+            </if>
+            <if test="domainRedirect != null">
+                domainRedirect = #{domainRedirect},
+            </if>
+            <if test="tplIndex != null">
+                tplIndex = #{tplIndex},
+            </if>
+            <if test="keywords != null">
+                keywords = #{keywords},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="siteLogo != null">
+                siteLogo = #{siteLogo},
+            </if>
+            <if test="siteLogoPath != null">
+                siteLogoPath = #{siteLogoPath},
+            </if>
+            <if test="copyrightExplain != null">
+                copyrightExplain = #{copyrightExplain},
+            </if>
+            <if test="recordNum != null">
+                recordNum = #{recordNum},
+            </if>
+            <if test="resourceSync != null">
+                resourceSync = #{resourceSync},
+            </if>
+            <if test="staticSync != null">
+                staticSync = #{staticSync},
+            </if>
+            <if test="staticIssue != null">
+                staticIssue = #{staticIssue},
+            </if>
+            <if test="shareCode != null">
+                shareCode = #{shareCode},
+            </if>
+            <if test="statisticsCode != null">
+                statisticsCode = #{statisticsCode},
+            </if>
+            <if test="siteStatus != null">
+                siteStatus = #{siteStatus},
+            </if>
+            <if test="statement != null">
+                statement = #{statement},
+            </if>
+
+        </set>
+        WHERE siteId = #{siteId}
+    </update>
+
+    <!-- 修 改-->
+    <update id="updateByPrimaryKey" parameterType="com.abc12366.cms.model.Site">
+        UPDATE cms_site
+        SET
+        domain = #{domain},
+        sitePath = #{sitePath},
+        siteName = #{siteName},
+        shortName = #{shortName},
+        protocol = #{protocol},
+        dynamicSuffix = #{dynamicSuffix},
+        staticSuffix = #{staticSuffix},
+        staticDir = #{staticDir},
+        isIndexToRoot = #{isIndexToRoot},
+        isStaticIndex = #{isStaticIndex},
+        localeAdmin = #{localeAdmin},
+        localeFront = #{localeFront},
+        tplSolution = #{tplSolution},
+        finalStep = #{finalStep},
+        afterCheck = #{afterCheck},
+        isRelativePath = #{isRelativePath},
+        isRecycleOn = #{isRecycleOn},
+        domainAlias = #{domainAlias},
+        domainRedirect = #{domainRedirect},
+        tplIndex = #{tplIndex},
+        keywords = #{keywords},
+        description = #{description},
+        siteLogo = #{siteLogo},
+        siteLogoPath = #{siteLogoPath},
+        copyrightExplain = #{copyrightExplain},
+        recordNum = #{recordNum},
+        resourceSync = #{resourceSync},
+        staticSync = #{staticSync},
+        staticIssue = #{staticIssue},
+        shareCode = #{shareCode},
+        statisticsCode = #{statisticsCode},
+        siteStatus = #{siteStatus},
+        statement = #{statement}
+        WHERE siteId = #{siteId}
+    </update>
+
+</mapper>

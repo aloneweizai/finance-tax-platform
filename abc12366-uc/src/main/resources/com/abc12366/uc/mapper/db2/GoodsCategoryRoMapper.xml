@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.GoodsCategoryRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, category, parentId, sort, createTime, lastUpdate
+    </sql>
+    <resultMap id="categoryBoResultMap" type="com.abc12366.uc.model.order.bo.GoodsCategoryBO">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="category" property="category" jdbcType="VARCHAR"/>
+        <result column="parentId" property="parentId" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="lastUpdate" property="lastUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.GoodsCategory" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_goods_category
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectById" resultMap="categoryBoResultMap" parameterType="java.lang.String">
+        SELECT
+        g.id, g.category, g.parentId, g.sort, g.createTime, g.lastUpdate,p.category as parentName
+        FROM uc_goods_category g
+        LEFT JOIN uc_goods_category p on p.id = g.parentId
+        WHERE g.id = #{id}
+    </select>
+
+    <!-- 查询（根据父ID查询） -->
+    <select id="selectByParentId" resultMap="categoryBoResultMap" parameterType="java.lang.String">
+        SELECT
+        g.id, g.category, g.parentId, g.sort, g.createTime, g.lastUpdate,p.category as parentName
+        FROM uc_goods_category g
+        LEFT JOIN uc_goods_category p on p.id = g.parentId
+        WHERE g.parentId = #{parentId}
+        ORDER BY  g.sort asc
+    </select>
+
+    <!-- 查询顶级父节点 -->
+    <select id="selectParentCategory" resultMap="categoryBoResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_goods_category
+        WHERE parentId is null
+    </select>
+
+    <!-- 查询（根据条件查询） -->
+    <select id="selectList" resultMap="categoryBoResultMap" parameterType="com.abc12366.uc.model.order.GoodsCategory">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_goods_category
+        <where>
+            1=1
+            <if test="category != null  and category!=''">AND category LIKE CONCAT('%',#{category},'%')</if>
+        </where>
+    </select>
+
+    <!-- 查询，根据名称查询分类 -->
+    <select id="selectByName" resultMap="categoryBoResultMap" parameterType="java.lang.String">
+        SELECT
+        g.id, g.category, g.parentId, g.sort, g.createTime, g.lastUpdate
+        FROM uc_goods_category g
+        <where>
+            g.category=#{category}
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.SysTaskRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,ruleCode,
+        count,skipURL,ruleId,awardType,remark,dateType,code
+    </sql>
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.util.Map">
+        SELECT
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,ruleCode
+        ,count,skipURL,ruleId,awardType,remark,dateType,code
+        from uc_sys_task
+        <where>
+            <if test="name!=null">
+                name=#{name}
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectDeployedList" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.util.Map">
+        SELECT
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,
+        ruleCode,count,skipURL,ruleId,awardType,remark,dateType,code
+        from uc_sys_task
+        <where>
+            status=1
+            <if test="name!=null">
+                and name=#{name}
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,ruleCode,
+        count,skipURL,ruleId,awardType,remark,dateType,code
+        from uc_sys_task
+        where id = #{id}
+    </select>
+
+  
+
+    <select id="selectListByDateType" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from uc_sys_task
+        where status = 1
+        and dateType = #{dateType}
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectValidListByTypeAndDateType" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from uc_sys_task
+        where status = 1
+        and type = #{type}
+        and dateType = #{dateType}
+    </select>
+
+    <select id="selectListByType" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from uc_sys_task
+        where status = 1
+        and type = #{type}
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectTimeLimitedListByType" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from uc_sys_task
+        where status = 1
+        and type = #{type}
+        and startTime IS NOT NULL
+        and endTime IS NOT NULL
+        and <![CDATA[  startTime < (SELECT CURDATE())]]>
+        and <![CDATA[  endTime > (SELECT CURDATE())]]>
+    </select>
+
+    <select id="selectValidSysTaskByRuleId" resultType="com.abc12366.uc.model.SysTask" parameterType="java.lang.String">
+        SELECT
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,ruleCode,
+        count,skipURL,ruleId,awardType,remark,dateType,code
+        from uc_sys_task
+        where ruleId = #{ruleId}
+        and status='1'
+    </select>
+
+    <select id="selectValidOneByCode" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        id,name,startTime,endTime,rule,award,type,status,createTime,lastUpdate,imageUrl,ruleName,ruleCode,
+        count,skipURL,ruleId,awardType,remark,dateType,code
+        from uc_sys_task
+        where code = #{taskCode}
+        and status='1'
+    </select>
+
+    <select id="selectListByCode" resultType="com.abc12366.uc.model.bo.SysTaskBO" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from uc_sys_task
+        where uc_sys_task.code = #{code}
+    </select>
+</mapper>

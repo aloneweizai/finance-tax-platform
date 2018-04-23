@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.TagRoMapper">
+
+    <select id="selectList" resultType="com.abc12366.uc.model.bo.TagBO"
+            parameterType="com.abc12366.uc.model.bo.TagSelectParamBO">
+        SELECT id,tagName,status,createTime,lastUpdate,category,description,rule,(SELECT count(1) FROM uc_subject_tag us LEFT JOIN uc_user u on u.id = us.subjectId where u.id is not null
+        and  us.tagId=ut.id) tagedCount,weight, type
+        from uc_tag ut
+        <where>
+            <if test="tagName!=null">
+                tagName=#{tagName}
+            </if>
+            <if test="category!=null">
+                and category=#{category}
+            </if>
+        </where>
+        ORDER BY category ASC
+    </select>
+    <select id="selectListByUserId" resultType="com.abc12366.uc.model.bo.TagBO" parameterType="java.lang.String">
+        SELECT
+        ut.id,ut.tagName,ut.status,ut.createTime,ut.lastUpdate,ut.category,ut.description,ut.rule,ut.weight,ut.type
+        from uc_tag ut,uc_subject_tag ust
+        where ut.id=ust.tagId
+        and ust.subjectId=#{userId}
+        ORDER BY lastUpdate DESC
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.bo.TagBO" parameterType="java.lang.String">
+        SELECT id,tagName,status,createTime,lastUpdate,category,description,rule,(SELECT COUNT(1) FROM uc_subject_tag us
+        WHERE us.tagId=ut.id) tagedCount,weight,type
+        from uc_tag ut
+        where ut.id=#{id}
+    </select>
+
+    <select id="selectUserIdsByTagIds" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT DISTINCT a.subjectId FROM
+        <foreach item="item" collection="tagId" separator="union all" open="(" close=")" index="">
+            SELECT subjectId FROM uc_subject_tag WHERE tagId=#{item}
+        </foreach>
+        a group by a.subjectId HAVING COUNT(subjectId) >= #{tagIdCount}
+    </select>
+</mapper>

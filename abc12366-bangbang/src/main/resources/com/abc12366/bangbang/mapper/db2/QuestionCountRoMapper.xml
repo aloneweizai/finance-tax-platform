@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionCountRoMapper">
+<!--点赞-->
+    <select id="selectLike" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+    SELECT userId as id,sum(likeNum) as count
+            ,(select userPicturePath from bb_user bu where bu.id=userId) userPicturePath
+        ,(select username from bb_user bu where bu.id=userId) username
+        ,(select nickname from bb_user bu where bu.id=userId) nickname
+    FROM
+    (SELECT * FROM bb_question_answer )  z
+    group by userId
+    having count > 0
+    order by count  desc
+    </select>
+
+    <select id="selectAttention" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+        SELECT attentionUserId as id,count(*) as count
+        ,(select userPicturePath from bb_user bu where bu.id=attentionUserId) userPicturePath
+        ,(select username from bb_user bu where bu.id=attentionUserId) username
+        ,(select nickname from bb_user bu where bu.id=attentionUserId) nickname
+        FROM bb_question_attention  z
+        group by attentionUserId
+        order by count(*) desc
+    </select>
+    <!--采纳次数-->
+    <select id="selectAccept" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+
+    SELECT userId as id,count(*) as count
+            ,(select userPicturePath from bb_user bu where bu.id=userId) userPicturePath
+        ,(select username from bb_user bu where bu.id=userId) username
+        ,(select nickname from bb_user bu where bu.id=userId) nickname
+    FROM
+    (SELECT * FROM bb_question_answer where isAccept=1)  z
+    group by userId
+    order by count(*) desc
+</select>
+    <!--专家采纳次数-->
+    <select id="selectAcceptExpert" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+         SELECT userId as id,count(*) as count
+        ,(select userPicturePath from bb_user bu where bu.id=userId) userPicturePath
+        ,(select username from bb_user bu where bu.id=userId) username
+        ,(select nickname from bb_user bu where bu.id=userId) nickname
+        FROM
+        (SELECT * FROM bb_question_answer where isAccept=1  and
+         userId in  (select  userId from bb_question_expert  ))  z
+        group by userId
+        order by count(*) desc
+    </select>
+    <!--回答次数-->
+    <select id="selectAnswers" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+  SELECT userId as id,count(*) as count
+            ,(select userPicturePath from bb_user bu where bu.id=userId) userPicturePath
+        ,(select username from bb_user bu where bu.id=userId) username
+        ,(select nickname from bb_user bu where bu.id=userId) nickname
+    FROM
+    bb_question_answer
+    group by userId
+    order by count(*) desc
+    </select>
+    <!--勋章-->
+    <select id="selectMedal" resultType="com.abc12366.bangbang.model.question.bo.QuestionCountBo">
+        SELECT userId as id,count(*) as count
+        ,(select userPicturePath from bb_user bu where bu.id=userId) userPicturePath
+        ,(select username from bb_user bu where bu.id=userId) username
+        ,(select nickname from bb_user bu where bu.id=userId) nickname
+        FROM
+        bb_question_medal_user
+        group by userId
+        order by count(*) desc
+    </select>
+</mapper>

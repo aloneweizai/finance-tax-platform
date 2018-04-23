@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.DictMapper">
+
+    <insert id="insert" parameterType="com.abc12366.uc.model.Dict">
+        INSERT INTO uc_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="dictId != null">
+                dictId,
+            </if>
+            <if test="dictName != null">
+                dictName,
+            </if>
+            <if test="fieldKey != null">
+                fieldKey,
+            </if>
+            <if test="fieldValue != null">
+                fieldValue,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="createUser != null">
+                createUser,
+            </if>
+            <if test="lastUpdate != null">
+                lastUpdate,
+            </if>
+            <if test="lastUser != null">
+                lastUser,
+            </if>
+            <if test="sort != null">
+                sort
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                #{id},
+            </if>
+            <if test="dictId!=null">
+                #{dictId},
+            </if>
+            <if test="dictName!=null">
+                #{dictName},
+            </if>
+            <if test="fieldKey!=null">
+                #{fieldKey},
+            </if>
+            <if test="fieldValue!=null">
+                #{fieldValue},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="createUser!=null">
+                #{createUser},
+            </if>
+            <if test="lastUpdate!=null">
+                #{lastUpdate},
+            </if>
+            <if test="lastUser!=null">
+                #{lastUser},
+            </if>
+            <if test="sort!=null">
+                #{sort}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.abc12366.uc.model.Dict">
+        update uc_dict
+        <set>
+            <if test="dictId != null">dictId = #{dictId},</if>
+            <if test="dictName != null">dictName = #{dictName},</if>
+            <if test="fieldKey != null">fieldKey = #{fieldKey},</if>
+            <if test="fieldValue != null">fieldValue = #{fieldValue},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="lastUpdate != null">lastUpdate = #{lastUpdate},</if>
+            <if test="lastUser != null">lastUser = #{lastUser}</if>
+            <if test="sort != null">sort = #{sort}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_dict
+        where id=#{id}
+    </delete>
+</mapper>

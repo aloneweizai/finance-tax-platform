@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db1.TagMapper">
+    <insert id="insert" parameterType="com.abc12366.uc.model.Tag">
+        insert into uc_tag(id,tagName,status,createTime,lastUpdate,category,description,rule,weight,type)
+        values(#{id},#{tagName},#{status},#{createTime},#{lastUpdate},#{category},#{description},#{rule},#{weight},#{type})
+    </insert>
+    <update id="update" parameterType="com.abc12366.uc.model.Tag">
+        update uc_tag
+        <set>
+            <if test="tagName!=null">tagName=#{tagName},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="createTime!=null">createTime=#{createTime},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="lastUpdate!=null">lastUpdate=#{lastUpdate},</if>
+            <if test="category!=null">category=#{category},</if>
+            <if test="description!=null">description=#{description},</if>
+            <if test="rule!=null">rule=#{rule},</if>
+            <if test="weight!=null">weight=#{weight},</if>
+            <if test="type!=null">type=#{type}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from uc_tag
+        where id=#{id}
+    </delete>
+    <update id="enableOrDisable" parameterType="com.abc12366.uc.model.Tag">
+        update uc_tag
+        <set>
+            <if test="status!=null">status=#{status},</if>
+            <if test="lastUpdate!=null">lastUpdate=#{lastUpdate}</if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

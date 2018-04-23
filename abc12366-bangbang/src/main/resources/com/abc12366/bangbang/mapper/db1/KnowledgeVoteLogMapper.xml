@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.KnowledgeVoteLogMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		id,	userId,	knowledgeId,	isUseFull,	sourceIP,	createTime
+	</sql>
+
+	<!-- 列表查询 -->
+	<select id="selectList" resultType="com.abc12366.bangbang.model.bo.KnowledgeVoteLogBO"
+			parameterType="com.abc12366.bangbang.model.bo.KnowledgeBaseParamBO">
+		SELECT t_votelog.*,t_user.username AS userName, t_base.subject AS knowledgeSubject,t_vote_msg.content as replyMsg
+		FROM
+		bb_knowledge_vote_log t_votelog
+		LEFT JOIN abc12366_uc.uc_user t_user ON t_votelog.userId = t_user.id
+		LEFT JOIN bb_knowledge_base  t_base ON t_votelog.knowledgeId = t_base.id
+		LEFT JOIN
+		(
+			SELECT a.* FROM abc12366_message.msg_business_message a WHERE busiType = 'KNOWLEDGE_VOTE' GROUP BY businessId
+		) t_vote_msg
+		ON t_votelog.id = t_vote_msg.businessId
+		WHERE 1=1
+		<if test="categoryCode != null and categoryCode !=''">
+			AND t_base.categoryCode LIKE CONCAT(#{categoryCode},'%')
+		</if>
+		<if test="type != null and type !=''">
+			AND t_base.type = #{type}
+		</if>
+		<if test="keywords != null and keywords !=''">
+			AND (
+				t_base.subject LIKE CONCAT('%',#{keywords},'%')
+				OR
+				t_base.id IN(
+					SELECT DISTINCT t1.knowledgeId
+					FROM
+					bb_knowledge_tag_rel t1
+					LEFT JOIN bb_knowledge_tag t2 ON t1.tagId = t2.id
+					WHERE t2.name LIKE CONCAT('%',#{keywords},'%')
+				)
+			)
+		</if>
+		ORDER BY t_votelog.createTime DESC
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.KnowledgeVoteLog" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bb_knowledge_vote_log
+		WHERE id = #{id}
+	</select>
+	<!-- 查询（根据查询） -->
+	<select id="selectByUserVotedKnowledge" resultType="com.abc12366.bangbang.model.KnowledgeVoteLog">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bb_knowledge_vote_log
+		WHERE userId = #{userId} AND knowledgeId = #{knowledgeId}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		DELETE FROM bb_knowledge_vote_log
+		WHERE id = #{id}
+	</delete>
+	<!--删除：根据主键ID批量删除-->
+	<delete id="deleteByPrimaryKeys" parameterType="java.util.List">
+		DELETE FROM bb_knowledge_vote_log
+		WHERE id IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!--删除：根据主键ID批量删除-->
+	<delete id="deleteByKnowledgeIds" parameterType="java.util.List">
+		DELETE FROM bb_knowledge_vote_log
+		WHERE knowledgeId IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.KnowledgeVoteLog">
+		INSERT INTO bb_knowledge_vote_log
+		(id,userId,knowledgeId,isUseFull,sourceIP,createTime)
+		VALUES
+		(#{id},#{userId},#{knowledgeId},#{isUseFull},#{sourceIP},now())
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.KnowledgeVoteLog">
+		INSERT INTO bb_knowledge_vote_log
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="knowledgeId != null">
+				knowledgeId,
+			</if>
+			<if test="isUseFull != null">
+				isUseFull,
+			</if>
+			<if test="sourceIP != null">
+				sourceIP,
+			</if>
+			createTime
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="userId!=null">
+				#{userId},
+			</if>
+			<if test="knowledgeId!=null">
+				#{knowledgeId},
+			</if>
+			<if test="isUseFull!=null">
+				#{isUseFull},
+			</if>
+			<if test="sourceIP!=null">
+				#{sourceIP},
+			</if>
+				now()
+		</trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.KnowledgeVoteLog">
+		UPDATE bb_knowledge_vote_log
+		<set>
+			<if test="userId != null">
+				userId = #{userId},
+			</if>
+			<if test="knowledgeId != null">
+				knowledgeId = #{knowledgeId},
+			</if>
+			<if test="isUseFull != null">
+				isUseFull = #{isUseFull},
+			</if>
+			<if test="sourceIP != null">
+				sourceIP = #{sourceIP},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.KnowledgeVoteLog">
+		 UPDATE bb_knowledge_vote_log
+		 SET
+			 userId = #{userId},
+			 knowledgeId = #{knowledgeId},
+			 isUseFull = #{isUseFull},
+			 sourceIP = #{sourceIP}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

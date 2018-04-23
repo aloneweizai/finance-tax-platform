@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.uc.mapper.db2.UserAddressRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, userId, name, province, city, area, detail, phone, isDefault, status, createTime, lastUpdate
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.uc.model.order.UserAddress" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_address
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据UserId查询 -->
+    <select id="selectList" resultType="com.abc12366.uc.model.order.UserAddress" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_address
+        WHERE userId = #{userId}
+    </select>
+
+    <select id="selectBOList" resultType="com.abc12366.uc.model.order.bo.UserAddressBO" parameterType="java.lang.String">
+        SELECT
+        a.id, a.userId, a.name, a.province, a.city, a.area, a.detail, a.phone, a.isDefault, a.status, a.createTime, a.lastUpdate,
+        p.province as provinceName,c.city as cityName,e.area as areaName
+        FROM uc_user_address a
+        LEFT JOIN uc_province p ON p.provinceId = a.province
+        LEFT JOIN uc_city c on c.cityId = a.city
+        LEFT JOIN uc_area e on e.areaId = a.area
+        WHERE a.userId = #{userId}
+        order by a.isDefault desc
+    </select>
+
+    <select id="selectById" resultType="com.abc12366.uc.model.order.bo.UserAddressBO" parameterType="java.lang.String">
+        SELECT
+        a.id, a.userId, a.name, a.province, a.city, a.area, a.detail, a.phone, a.isDefault, a.status, a.createTime, a.lastUpdate,
+        p.province as provinceName,c.city as cityName,e.area as areaName
+        FROM uc_user_address a
+        LEFT JOIN uc_province p ON p.provinceId = a.province
+        LEFT JOIN uc_city c on c.cityId = a.city
+        LEFT JOIN uc_area e on e.areaId = a.area
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="selectOne" resultType="com.abc12366.uc.model.order.UserAddress"
+            parameterType="com.abc12366.uc.model.order.UserAddress">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_address
+        WHERE id = #{id} and userId = #{userId}
+    </select>
+
+    <select id="selectByUserId" resultType="com.abc12366.uc.model.order.UserAddress"
+            parameterType="com.abc12366.uc.model.order.UserAddress">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM uc_user_address
+        WHERE id != #{id} and userId = #{userId}
+    </select>
+
+</mapper>

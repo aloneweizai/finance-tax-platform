@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionMedalUserRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	medalId,	userId,	medalTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionMedalUser" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_medal_user
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectListByUserId" resultType="com.abc12366.bangbang.model.question.bo.QuestionMedalUserBo" parameterType="java.util.Map">
+        SELECT
+            mu.id,	medalId,	mu.userId,	medalTime,m.image,m.name
+        FROM bb_question_medal_user mu left join bb_question_medal m on mu.medalId = m.id
+        WHERE mu.userId = #{userId}
+        ORDER BY medalTime DESC
+    </select>
+
+</mapper>

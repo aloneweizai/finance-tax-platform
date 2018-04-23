@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumBrowseMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_browse
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumBrowse">
+		 INSERT INTO bb_curriculum_browse
+ 		(curriculumId,browseId,userId,username,nickname,memberGrade,visitIP,visitSite) 
+		 VALUES 
+ 		(#{curriculumId},#{browseId},#{userId},#{username},#{nickname},#{memberGrade},#{visitIP},#{visitSite}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumBrowse">
+		 INSERT INTO bb_curriculum_browse
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="browseId != null">
+				 browseId,
+			</if>
+			<if test="userId != null">
+				 userId,
+			</if>
+			<if test="username != null">
+				 username,
+			</if>
+			<if test="nickname != null">
+				 nickname,
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade,
+			</if>
+			<if test="visitIP != null">
+				 visitIP,
+			</if>
+			<if test="visitSite != null">
+				 visitSite,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="browseId!=null">
+				 #{browseId},
+			</if>
+			<if test="userId!=null">
+				 #{userId},
+			</if>
+			<if test="username!=null">
+				 #{username},
+			</if>
+			<if test="nickname!=null">
+				 #{nickname},
+			</if>
+			<if test="memberGrade!=null">
+				 #{memberGrade},
+			</if>
+			<if test="visitIP!=null">
+				 #{visitIP},
+			</if>
+			<if test="visitSite!=null">
+				 #{visitSite},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumBrowse">
+		 UPDATE bb_curriculum_browse
+ 		 <set> 
+			<if test="browseId != null">
+				 browseId = #{browseId},
+			</if>
+			<if test="userId != null">
+				 userId = #{userId},
+			</if>
+			<if test="username != null">
+				 username = #{username},
+			</if>
+			<if test="nickname != null">
+				 nickname = #{nickname},
+			</if>
+			<if test="memberGrade != null">
+				 memberGrade = #{memberGrade},
+			</if>
+			<if test="visitIP != null">
+				 visitIP = #{visitIP},
+			</if>
+			<if test="visitSite != null">
+				 visitSite = #{visitSite},
+			</if>
+
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumBrowse">
+		 UPDATE bb_curriculum_browse
+		 SET 
+			 browseId = #{browseId},
+			 userId = #{userId},
+			 username = #{username},
+			 nickname = #{nickname},
+			 memberGrade = #{memberGrade},
+			 visitIP = #{visitIP},
+			 visitSite = #{visitSite}
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.QuestionFactionInformMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	factionId,	content,	createUserId,	createTime,	updateTime
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionInform" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_inform
+		 WHERE id = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_question_faction_inform
+		 WHERE id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.question.QuestionFactionInform">
+		 INSERT INTO bb_question_faction_inform
+ 		(id,factionId,content,createUserId,createTime,updateTime) 
+		 VALUES 
+ 		(#{id},#{factionId},#{content},#{createUserId},#{createTime},#{updateTime}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionInform">
+		 INSERT INTO bb_question_faction_inform
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 id,
+			</if>
+			<if test="factionId != null">
+				 factionId,
+			</if>
+			<if test="content != null">
+				 content,
+			</if>
+			<if test="createUserId != null">
+				 createUserId,
+			</if>
+			<if test="createTime != null">
+				 createTime,
+			</if>
+			<if test="updateTime != null">
+				 updateTime,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="factionId!=null">
+				 #{factionId},
+			</if>
+			<if test="content!=null">
+				 #{content},
+			</if>
+			<if test="createUserId!=null">
+				 #{createUserId},
+			</if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.question.QuestionFactionInform">
+		 UPDATE bb_question_faction_inform
+ 		 <set> 
+			<if test="factionId != null">
+				 factionId = #{factionId},
+			</if>
+			<if test="content != null">
+				 content = #{content},
+			</if>
+			<if test="createUserId != null">
+				 createUserId = #{createUserId},
+			</if>
+			<if test="createTime != null">
+				 createTime = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				 updateTime = #{updateTime},
+			</if>
+
+ 		 </set>
+		 WHERE id = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.question.QuestionFactionInform">
+		 UPDATE bb_question_faction_inform
+		 SET 
+			 factionId = #{factionId},
+			 content = #{content},
+			 createUserId = #{createUserId},
+			 createTime = #{createTime},
+			 updateTime = #{updateTime}
+		 WHERE id = #{id}
+	</update>
+
+</mapper>

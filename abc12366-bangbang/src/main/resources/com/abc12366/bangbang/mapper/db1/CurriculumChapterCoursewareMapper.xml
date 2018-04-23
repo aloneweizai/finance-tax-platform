@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db1.CurriculumChapterCoursewareMapper">
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		 DELETE FROM bb_curriculum_chapter_courseware
+		 WHERE curriculumId = #{curriculumId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapterCourseware">
+		 INSERT INTO bb_curriculum_chapter_courseware
+ 		(curriculumId,chapterId,coursewareId,coursewareSeq) 
+		 VALUES 
+ 		(#{curriculumId},#{chapterId},#{coursewareId},#{coursewareSeq}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapterCourseware">
+		 INSERT INTO bb_curriculum_chapter_courseware
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curriculumId != null">
+				 curriculumId,
+			</if>
+			<if test="chapterId != null">
+				 chapterId,
+			</if>
+			<if test="coursewareId != null">
+				 coursewareId,
+			</if>
+			<if test="coursewareSeq != null">
+				 coursewareSeq,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curriculumId!=null">
+				 #{curriculumId},
+			</if>
+			<if test="chapterId!=null">
+				 #{chapterId},
+			</if>
+			<if test="coursewareId!=null">
+				 #{coursewareId},
+			</if>
+			<if test="coursewareSeq!=null">
+				 #{coursewareSeq},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapterCourseware">
+		 UPDATE bb_curriculum_chapter_courseware
+ 		 <set> 
+			<if test="chapterId != null">
+				 chapterId = #{chapterId},
+			</if>
+			<if test="coursewareId != null">
+				 coursewareId = #{coursewareId},
+			</if>
+			<if test="coursewareSeq != null">
+				 coursewareSeq = #{coursewareSeq},
+			</if>
+
+ 		 </set>
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.abc12366.bangbang.model.curriculum.CurriculumChapterCourseware">
+		 UPDATE bb_curriculum_chapter_courseware
+		 SET 
+			 chapterId = #{chapterId},
+			 coursewareId = #{coursewareId},
+			 coursewareSeq = #{coursewareSeq}
+		 WHERE curriculumId = #{curriculumId}
+	</update>
+
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.bangbang.mapper.db2.QuestionFactionAllocationRoMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		 id,	factionId,	userId,	userRank,	proportion,	integral,awardReason,	createUserId,	createTime,	updateTime,	state
+	</sql>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="com.abc12366.bangbang.model.question.QuestionFactionAllocation" parameterType="java.lang.String">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM bb_question_faction_allocation
+		 WHERE id = #{id}
+	</select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionAllocationBo" parameterType="java.util.Map">
+        SELECT
+            id,	factionId,	userId,	userRank,	proportion,	integral,awardReason,	createUserId,	createTime,	updateTime,	state
+        FROM bb_question_faction_allocation
+        WHERE 1=1
+        <if test="state != null and state !=''">
+            AND state = #{state}
+        </if>
+        <if test="factionId != null and factionId !=''">
+            AND factionId = #{factionId}
+        </if>
+        ORDER BY integral desc
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectAllocationCnt" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+            count(*)
+        FROM bb_question_faction_allocation
+        WHERE 1=1
+        <if test="userId != null and userId !=''">
+            AND userId = #{userId}
+        </if>
+        <if test="state != null and state !=''">
+            AND state = #{state}
+        </if>
+        <if test="factionId != null and factionId !=''">
+            AND factionId = #{factionId}
+        </if>
+        <if test="id != null and id !=''">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectIntegral" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        ifnull(sum(integral),0)
+        FROM bb_question_faction_allocation
+        WHERE 1=1
+        <if test="userId != null and userId !=''">
+            AND userId = #{userId}
+        </if>
+        <if test="state != null and state !=''">
+            AND state = #{state}
+        </if>
+        <if test="factionId != null and factionId !=''">
+            AND factionId = #{factionId}
+        </if>
+        <if test="id != null and id !=''">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectAwardPoint" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        IFNULL(sum(awardPoint),0) awardPoint
+        FROM bb_question_faction
+        WHERE 1=1
+        <if test="factionId != null and factionId !=''">
+            AND factionId = #{factionId}
+        </if>
+    </select>
+
+
+    <!-- 查询（运营管理系统 帮派成员分配列表） -->
+    <select id="selectAllocationManageList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionAllocationManageBo" parameterType="java.util.Map">
+        SELECT
+        t.id,t.factionId,t.integral,t.state AS STATUS, t.refuseReason, t.createTime,t.updateTime,
+        t1.factionName, t2.username AS memberName,t3.name AS memberLevel
+        FROM bb_question_faction_allocation  t
+        JOIN bb_question_faction  t1  ON t.factionId = t1.factionId
+        JOIN abc12366_uc.uc_user t2 ON t.userId = t2.id
+        JOIN bb_question_faction_member_level t3 ON t.userRank = t3.code
+        WHERE 1=1
+        <if test="status != null and status !=''">
+            AND t.state = #{status}
+        </if>
+        <if test="factionName != null and factionName !=''">
+            AND t1.factionName = #{factionName}
+        </if>
+        ORDER BY t.createTime desc
+    </select>
+
+    <!-- 查询（帮派成员分配列表） -->
+    <select id="selectAllocationList" resultType="com.abc12366.bangbang.model.question.bo.QuestionFactionAllocationsBo" parameterType="java.util.Map">
+        SELECT
+        t.id,t.factionId,t.integral,t.state AS STATUS, t.refuseReason, t.createTime,t.updateTime,
+        t.awardReason,t2.userPicturePath memberImage,
+        t1.factionName, t2.username AS memberName,t3.name AS memberLevel
+        FROM bb_question_faction_allocation  t
+        JOIN bb_question_faction  t1  ON t.factionId = t1.factionId
+        JOIN abc12366_uc.uc_user t2 ON t.userId = t2.id
+        JOIN bb_question_faction_member_level t3 ON t.userRank = t3.code
+        WHERE 1=1
+        <if test="status != null and status !=''">
+            AND t.state = #{status}
+        </if>
+        <if test="factionId != null and factionId !=''">
+            AND t1.factionId = #{factionId}
+        </if>
+        ORDER BY t.createTime desc
+    </select>
+
+    <select id="selectPointAwardListByIds" resultType="com.abc12366.bangbang.model.question.bo.AllocationPointAwardBO" parameterType="java.util.List">
+        SELECT userId , integral as point,factionId FROM bb_question_faction_allocation
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

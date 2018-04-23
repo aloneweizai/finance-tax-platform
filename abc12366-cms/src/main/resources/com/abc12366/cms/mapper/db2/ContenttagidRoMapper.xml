@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc12366.cms.mapper.db2.ContenttagidRoMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        contentId, tagId, priority
+    </sql>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectByPrimaryKey" resultType="com.abc12366.cms.model.Contenttagid" parameterType="java.lang.String">
+        SELECT
+        contentId, tagId, priority
+        FROM cms_contenttagid
+        WHERE contentId = #{contentId}
+    </select>
+
+    <!-- 查询（根据主键ID查询） -->
+    <select id="selectList" resultType="com.abc12366.cms.model.Contenttagid" parameterType="java.lang.String">
+        SELECT
+        contentId, tagId, priority,t.name
+        FROM cms_contenttagid c left join abc12366_bangbang.bb_knowledge_tag t on c.tagId = t.id
+        WHERE contentId = #{contentId}
+    </select>
+
+</mapper>
