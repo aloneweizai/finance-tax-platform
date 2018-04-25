@@ -79,6 +79,9 @@ public class RegisterBO implements Serializable {
     //用户地址-城市
     private String city;
 
+    /**唯一邀请码**/
+    private String inviteCode;
+
     public RegisterBO() {
     }
 
@@ -230,5 +233,13 @@ public class RegisterBO implements Serializable {
                 ", province='" + province + '\'' +
                 ", city='" + city + '\'' +
                 '}';
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }

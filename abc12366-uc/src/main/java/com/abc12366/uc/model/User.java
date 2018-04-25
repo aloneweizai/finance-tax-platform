@@ -49,6 +49,12 @@ public class User {
      */
     private Double amount;
 
+    /**是否代理人，0：否，1：是**/
+    private String isProxy;
+
+    /**唯一邀请码**/
+    private String inviteCode;
+
     public User() {
     }
 
@@ -329,5 +335,21 @@ public class User {
                 ", levelName='" + levelName + '\'' +
                 ", oldId='" + oldId + '\'' +
                 '}';
+    }
+
+    public String getIsProxy() {
+        return isProxy;
+    }
+
+    public void setIsProxy(String isProxy) {
+        this.isProxy = isProxy;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }

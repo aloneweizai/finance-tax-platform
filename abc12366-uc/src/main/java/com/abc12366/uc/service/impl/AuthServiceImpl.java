@@ -11,10 +11,7 @@ import com.abc12366.uc.mapper.db1.UcUserLoginLogMapper;
 import com.abc12366.uc.mapper.db1.UserMapper;
 import com.abc12366.uc.mapper.db2.TokenRoMapper;
 import com.abc12366.uc.mapper.db2.UcUserLoginLogRoMapper;
-import com.abc12366.uc.model.BaseObject;
-import com.abc12366.uc.model.Token;
-import com.abc12366.uc.model.User;
-import com.abc12366.uc.model.UserLoginPasswordWrongCount;
+import com.abc12366.uc.model.*;
 import com.abc12366.uc.model.bo.*;
 import com.abc12366.uc.service.*;
 import com.abc12366.uc.service.admin.OperateMessageService;
@@ -145,12 +142,12 @@ public class AuthServiceImpl implements AuthService {
         }
         user = new User();
         BeanUtils.copyProperties(registerBO, user);
-
-        user.setId(Utils.uuid());
+        String userId = Utils.uuid();
+        user.setId(userId);
         //用户名（字母UC+时间戳毫秒数）
-        user.setUsername("uc" + System.currentTimeMillis());
+        user.setUsername("kp" + System.currentTimeMillis());
         //自动生成用户昵称:（财税+6位数字）
-        user.setNickname("财税" + RandomNumber.getRandomNumber(6));
+        user.setNickname("客品" + RandomNumber.getRandomNumber(6));
         user.setSalt(salt);
         user.setPassword(encodePassword);
         user.setPoints(0);
@@ -191,7 +188,7 @@ public class AuthServiceImpl implements AuthService {
         BeanUtils.copyProperties(user, userReturnBO);
 
         //首次绑定手机任务埋点
-        todoTaskService.doTask(user.getId(), TaskConstant.SYS_TASK_FIRST_PHONE_VALIDATE_CODE);
+        //todoTaskService.doTask(user.getId(), TaskConstant.SYS_TASK_FIRST_PHONE_VALIDATE_CODE);
 
         LOGGER.info("{}", userReturnBO);
         return userReturnBO;
