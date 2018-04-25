@@ -300,6 +300,9 @@ public class TaskConstant {
     public final static String POINT_RULE_SCSCTX_CODE = "P-sctx";
     //22.首次实名认证
     public final static String POINT_RULE_SCSMRZ_CODE = "P-smrz";
+
+    //22.首次实名认证
+    public final static String POINT_RULE_GMJFFH_CODE = "P-gmjffh";
     /**
      * 微信红包赠送
      */

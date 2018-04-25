@@ -182,6 +182,7 @@ public class AuthServiceImpl implements AuthService {
         userExtend.setUserId(user.getId());
         userExtend.setProvince(registerBO.getProvince());
         userExtend.setCity(registerBO.getCity());
+        userExtend.setArea(registerBO.getArea());
         userExtendService.insert(userExtend, request);
 
         UserReturnBO userReturnBO = new UserReturnBO();
